@@ -1,0 +1,469 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Privacy Policy - GovtExamWala{% endblock %}
+
+{% block extra_css %}
+<style>
+    .hero-privacy {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .hero-privacy::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320"><path fill="rgba(255,255,255,0.1)" d="M0,96L48,112C96,128,192,160,288,160C384,160,480,128,576,122.7C672,117,768,139,864,154.7C960,171,1056,181,1152,165.3C1248,149,1344,107,1392,85.3L1440,64L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path></svg>') no-repeat bottom;
+        background-size: cover;
+    }
+    
+    .policy-card {
+        background: white;
+        border-radius: 16px;
+        box-shadow: 0 10px 40px rgba(0,0,0,0.08);
+        transition: all 0.3s ease;
+    }
+    
+    .dark .policy-card {
+        background: #1f2937;
+    }
+    
+    .policy-section {
+        border-bottom: 1px solid #e5e7eb;
+        padding-bottom: 1.5rem;
+        margin-bottom: 1.5rem;
+    }
+    
+    .dark .policy-section {
+        border-bottom-color: #374151;
+    }
+    
+    .policy-section:last-child {
+        border-bottom: none;
+        margin-bottom: 0;
+        padding-bottom: 0;
+    }
+    
+    .policy-title {
+        font-size: 1.5rem;
+        font-weight: bold;
+        margin-bottom: 1rem;
+        color: #1f2937;
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+    }
+    
+    .dark .policy-title {
+        color: #f3f4f6;
+    }
+    
+    .policy-title i {
+        color: #8b5cf6;
+        font-size: 1.75rem;
+    }
+    
+    .policy-content {
+        color: #4b5563;
+        line-height: 1.7;
+        padding-left: 2.5rem;
+    }
+    
+    .dark .policy-content {
+        color: #9ca3af;
+    }
+    
+    .policy-content p {
+        margin-bottom: 1rem;
+    }
+    
+    .policy-content ul, .policy-content ol {
+        margin: 1rem 0;
+        padding-left: 1.5rem;
+    }
+    
+    .policy-content li {
+        margin-bottom: 0.5rem;
+    }
+    
+    .effective-date {
+        background: #f3f4f6;
+        padding: 0.75rem 1rem;
+        border-radius: 8px;
+        display: inline-block;
+        margin-bottom: 1rem;
+    }
+    
+    .dark .effective-date {
+        background: #374151;
+    }
+    
+    .last-updated {
+        color: #6b7280;
+        font-size: 0.875rem;
+        margin-bottom: 1rem;
+    }
+    
+    .table-of-contents {
+        background: #f9fafb;
+        border-radius: 12px;
+        padding: 1.5rem;
+        margin-bottom: 2rem;
+    }
+    
+    .dark .table-of-contents {
+        background: #111827;
+    }
+    
+    .table-of-contents h3 {
+        font-size: 1.25rem;
+        font-weight: bold;
+        margin-bottom: 1rem;
+        color: #1f2937;
+    }
+    
+    .dark .table-of-contents h3 {
+        color: #f3f4f6;
+    }
+    
+    .toc-list {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+        gap: 0.75rem;
+        list-style: none;
+        padding: 0;
+    }
+    
+    .toc-list li a {
+        color: #6b7280;
+        text-decoration: none;
+        transition: color 0.3s;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+    
+    .toc-list li a:hover {
+        color: #8b5cf6;
+    }
+    
+    .toc-list li a i {
+        font-size: 0.75rem;
+        color: #8b5cf6;
+    }
+    
+    .contact-info {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 2rem;
+        border-radius: 16px;
+        margin-top: 2rem;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="hero-privacy text-white py-20">
+    <div class="container mx-auto px-4 relative z-10">
+        <div class="text-center max-w-3xl mx-auto">
+            <i class="fas fa-shield-alt text-5xl mb-4"></i>
+            <h1 class="text-4xl md:text-5xl font-bold mb-4">Privacy Policy</h1>
+            <p class="text-xl opacity-90">Your privacy is important to us. Learn how we protect your data.</p>
+        </div>
+    </div>
+</section>
+
+<div class="container mx-auto px-4 py-12">
+    <div class="max-w-4xl mx-auto">
+        <!-- Effective Date -->
+        <div class="effective-date dark:bg-gray-800">
+            <i class="fas fa-calendar-alt mr-2 text-purple-600"></i>
+            <strong>Effective Date:</strong> January 1, 2027
+        </div>
+        <div class="last-updated">
+            <i class="fas fa-clock mr-1"></i> Last Updated: June 15, 2026
+        </div>
+        
+        <!-- Policy Card -->
+        <div class="policy-card p-6 md:p-8">
+            <!-- Introduction -->
+            <div class="policy-section">
+                <div class="policy-title">
+                    <i class="fas fa-info-circle"></i>
+                    <span>Introduction</span>
+                </div>
+                <div class="policy-content">
+                    <p>Welcome to GovtExamWala ("we," "our," or "us"). This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you visit our website, use our mobile application, or engage with our services. Please read this privacy policy carefully. If you do not agree with the terms of this privacy policy, please do not access the site or use our services.</p>
+                    <p>We are committed to protecting your personal information and your right to privacy. This policy applies to all information collected through our website, mobile app, and any related services, sales, marketing, or events.</p>
+                </div>
+            </div>
+            
+            <!-- Table of Contents -->
+            <div class="table-of-contents">
+                <h3><i class="fas fa-list mr-2 text-purple-600"></i> Table of Contents</h3>
+                <ul class="toc-list">
+                    <li><a href="#information-collect"><i class="fas fa-chevron-right"></i> Information We Collect</a></li>
+                    <li><a href="#information-use"><i class="fas fa-chevron-right"></i> How We Use Your Information</a></li>
+                    <li><a href="#information-share"><i class="fas fa-chevron-right"></i> Sharing Your Information</a></li>
+                    <li><a href="#cookies"><i class="fas fa-chevron-right"></i> Cookies & Tracking</a></li>
+                    <li><a href="#data-security"><i class="fas fa-chevron-right"></i> Data Security</a></li>
+                    <li><a href="#data-retention"><i class="fas fa-chevron-right"></i> Data Retention</a></li>
+                    <li><a href="#children"><i class="fas fa-chevron-right"></i> Children's Privacy</a></li>
+                    <li><a href="#third-party"><i class="fas fa-chevron-right"></i> Third-Party Links</a></li>
+                    <li><a href="#your-rights"><i class="fas fa-chevron-right"></i> Your Privacy Rights</a></li>
+                    <li><a href="#policy-updates"><i class="fas fa-chevron-right"></i> Policy Updates</a></li>
+                    <li><a href="#contact"><i class="fas fa-chevron-right"></i> Contact Us</a></li>
+                </ul>
+            </div>
+            
+            <!-- Information We Collect -->
+            <div class="policy-section" id="information-collect">
+                <div class="policy-title">
+                    <i class="fas fa-database"></i>
+                    <span>Information We Collect</span>
+                </div>
+                <div class="policy-content">
+                    <p><strong>Personal Information You Provide:</strong></p>
+                    <ul>
+                        <li><strong>Account Information:</strong> Name, email address, phone number, date of birth, and password when you register.</li>
+                        <li><strong>Profile Information:</strong> Profile picture, educational background, exam preferences, and city/state.</li>
+                        <li><strong>Payment Information:</strong> Payment method details, billing address, and transaction history (we do not store full payment credentials).</li>
+                        <li><strong>Communication Data:</strong> Messages, feedback, support requests, and survey responses.</li>
+                    </ul>
+                    
+                    <p><strong>Information Automatically Collected:</strong></p>
+                    <ul>
+                        <li><strong>Usage Data:</strong> Pages visited, time spent, features used, mock test attempts, and learning progress.</li>
+                        <li><strong>Device Information:</strong> IP address, browser type, operating system, device identifiers, and mobile app version.</li>
+                        <li><strong>Location Data:</strong> Approximate location based on IP address (with your consent for precise location).</li>
+                        <li><strong>Cookies & Similar Technologies:</strong> Browsing behavior, preferences, and session information.</li>
+                    </ul>
+                    
+                    <p><strong>Information from Third Parties:</strong></p>
+                    <ul>
+                        <li>Social media platforms if you log in using Google or Facebook.</li>
+                        <li>Payment processors for transaction verification.</li>
+                        <li>Analytics providers for usage statistics.</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <!-- How We Use Your Information -->
+            <div class="policy-section" id="information-use">
+                <div class="policy-title">
+                    <i class="fas fa-chart-line"></i>
+                    <span>How We Use Your Information</span>
+                </div>
+                <div class="policy-content">
+                    <p>We use your information for the following purposes:</p>
+                    <ul>
+                        <li><strong>To Provide Services:</strong> Create and manage your account, deliver mock tests, track progress, and personalize your learning experience.</li>
+                        <li><strong>To Improve Our Platform:</strong> Analyze usage patterns, fix bugs, enhance features, and develop new content.</li>
+                        <li><strong>To Communicate:</strong> Send important updates, exam notifications, result alerts, and respond to support requests.</li>
+                        <li><strong>To Personalize:</strong> Recommend relevant study materials, mock tests, and AI-powered insights based on your performance.</li>
+                        <li><strong>To Process Payments:</strong> Handle subscriptions, purchases, and generate invoices.</li>
+                        <li><strong>To Ensure Security:</strong> Detect and prevent fraud, unauthorized access, and security incidents.</li>
+                        <li><strong>To Comply with Legal Obligations:</strong> Respond to legal requests and enforce our terms of service.</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <!-- Sharing Your Information -->
+            <div class="policy-section" id="information-share">
+                <div class="policy-title">
+                    <i class="fas fa-share-alt"></i>
+                    <span>Sharing Your Information</span>
+                </div>
+                <div class="policy-content">
+                    <p>We do not sell your personal information. We may share your information in the following situations:</p>
+                    <ul>
+                        <li><strong>Service Providers:</strong> With trusted third-party vendors who assist us in operating our platform (payment processing, analytics, cloud hosting, email delivery).</li>
+                        <li><strong>Business Transfers:</strong> In connection with a merger, acquisition, or sale of assets.</li>
+                        <li><strong>Legal Requirements:</strong> When required by law, court order, or to protect our rights and safety.</li>
+                        <li><strong>With Your Consent:</strong> When you explicitly authorize us to share your information.</li>
+                        <li><strong>Aggregated Data:</strong> We may share anonymized, aggregated data for research or marketing purposes.</li>
+                    </ul>
+                    <p>Third-party service providers are bound by confidentiality agreements and cannot use your information for any purpose other than providing services to us.</p>
+                </div>
+            </div>
+            
+            <!-- Cookies & Tracking -->
+            <div class="policy-section" id="cookies">
+                <div class="policy-title">
+                    <i class="fas fa-cookie-bite"></i>
+                    <span>Cookies & Tracking Technologies</span>
+                </div>
+                <div class="policy-content">
+                    <p>We use cookies and similar tracking technologies to enhance your experience. Cookies are small text files stored on your device.</p>
+                    <p><strong>Types of cookies we use:</strong></p>
+                    <ul>
+                        <li><strong>Essential Cookies:</strong> Required for basic site functionality (login, navigation, test-taking).</li>
+                        <li><strong>Performance Cookies:</strong> Help us analyze site usage and improve performance.</li>
+                        <li><strong>Functional Cookies:</strong> Remember your preferences and personalize your experience.</li>
+                        <li><strong>Advertising Cookies:</strong> Used to deliver relevant advertisements (you can opt-out).</li>
+                    </ul>
+                    <p>You can control cookies through your browser settings. Disabling certain cookies may affect functionality. For more information, visit <a href="#" class="text-purple-600 hover:underline">our Cookie Policy</a>.</p>
+                </div>
+            </div>
+            
+            <!-- Data Security -->
+            <div class="policy-section" id="data-security">
+                <div class="policy-title">
+                    <i class="fas fa-lock"></i>
+                    <span>Data Security</span>
+                </div>
+                <div class="policy-content">
+                    <p>We implement robust security measures to protect your data:</p>
+                    <ul>
+                        <li><strong>Encryption:</strong> All data transmitted is encrypted using SSL/TLS technology.</li>
+                        <li><strong>Access Controls:</strong> Strict access controls limit who can access user data.</li>
+                        <li><strong>Regular Audits:</strong> We conduct regular security audits and vulnerability assessments.</li>
+                        <li><strong>Secure Storage:</strong> User data is stored on secure servers with firewalls and intrusion detection.</li>
+                        <li><strong>Data Minimization:</strong> We only collect information necessary for our services.</li>
+                    </ul>
+                    <p>While we take reasonable precautions, no method of transmission over the internet is 100% secure. We cannot guarantee absolute security.</p>
+                </div>
+            </div>
+            
+            <!-- Data Retention -->
+            <div class="policy-section" id="data-retention">
+                <div class="policy-title">
+                    <i class="fas fa-hourglass-half"></i>
+                    <span>Data Retention</span>
+                </div>
+                <div class="policy-content">
+                    <p>We retain your personal information for as long as your account is active or as needed to provide services. We may retain certain information for legitimate business purposes, legal compliance, or dispute resolution.</p>
+                    <p>When you request account deletion, we will delete or anonymize your personal information within 30 days, except where retention is required by law.</p>
+                    <p>Aggregated and anonymized data may be retained indefinitely for analytical purposes.</p>
+                </div>
+            </div>
+            
+            <!-- Children's Privacy -->
+            <div class="policy-section" id="children">
+                <div class="policy-title">
+                    <i class="fas fa-child"></i>
+                    <span>Children's Privacy</span>
+                </div>
+                <div class="policy-content">
+                    <p>Our services are not directed to individuals under 13 years of age. We do not knowingly collect personal information from children under 13. If we learn that we have collected personal information from a child under 13, we will delete that information promptly. Parents or guardians who believe their child has provided us with personal information should contact us.</p>
+                    <p>For users between 13 and 18, we recommend obtaining parental consent before using our services.</p>
+                </div>
+            </div>
+            
+            <!-- Third-Party Links -->
+            <div class="policy-section" id="third-party">
+                <div class="policy-title">
+                    <i class="fas fa-external-link-alt"></i>
+                    <span>Third-Party Links</span>
+                </div>
+                <div class="policy-content">
+                    <p>Our platform may contain links to third-party websites, advertisers, or services. We are not responsible for the privacy practices or content of these third parties. We encourage you to review their privacy policies before providing any personal information.</p>
+                    <p>Third-party integrations include payment processors (Razorpay), analytics (Google Analytics), and social media platforms.</p>
+                </div>
+            </div>
+            
+            <!-- Your Privacy Rights -->
+            <div class="policy-section" id="your-rights">
+                <div class="policy-title">
+                    <i class="fas fa-user-check"></i>
+                    <span>Your Privacy Rights</span>
+                </div>
+                <div class="policy-content">
+                    <p>Depending on your location, you may have certain rights regarding your personal information:</p>
+                    <ul>
+                        <li><strong>Access:</strong> Request a copy of the personal information we hold about you.</li>
+                        <li><strong>Correction:</strong> Request correction of inaccurate or incomplete information.</li>
+                        <li><strong>Deletion:</strong> Request deletion of your personal information (subject to exceptions).</li>
+                        <li><strong>Portability:</strong> Request transfer of your data to another service.</li>
+                        <li><strong>Objection:</strong> Object to certain processing activities (e.g., direct marketing).</li>
+                        <li><strong>Restriction:</strong> Request restriction of processing in certain circumstances.</li>
+                        <li><strong>Withdraw Consent:</strong> Withdraw consent where processing is based on consent.</li>
+                    </ul>
+                    <p>To exercise these rights, contact us using the information below. We will respond within 30 days. For users in the European Union, you also have the right to lodge a complaint with your local data protection authority.</p>
+                </div>
+            </div>
+            
+            <!-- Policy Updates -->
+            <div class="policy-section" id="policy-updates">
+                <div class="policy-title">
+                    <i class="fas fa-edit"></i>
+                    <span>Policy Updates</span>
+                </div>
+                <div class="policy-content">
+                    <p>We may update this Privacy Policy periodically to reflect changes in our practices or legal requirements. We will notify you of material changes through:</p>
+                    <ul>
+                        <li>Email notification to registered users</li>
+                        <li>Prominent notice on our website</li>
+                        <li>In-app notification</li>
+                    </ul>
+                    <p>The "Last Updated" date at the top of this policy indicates when changes were made. Continued use of our services after changes constitutes acceptance of the updated policy.</p>
+                </div>
+            </div>
+            
+            <!-- Contact Us -->
+            <div class="policy-section" id="contact">
+                <div class="policy-title">
+                    <i class="fas fa-envelope"></i>
+                    <span>Contact Us</span>
+                </div>
+                <div class="policy-content">
+                    <p>If you have questions about this Privacy Policy or wish to exercise your privacy rights, please contact us:</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Contact Info Card -->
+        <div class="contact-info">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="text-center">
+                    <i class="fas fa-envelope text-2xl mb-2"></i>
+                    <h3 class="font-bold mb-1">Email</h3>
+                    <p class="opacity-90">privacy@govtexamwala.com</p>
+                </div>
+                <div class="text-center">
+                    <i class="fas fa-phone-alt text-2xl mb-2"></i>
+                    <h3 class="font-bold mb-1">Phone</h3>
+                    <p class="opacity-90">+91-XXXXXXXXXX</p>
+                </div>
+                <div class="text-center">
+                    <i class="fas fa-map-marker-alt text-2xl mb-2"></i>
+                    <h3 class="font-bold mb-1">Address</h3>
+                    <p class="opacity-90">Bihar, India</p>
+                </div>
+            </div>
+            <div class="text-center mt-6 pt-6 border-t border-white/20">
+                <p>Data Protection Officer: <strong>A Kumar</strong></p>
+                <p class="text-sm opacity-75 mt-2">For GDPR-related inquiries, please contact our EU Representative at gdpr@govtexamwala.com</p>
+            </div>
+        </div>
+        
+        <!-- Acceptance -->
+        <div class="mt-8 text-center text-gray-500 text-sm">
+            <i class="fas fa-check-circle text-green-500"></i> By using GovtExamWala, you acknowledge that you have read and understood this Privacy Policy.
+        </div>
+    </div>
+</div>
+
+<script>
+    // Smooth scroll for anchor links
+    document.querySelectorAll('.toc-list a, .policy-title').forEach(anchor => {
+        anchor.addEventListener('click', function(e) {
+            const hash = this.getAttribute('href');
+            if (hash && hash.startsWith('#')) {
+                e.preventDefault();
+                const target = document.querySelector(hash);
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    history.pushState(null, null, hash);
+                }
+            }
+        });
+    });
+</script>
+{% endblock %}

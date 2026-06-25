@@ -1,0 +1,258 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Government Exam Preparation Platform{% endblock %}
+
+{% block content %}
+<!-- Hero Section with Banner -->
+<div class="relative bg-gradient-to-r from-blue-600 to-purple-700 text-white overflow-hidden">
+    <div class="absolute inset-0 bg-black opacity-20"></div>
+    <div class="container mx-auto px-4 py-16 relative z-10">
+        <div class="text-center">
+            <h1 class="text-4xl md:text-6xl font-bold mb-4 animate-fade-in">
+                India's Most Advanced Exam Prep Platform
+            </h1>
+            <p class="text-xl md:text-2xl mb-8 opacity-90">
+                Join 10 Lakh+ Aspirants • 5000+ Mock Tests • 24/7 Support
+            </p>
+            <div class="flex flex-wrap justify-center gap-4">
+                <a href="{% url 'mocktests:list' %}" class="bg-white text-blue-600 px-8 py-3 rounded-lg font-semibold hover:bg-gray-100 transition shadow-lg">
+                    Mock Tests
+                </a>
+                <a href="#exams" class="bg-transparent border-2 border-white text-white px-8 py-3 rounded-lg font-semibold hover:bg-white hover:text-blue-600 transition">
+                    View Exams
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container mx-auto px-4 py-8">
+    <!-- Daily Challenge Section -->
+    {% if daily_challenge %}
+    <div class="mb-12 bg-gradient-to-r from-orange-500 to-red-600 rounded-2xl overflow-hidden shadow-xl transform hover:scale-[1.02] transition-all duration-300">
+        <div class="p-6 md:p-8 text-white">
+            <div class="flex flex-wrap justify-between items-center">
+                <div class="flex-1">
+                    <div class="flex items-center mb-3">
+                        <span class="bg-yellow-400 text-red-600 px-3 py-1 rounded-full text-sm font-bold animate-pulse">
+                            🔥 HOT! 🔥
+                        </span>
+                        <span class="ml-3 bg-white/20 px-3 py-1 rounded-full text-sm">Daily Challenge</span>
+                    </div>
+                    <h2 class="text-2xl md:text-3xl font-bold mb-2">{{ daily_challenge.title }}</h2>
+                    <p class="text-white/90 mb-4">{{ daily_challenge.description|truncatewords:25 }}</p>
+                    <div class="flex flex-wrap gap-4 text-sm">
+                        <div class="flex items-center">
+                            <i class="fas fa-clock mr-2"></i>
+                            <span>{{ daily_challenge.duration_minutes }} mins</span>
+                        </div>
+                        <div class="flex items-center">
+                            <i class="fas fa-question-circle mr-2"></i>
+                            <span>{{ daily_challenge.total_questions }} Questions</span>
+                        </div>
+                        <div class="flex items-center">
+                            <i class="fas fa-trophy mr-2"></i>
+                            <span>{{ daily_challenge.xp_reward }} XP</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="mt-4 md:mt-0">
+                    <a href="{% url 'exams:take_daily_challenge' daily_challenge.slug %}" 
+                       class="bg-white text-orange-600 px-8 py-3 rounded-xl font-bold hover:bg-gray-100 transition shadow-lg inline-flex items-center gap-2">
+                        <i class="fas fa-bolt"></i> Participate Now →
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Live Test Cards Section -->
+    {% if live_tests %}
+    <div class="mb-12">
+        <h2 class="text-2xl font-bold text-gray-800 mb-6 flex items-center">
+            <i class="fas fa-broadcast-tower text-red-500 mr-2 animate-pulse"></i>
+            Live Tests & Quizzes
+            <span class="ml-3 bg-red-500 text-white text-xs px-2 py-1 rounded-full animate-pulse">LIVE NOW</span>
+        </h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {% for test in live_tests %}
+            <div class="bg-gradient-to-br from-gray-900 to-gray-800 rounded-xl overflow-hidden shadow-xl hover:shadow-2xl transition-all transform hover:-translate-y-2">
+                <div class="p-6">
+                    <div class="flex justify-between items-start mb-3">
+                        <span class="inline-block px-3 py-1 rounded-full text-xs font-semibold {{ test.get_badge_color_class }}">
+                            <i class="fas fa-circle text-red-500 animate-pulse mr-1"></i>
+                            {{ test.badge_text }}
+                        </span>
+                        {% if test.has_timer %}
+                        <div class="text-right">
+                            <div class="text-xs text-gray-400">Starts in</div>
+                            <div class="font-mono text-xl font-bold text-white countdown-timer" 
+                                 data-hours="{{ test.timer_hours }}" 
+                                 data-minutes="{{ test.timer_minutes }}" 
+                                 data-seconds="{{ test.timer_seconds }}">
+                                {{ test.timer_hours }}h {{ test.timer_minutes }}m {{ test.timer_seconds }}s
+                            </div>
+                        </div>
+                        {% endif %}
+                    </div>
+                    
+                    <h3 class="text-xl font-bold text-white mb-2">{{ test.title }}</h3>
+                    <p class="text-gray-300 text-sm mb-4">{{ test.subtitle }}</p>
+                    
+                    <div class="mb-4">
+                        <div class="flex justify-between text-sm text-gray-400 mb-1">
+                            <span>Participants</span>
+                            <span>{{ test.total_participants }}</span>
+                        </div>
+                        <div class="bg-gray-700 rounded-full h-2 overflow-hidden">
+                            <div class="bg-gradient-to-r from-green-500 to-green-400 h-2 rounded-full transition-all duration-500" 
+                                 style="width: {{ test.enrolled_percentage }}%"></div>
+                        </div>
+                        <div class="text-right text-xs text-gray-400 mt-1">{{ test.enrolled_percentage }}% enrolled</div>
+                    </div>
+                    
+                    <a href="{% url 'exams:join_live_test' test.id %}" 
+                       class="block text-center bg-gradient-to-r from-blue-500 to-blue-600 text-white py-2 rounded-lg hover:from-blue-600 hover:to-blue-700 transition transform hover:scale-105">
+                        {{ test.button_text }}
+                    </a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Popular Exams Section -->
+    {% if popular_exams %}
+    <div class="mb-12" id="exams">
+        <h2 class="text-2xl font-bold text-gray-800 mb-6 flex items-center">
+            <i class="fas fa-fire text-orange-500 mr-2"></i>
+            Popular Exams
+        </h2>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {% for exam in popular_exams %}
+            <div class="group bg-white rounded-xl shadow-md overflow-hidden hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2">
+                <div class="relative h-40 bg-gradient-to-r from-blue-500 to-purple-600 flex items-center justify-center">
+                    {% if exam.logo %}
+                    <img src="{{ exam.logo.url }}" alt="{{ exam.name }}" class="h-24 w-24 object-contain rounded-full bg-white p-2 shadow-lg">
+                    {% else %}
+                    <i class="fas fa-graduation-cap text-white text-6xl"></i>
+                    {% endif %}
+                    <div class="absolute inset-0 bg-black opacity-0 group-hover:opacity-10 transition"></div>
+                </div>
+                <div class="p-5">
+                    <h3 class="text-lg font-bold text-gray-800 mb-2">{{ exam.name }}</h3>
+                    <p class="text-gray-600 text-sm mb-3 line-clamp-2">{{ exam.description|striptags|truncatewords:10|default:"Complete preparation for this exam" }}</p>
+                    <div class="flex items-center justify-between text-sm mb-4">
+                        <span class="text-gray-500"><i class="far fa-clock mr-1"></i> {{ exam.duration_minutes }} min</span>
+                        <span class="text-gray-500"><i class="fas fa-question-circle mr-1"></i> {{ exam.total_questions_count }} Qs</span>
+                    </div>
+                    <a href="{% url 'exams:detail' exam.slug %}" 
+                       class="block text-center bg-gradient-to-r from-blue-500 to-blue-600 text-white py-2 rounded-lg hover:from-blue-600 hover:to-blue-700 transition">
+                        View Details →
+                    </a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- All Exams by Category -->
+    <div>
+        <h2 class="text-2xl font-bold text-gray-800 mb-6 flex items-center">
+            <i class="fas fa-layer-group text-blue-500 mr-2"></i>
+            All Exams by Category
+        </h2>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {% for category in categories %}
+            <div class="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-lg transition">
+                <div class="bg-gradient-to-r from-blue-500 to-purple-600 px-5 py-3">
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center space-x-2">
+                            <i class="{{ category.icon|default:'fas fa-book' }} text-white text-xl"></i>
+                            <h3 class="text-white font-bold text-lg">{{ category.name }}</h3>
+                        </div>
+                        <span class="text-white/80 text-sm">{{ category.exams.count }} Exams</span>
+                    </div>
+                </div>
+                <div class="p-4">
+                    {% for exam in category.exams.all|slice:":4" %}
+                    <a href="{% url 'exams:detail' exam.slug %}" class="block p-3 rounded-lg hover:bg-gray-50 transition mb-2">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <h4 class="font-semibold text-gray-800">{{ exam.name }}</h4>
+                                <div class="flex items-center text-xs text-gray-500 mt-1">
+                                    <span class="mr-3"><i class="far fa-clock"></i> {{ exam.duration_minutes }} min</span>
+                                    <span><i class="fas fa-question-circle"></i> {{ exam.total_questions_count }} Qs</span>
+                                </div>
+                            </div>
+                            <i class="fas fa-chevron-right text-gray-400"></i>
+                        </div>
+                    </a>
+                    {% empty %}
+                    <p class="text-gray-500 text-center py-4">No exams in this category yet.</p>
+                    {% endfor %}
+                    {% if category.exams.count > 4 %}
+                    <a href="{% url 'exams:category_detail' category.slug %}" class="block text-center text-blue-500 text-sm mt-2 hover:text-blue-600">
+                        View all {{ category.exams.count }} exams →
+                    </a>
+                    {% endif %}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+<!-- Countdown Timer Script -->
+<script>
+function startCountdownTimers() {
+    document.querySelectorAll('.countdown-timer').forEach(element => {
+        let hours = parseInt(element.dataset.hours) || 0;
+        let minutes = parseInt(element.dataset.minutes) || 0;
+        let seconds = parseInt(element.dataset.seconds) || 0;
+        let totalSeconds = (hours * 3600) + (minutes * 60) + seconds;
+        
+        if (totalSeconds <= 0) return;
+        
+        const timer = setInterval(() => {
+            if (totalSeconds <= 0) {
+                clearInterval(timer);
+                element.innerHTML = "LIVE NOW!";
+                element.classList.add('text-green-400', 'font-bold');
+                return;
+            }
+            
+            totalSeconds--;
+            const h = Math.floor(totalSeconds / 3600);
+            const m = Math.floor((totalSeconds % 3600) / 60);
+            const s = totalSeconds % 60;
+            
+            element.innerHTML = `${h > 0 ? h + 'h ' : ''}${m}m ${s}s`;
+        }, 1000);
+    });
+}
+
+document.addEventListener('DOMContentLoaded', startCountdownTimers);
+</script>
+
+<style>
+@keyframes fade-in {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+.animate-fade-in {
+    animation: fade-in 0.8s ease-out;
+}
+.line-clamp-2 {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+</style>
+{% endblock %}

@@ -1,0 +1,110 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ affair.title }} | GovtExamWala{% endblock %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-8">
+    <div class="max-w-4xl mx-auto">
+        <!-- Article Header -->
+        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden mb-6">
+            <div class="p-6">
+                <div class="flex flex-wrap gap-3 mb-4">
+                    <span class="text-xs bg-purple-100 text-purple-600 px-3 py-1 rounded">{{ affair.get_category_display }}</span>
+                    <span class="text-xs text-gray-500">{{ affair.date|date:"F d, Y" }}</span>
+                </div>
+                
+                <h1 class="text-3xl font-bold mb-4">{{ affair.title }}</h1>
+                
+                <div class="flex justify-between items-center text-sm text-gray-500 mb-6 pb-4 border-b">
+                    <div class="flex gap-4">
+                        <span><i class="fas fa-eye mr-1"></i> {{ affair.views }} views</span>
+                        {% if affair.author %}
+                        <span><i class="fas fa-user mr-1"></i> {{ affair.author }}</span>
+                        {% endif %}
+                        {% if affair.source %}
+                        <span><i class="fas fa-newspaper mr-1"></i> {{ affair.source }}</span>
+                        {% endif %}
+                    </div>
+                    {% if user.is_authenticated %}
+                    <button id="bookmarkBtn" class="text-purple-600 hover:text-yellow-500 transition">
+                        <i class="{% if is_bookmarked %}fas{% else %}far{% endif %} fa-bookmark text-xl"></i>
+                    </button>
+                    {% endif %}
+                </div>
+                
+                {% if affair.image %}
+                <img src="{{ affair.image.url }}" alt="{{ affair.title }}" class="w-full rounded-lg mb-6">
+                {% endif %}
+                
+                <div class="prose max-w-none dark:prose-invert">
+                    {{ affair.content|safe }}
+                </div>
+                
+                <!-- Important For -->
+                {% if affair.important_for %}
+                <div class="mt-6 p-4 bg-yellow-50 dark:bg-yellow-900/20 rounded-lg">
+                    <h4 class="font-bold mb-2">📌 Important For</h4>
+                    <p class="text-sm">{{ affair.important_for }}</p>
+                </div>
+                {% endif %}
+                
+                <!-- Tags -->
+                {% if affair.tags %}
+                <div class="mt-6 pt-4 border-t">
+                    <div class="flex flex-wrap gap-2">
+                        {% for tag in affair.tags.split %}
+                        <span class="text-xs bg-gray-100 dark:bg-gray-700 px-2 py-1 rounded">#{{ tag }}</span>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+        
+        <!-- Related Affairs -->
+        {% if related_affairs %}
+        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6">
+            <h3 class="text-xl font-bold mb-4">Related Current Affairs</h3>
+            <div class="space-y-3">
+                {% for related in related_affairs %}
+                <a href="{% url 'study_materials:current_affair_detail' related.slug %}" class="block p-3 hover:bg-gray-50 dark:hover:bg-gray-700 rounded-lg transition">
+                    <div class="flex justify-between">
+                        <span class="font-medium">{{ related.title|truncatechars:80 }}</span>
+                        <span class="text-sm text-gray-500">{{ related.date|date:"M d, Y" }}</span>
+                    </div>
+                </a>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<script>
+    {% if user.is_authenticated %}
+    document.getElementById('bookmarkBtn')?.addEventListener('click', async function() {
+        const response = await fetch('{% url "study_materials:bookmark_content" %}', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': '{{ csrf_token }}'
+            },
+            body: JSON.stringify({
+                content_type: 'current_affair',
+                content_id: {{ affair.id }}
+            })
+        });
+        const data = await response.json();
+        const icon = this.querySelector('i');
+        if (data.bookmarked) {
+            icon.classList.remove('far');
+            icon.classList.add('fas');
+        } else {
+            icon.classList.remove('fas');
+            icon.classList.add('far');
+        }
+    });
+    {% endif %}
+</script>
+{% endblock %}

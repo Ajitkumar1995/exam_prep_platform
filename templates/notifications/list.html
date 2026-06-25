@@ -1,0 +1,75 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Notifications - GovtExamWala{% endblock %}
+
+{% block content %}
+<div class="bg-gradient-to-r from-purple-600 to-indigo-600 text-white py-12">
+    <div class="container mx-auto px-4 text-center">
+        <i class="fas fa-bell text-5xl mb-4"></i>
+        <h1 class="text-4xl font-bold mb-2">Notifications</h1>
+        <p class="text-xl opacity-90">Stay updated with latest announcements</p>
+    </div>
+</div>
+
+<div class="container mx-auto px-4 py-8">
+    <div class="max-w-4xl mx-auto">
+        <div class="space-y-4">
+            {% for notification in notifications %}
+            <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition">
+                <div class="p-6">
+                    <div class="flex justify-between items-start">
+                        <div class="flex-1">
+                            <div class="flex flex-wrap gap-2 mb-2">
+                                <span class="text-xs px-2 py-1 rounded-full 
+                                    {% if notification.priority == 'urgent' %}bg-red-100 text-red-600
+                                    {% elif notification.priority == 'high' %}bg-orange-100 text-orange-600
+                                    {% elif notification.priority == 'medium' %}bg-yellow-100 text-yellow-600
+                                    {% else %}bg-blue-100 text-blue-600{% endif %}">
+                                    {{ notification.get_priority_display }}
+                                </span>
+                                <span class="text-xs text-gray-500">{{ notification.created_at|date:"M d, Y" }}</span>
+                            </div>
+                            <h3 class="text-xl font-bold mb-2">{{ notification.title }}</h3>
+                            <div class="text-gray-600 dark:text-gray-400 mb-4">{{ notification.message|safe|truncatechars_html:200 }}</div>
+                            {% if notification.action_url %}
+                            <a href="{% url 'notifications:track_click' notification.id %}" class="inline-flex items-center text-purple-600 hover:text-purple-700 font-semibold">
+                                {{ notification.button_text }} 
+                                <i class="fas fa-arrow-right ml-2"></i>
+                            </a>
+                            {% else %}
+                            <a href="{% url 'notifications:detail' notification.slug %}" class="inline-flex items-center text-purple-600 hover:text-purple-700 font-semibold">
+                                Read More 
+                                <i class="fas fa-arrow-right ml-2"></i>
+                            </a>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <div class="text-center py-12">
+                <i class="fas fa-bell-slash text-6xl text-gray-400 mb-4"></i>
+                <p class="text-xl text-gray-500">No notifications yet</p>
+                <p class="text-gray-400 mt-2">Check back later for updates</p>
+            </div>
+            {% endfor %}
+        </div>
+        
+        <!-- Pagination -->
+        {% if notifications.has_other_pages %}
+        <div class="flex justify-center mt-8">
+            <div class="flex gap-2">
+                {% if notifications.has_previous %}
+                <a href="?page={{ notifications.previous_page_number }}" class="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300">Previous</a>
+                {% endif %}
+                <span class="px-4 py-2 bg-purple-600 text-white rounded">{{ notifications.number }}</span>
+                {% if notifications.has_next %}
+                <a href="?page={{ notifications.next_page_number }}" class="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300">Next</a>
+                {% endif %}
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

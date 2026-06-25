@@ -1,0 +1,198 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}My Purchases - GovtExamWala{% endblock %}
+
+{% block content %}
+<div class="bg-gradient-to-r from-purple-600 to-indigo-600 text-white py-8">
+    <div class="container mx-auto px-4">
+        <h1 class="text-3xl font-bold mb-2">My Purchases</h1>
+        <p class="text-lg opacity-90">View all your purchased courses and mock tests</p>
+    </div>
+</div>
+
+<div class="container mx-auto px-4 py-8">
+    {% if exam_purchases or mock_test_purchases %}
+        <!-- Purchased Exams -->
+        {% if exam_purchases %}
+        <div class="mb-8">
+            <h2 class="text-2xl font-bold text-gray-800 dark:text-white mb-4 flex items-center">
+                <i class="fas fa-graduation-cap text-purple-600 mr-2"></i>
+                Purchased Courses
+            </h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {% for purchase in exam_purchases %}
+                <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden hover:shadow-xl transition">
+                    <div class="p-6">
+                        <div class="flex items-center justify-between mb-3">
+                            <div class="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center">
+                                <i class="fas fa-book-open text-purple-600 text-xl"></i>
+                            </div>
+                            <span class="text-xs bg-green-100 text-green-600 px-2 py-1 rounded-full">Purchased</span>
+                        </div>
+                        <h3 class="text-xl font-bold text-gray-800 dark:text-white mb-2">{{ purchase.exam.name }}</h3>
+                        <p class="text-gray-600 dark:text-gray-400 text-sm mb-4">
+                            {{ purchase.exam.description|striptags|truncatewords:20|default:"Complete course material included" }}
+                        </p>
+                        <div class="flex items-center justify-between text-sm mb-4">
+                            <span class="text-gray-500">
+                                <i class="far fa-clock mr-1"></i> {{ purchase.exam.duration_minutes }} mins
+                            </span>
+                            <span class="text-gray-500">
+                                <i class="fas fa-question-circle mr-1"></i> {{ purchase.exam.total_questions }} Qs
+                            </span>
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <span class="text-xs text-gray-400">
+                                Purchased: {{ purchase.unlocked_at|date:"M d, Y" }}
+                            </span>
+                            <a href="{% url 'exams:detail' purchase.exam.slug %}" 
+                               class="bg-purple-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-purple-700 transition">
+                                Access Course →
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+        
+        <!-- Purchased Mock Tests -->
+        {% if mock_test_purchases %}
+        <div>
+            <h2 class="text-2xl font-bold text-gray-800 dark:text-white mb-4 flex items-center">
+                <i class="fas fa-tasks text-green-600 mr-2"></i>
+                Purchased Mock Tests
+            </h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {% for purchase in mock_test_purchases %}
+                <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden hover:shadow-xl transition">
+                    <div class="p-6">
+                        <div class="flex items-center justify-between mb-3">
+                            <div class="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center">
+                                <i class="fas fa-chalkboard text-green-600 text-xl"></i>
+                            </div>
+                            <span class="text-xs bg-green-100 text-green-600 px-2 py-1 rounded-full">Purchased</span>
+                        </div>
+                        <h3 class="text-xl font-bold text-gray-800 dark:text-white mb-2">{{ purchase.mock_test.name }}</h3>
+                        <p class="text-gray-600 dark:text-gray-400 text-sm mb-4">
+                            {{ purchase.mock_test.description|truncatewords:20|default:"Full length mock test for practice" }}
+                        </p>
+                        <div class="flex items-center justify-between text-sm mb-4">
+                            <span class="text-gray-500">
+                                <i class="far fa-clock mr-1"></i> {{ purchase.mock_test.duration_minutes }} mins
+                            </span>
+                            <span class="text-gray-500">
+                                <i class="fas fa-question-circle mr-1"></i> {{ purchase.mock_test.total_questions }} Qs
+                            </span>
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <span class="text-xs text-gray-400">
+                                Purchased: {{ purchase.unlocked_at|date:"M d, Y" }}
+                            </span>
+                            <a href="{% url 'mocktests:detail' purchase.mock_test.slug %}" 
+                               class="bg-green-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-green-700 transition">
+                                Take Test →
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+        
+        <!-- Payment History -->
+        {% if payments %}
+        <div class="mt-8">
+            <h2 class="text-xl font-bold text-gray-800 dark:text-white mb-4 flex items-center">
+                <i class="fas fa-history text-blue-600 mr-2"></i>
+                Payment History
+            </h2>
+            <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden">
+                <div class="overflow-x-auto">
+                    <table class="w-full">
+                        <thead class="bg-gray-50 dark:bg-gray-700">
+                            <tr>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Item</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Amount</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Transaction ID</th>
+                             </tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
+                            {% for payment in payments %}
+                            <tr class="hover:bg-gray-50 dark:hover:bg-gray-700">
+                                <td class="px-6 py-4 text-sm text-gray-900 dark:text-white">
+                                    {{ payment.get_item_name }}
+                                </td>
+                                <td class="px-6 py-4 text-sm font-semibold text-purple-600">
+                                    ₹{{ payment.amount }}
+                                </td>
+                                <td class="px-6 py-4 text-sm text-gray-500">
+                                    {{ payment.paid_at|date:"M d, Y H:i" }}
+                                </td>
+                                <td class="px-6 py-4">
+                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                                        {{ payment.status|title }}
+                                    </span>
+                                </td>
+                                <td class="px-6 py-4 text-sm text-gray-500 font-mono">
+                                    {{ payment.phonepe_transaction_id|default:payment.order_id|slice:":12" }}...
+                                </td>
+                             </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+        
+    {% else %}
+        <!-- Empty State - No Purchases -->
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-12 text-center">
+            <div class="w-24 h-24 bg-gray-100 dark:bg-gray-700 rounded-full flex items-center justify-center mx-auto mb-4">
+                <i class="fas fa-shopping-bag text-4xl text-gray-400"></i>
+            </div>
+            <h2 class="text-2xl font-bold text-gray-800 dark:text-white mb-2">No Purchases Yet</h2>
+            <p class="text-gray-600 dark:text-gray-400 mb-6">
+                You haven't purchased any courses or mock tests yet.
+                Explore our premium content to boost your preparation!
+            </p>
+            <div class="flex flex-wrap justify-center gap-4">
+                <a href="{% url 'exams:list' %}" class="bg-purple-600 text-white px-6 py-2 rounded-lg hover:bg-purple-700 transition">
+                    <i class="fas fa-book mr-2"></i> Browse Exams
+                </a>
+                <a href="{% url 'mocktests:list' %}" class="bg-green-600 text-white px-6 py-2 rounded-lg hover:bg-green-700 transition">
+                    <i class="fas fa-tasks mr-2"></i> Browse Mock Tests
+                </a>
+            </div>
+        </div>
+        
+        <!-- Recommended Content -->
+        <div class="mt-8">
+            <h3 class="text-xl font-bold text-gray-800 dark:text-white mb-4">Recommended for You</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Popular Paid Exams -->
+                {% for exam in popular_paid_exams %}
+                <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-4 hover:shadow-lg transition">
+                    <div class="flex items-center justify-between mb-2">
+                        <h4 class="font-bold text-gray-800 dark:text-white">{{ exam.name }}</h4>
+                        <span class="text-lg font-bold text-purple-600">₹{{ exam.price }}</span>
+                    </div>
+                    <p class="text-sm text-gray-600 dark:text-gray-400 mb-3">{{ exam.description|striptags|truncatewords:15 }}</p>
+                    <a href="{% url 'exams:detail' exam.slug %}" class="text-purple-600 text-sm font-semibold hover:text-purple-700">
+                        View Details →
+                    </a>
+                </div>
+                {% empty %}
+                <p class="text-gray-500">No recommendations available</p>
+                {% endfor %}
+            </div>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

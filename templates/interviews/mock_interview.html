@@ -1,0 +1,244 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Mock Interview - Practice with Real Questions | GovtExamWala{% endblock %}
+
+{% block extra_css %}
+<style>
+    .mock-interview-container {
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+    .question-card {
+        transition: all 0.3s ease;
+        border-left: 4px solid #8b5cf6;
+    }
+    .question-card:hover {
+        transform: translateX(5px);
+        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    }
+    .progress-step {
+        transition: all 0.3s ease;
+    }
+    .progress-step.active {
+        background: #8b5cf6;
+        color: white;
+        transform: scale(1.1);
+    }
+    .progress-step.completed {
+        background: #10b981;
+        color: white;
+    }
+    .timer-display {
+        font-family: 'Courier New', monospace;
+        font-size: 2rem;
+        font-weight: bold;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="bg-gradient-to-r from-purple-600 to-indigo-600 text-white py-12">
+    <div class="container mx-auto px-4 text-center">
+        <i class="fas fa-microphone-alt text-5xl mb-4"></i>
+        <h1 class="text-4xl font-bold mb-2">Mock Interview</h1>
+        <p class="text-xl opacity-90">Practice with {{ total_questions }} real interview questions</p>
+    </div>
+</div>
+
+<div class="mock-interview-container container mx-auto px-4 py-8">
+    <form id="mockInterviewForm" method="POST">
+        {% csrf_token %}
+        
+        <!-- Progress Indicator -->
+        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 mb-8 sticky top-20 z-10">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="font-bold">Interview Progress</h3>
+                <span id="progressText">Question 1 of {{ total_questions }}</span>
+            </div>
+            <div class="flex gap-2 overflow-x-auto pb-2">
+                {% for q in questions %}
+                <div class="progress-step w-10 h-10 rounded-full flex items-center justify-center font-semibold bg-gray-200 dark:bg-gray-700 cursor-pointer transition-all"
+                     data-step="{{ forloop.counter0 }}">
+                    {{ forloop.counter }}
+                </div>
+                {% endfor %}
+            </div>
+            <div class="mt-4">
+                <div class="w-full bg-gray-200 rounded-full h-2">
+                    <div id="progressBar" class="bg-gradient-to-r from-purple-600 to-indigo-600 h-2 rounded-full transition-all" style="width: 0%"></div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Questions -->
+        <div id="questionsContainer">
+            {% for question in questions %}
+            <div class="question-card bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 mb-6" data-qid="{{ forloop.counter0 }}" style="display: {% if forloop.first %}block{% else %}none{% endif %};">
+                <div class="flex justify-between items-start mb-4">
+                    <div>
+                        <span class="text-sm bg-purple-100 text-purple-600 px-3 py-1 rounded-full">{{ question.get_question_type_display }}</span>
+                        <span class="text-sm bg-gray-100 text-gray-600 px-3 py-1 rounded-full ml-2">{{ question.get_difficulty_display }}</span>
+                    </div>
+                    <div class="text-sm text-gray-500">
+                        <i class="fas fa-clock mr-1"></i> {{ question.time_limit }} seconds
+                    </div>
+                </div>
+                
+                <h3 class="text-xl font-bold mb-4">{{ question.question_text }}</h3>
+                
+                <div class="mb-4">
+                    <label class="block text-sm font-medium mb-2">Your Answer</label>
+                    <textarea name="answer_{{ question.id }}" rows="6" class="answer-textarea w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-purple-500 dark:bg-gray-700 dark:border-gray-600" placeholder="Type your answer here..."></textarea>
+                    <div class="text-right text-sm text-gray-500 mt-1">
+                        <span class="word-count">0</span> words
+                    </div>
+                </div>
+                
+                <div class="flex justify-between">
+                    <button type="button" class="prev-btn bg-gray-500 text-white px-6 py-2 rounded-lg hover:bg-gray-600 transition" data-current="{{ forloop.counter0 }}" {% if forloop.first %}disabled{% endif %}>
+                        ← Previous
+                    </button>
+                    <button type="button" class="next-btn bg-purple-600 text-white px-6 py-2 rounded-lg hover:bg-purple-700 transition" data-current="{{ forloop.counter0 }}">
+                        Save & Next →
+                    </button>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        
+        <!-- Submit Button -->
+        <div class="text-center mt-8">
+            <button type="submit" id="submitMockInterview" class="bg-green-600 text-white px-8 py-3 rounded-lg font-bold hover:bg-green-700 transition transform hover:scale-105">
+                Submit All Answers & Get Evaluation
+            </button>
+        </div>
+    </form>
+</div>
+
+<script>
+    const totalQuestions = {{ total_questions }};
+    let currentQuestion = 0;
+    const answers = {};
+    
+    // Word count for each textarea
+    document.querySelectorAll('.answer-textarea').forEach(textarea => {
+        textarea.addEventListener('input', function() {
+            const words = this.value.trim().split(/\s+/).filter(w => w.length > 0);
+            const wordCountSpan = this.closest('.mb-4').querySelector('.word-count');
+            if (wordCountSpan) {
+                wordCountSpan.textContent = words.length;
+            }
+            
+            // Save answer
+            const qid = this.getAttribute('name').split('_')[1];
+            answers[qid] = this.value;
+        });
+    });
+    
+    // Navigation functions
+    function showQuestion(index) {
+        document.querySelectorAll('.question-card').forEach((card, i) => {
+            card.style.display = i === index ? 'block' : 'none';
+        });
+        
+        document.querySelectorAll('.progress-step').forEach((step, i) => {
+            step.classList.remove('active');
+            if (i === index) {
+                step.classList.add('active');
+            }
+        });
+        
+        document.getElementById('progressText').innerHTML = `Question ${index + 1} of ${totalQuestions}`;
+        const progressPercent = ((index + 1) / totalQuestions) * 100;
+        document.getElementById('progressBar').style.width = `${progressPercent}%`;
+        
+        currentQuestion = index;
+    }
+    
+    // Next button
+    document.querySelectorAll('.next-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            const current = parseInt(this.getAttribute('data-current'));
+            
+            // Save current answer
+            const textarea = document.querySelector(`.question-card[data-qid="${current}"] .answer-textarea`);
+            if (textarea) {
+                const qid = textarea.getAttribute('name').split('_')[1];
+                answers[qid] = textarea.value;
+            }
+            
+            // Mark step as completed if answered
+            if (answers[Object.keys(answers)[current]] && answers[Object.keys(answers)[current]].trim()) {
+                document.querySelectorAll('.progress-step')[current].classList.add('completed');
+            }
+            
+            if (current + 1 < totalQuestions) {
+                showQuestion(current + 1);
+            }
+        });
+    });
+    
+    // Previous button
+    document.querySelectorAll('.prev-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            const current = parseInt(this.getAttribute('data-current'));
+            if (current > 0) {
+                showQuestion(current - 1);
+            }
+        });
+    });
+    
+    // Progress step click
+    document.querySelectorAll('.progress-step').forEach((step, index) => {
+        step.addEventListener('click', () => {
+            showQuestion(index);
+        });
+    });
+    
+    // Submit form
+    document.getElementById('submitMockInterview').addEventListener('click', async function(e) {
+        e.preventDefault();
+        
+        // Collect all answers
+        const allAnswers = {};
+        document.querySelectorAll('.answer-textarea').forEach(textarea => {
+            const qid = textarea.getAttribute('name').split('_')[1];
+            allAnswers[qid] = textarea.value;
+        });
+        
+        // Create form data
+        const formData = new FormData();
+        formData.append('answers', JSON.stringify(allAnswers));
+        
+        this.disabled = true;
+        this.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Evaluating...';
+        
+        // Submit via AJAX or regular form
+        document.getElementById('mockInterviewForm').submit();
+    });
+    
+    // Auto-save on page unload
+    window.addEventListener('beforeunload', function() {
+        const allAnswers = {};
+        document.querySelectorAll('.answer-textarea').forEach(textarea => {
+            const qid = textarea.getAttribute('name').split('_')[1];
+            allAnswers[qid] = textarea.value;
+        });
+        localStorage.setItem('mockInterviewAnswers', JSON.stringify(allAnswers));
+    });
+    
+    // Load saved answers
+    const savedAnswers = localStorage.getItem('mockInterviewAnswers');
+    if (savedAnswers) {
+        const answers = JSON.parse(savedAnswers);
+        Object.keys(answers).forEach(qid => {
+            const textarea = document.querySelector(`textarea[name="answer_${qid}"]`);
+            if (textarea && answers[qid]) {
+                textarea.value = answers[qid];
+                textarea.dispatchEvent(new Event('input'));
+            }
+        });
+    }
+</script>
+{% endblock %}

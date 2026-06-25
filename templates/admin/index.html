@@ -1,0 +1,690 @@
+{% extends "admin/index.html" %}
+{% load static %}
+
+{% block extrastyle %}
+{{ block.super }}
+<style>
+    /* ==================== GLOBAL STYLES ==================== */
+    body {
+        background: #f0f4ff !important;
+    }
+    
+    /* ==================== HEADER ==================== */
+    #header {
+        background: linear-gradient(135deg, #4F46E5 0%, #7C3AED 100%) !important;
+        padding: 18px 40px !important;
+        box-shadow: 0 4px 20px rgba(79, 70, 229, 0.4) !important;
+        border-bottom: none !important;
+    }
+    
+    #header h1 {
+        color: white !important;
+        font-size: 26px !important;
+        font-weight: 700 !important;
+    }
+    
+    #header h1:before {
+        content: "📚 ";
+    }
+    
+    /* ==================== BREADCRUMBS ==================== */
+    div.breadcrumbs {
+        background: linear-gradient(135deg, #4F46E5 0%, #7C3AED 100%) !important;
+        color: white !important;
+        padding: 10px 40px !important;
+        border-bottom: none !important;
+    }
+    
+    div.breadcrumbs a {
+        color: rgba(255,255,255,0.9) !important;
+    }
+    
+    /* ==================== CONTENT ==================== */
+    #content {
+        padding: 30px !important;
+        max-width: 1400px !important;
+        margin: 0 auto !important;
+    }
+    
+    /* ==================== WELCOME CARD ==================== */
+    .welcome-card {
+        background: linear-gradient(135deg, #4F46E5 0%, #7C3AED 100%) !important;
+        border-radius: 16px !important;
+        padding: 28px 35px !important;
+        margin-bottom: 30px !important;
+        box-shadow: 0 8px 30px rgba(79, 70, 229, 0.3) !important;
+    }
+    
+    .welcome-card h2 {
+        color: white !important;
+        font-size: 22px !important;
+        margin: 0 !important;
+        font-weight: 700 !important;
+    }
+    
+    .welcome-card p {
+        color: rgba(255,255,255,0.9) !important;
+        margin: 6px 0 0 0 !important;
+        font-size: 15px !important;
+    }
+    
+    /* ==================== DASHBOARD GRID ==================== */
+/* ==================== DASHBOARD GRID ==================== */
+
+    #content {
+        width: 95% !important;
+        max-width: 1800px !important;
+        margin: 0 auto !important;
+        padding: 30px !important;
+    }
+
+    /* REMOVE THE OLD 2fr 1fr GRID */
+    #content-main {
+        display: block !important;
+        width: 100% !important;
+    }
+
+    /* Django app cards layout */
+    .app-list {
+        display: grid !important;
+        grid-template-columns: repeat(auto-fit, minmax(500px, 1fr)) !important;
+        gap: 25px !important;
+    }
+
+    /* Card width */
+    .app-list .app {
+        min-width: 500px !important;
+        width: 100% !important;
+    }
+
+    /* Fix vertical text issue */
+    .module table {
+        width: 100% !important;
+        table-layout: auto !important;
+    }
+
+    .module table th,
+    .module table td {
+        white-space: nowrap !important;
+        writing-mode: horizontal-tb !important;
+        word-break: normal !important;
+        overflow: visible !important;
+    }
+
+    /* Model name column */
+    .module table td:first-child,
+    .module table th:first-child {
+        min-width: 220px !important;
+    }
+
+    /* Action column */
+    .module table td:last-child,
+    .module table th:last-child {
+        min-width: 160px !important;
+    }
+
+    /* Sidebar */
+    #content-related {
+        width: 100% !important;
+        float: none !important;
+        clear: both !important;
+        margin-top: 30px !important;
+    }
+    
+    /* ==================== MODULE / APP CARDS ==================== */
+    .module {
+        background: white !important;
+        border-radius: 16px !important;
+        overflow: hidden !important;
+        box-shadow: 0 2px 12px rgba(0,0,0,0.08) !important;
+        margin-bottom: 25px !important;
+        border: none !important;
+    }
+    
+    .module h2, .module caption {
+        background: linear-gradient(135deg, #4F46E5 0%, #7C3AED 100%) !important;
+        color: white !important;
+        padding: 14px 20px !important;
+        margin: 0 !important;
+        font-weight: 600 !important;
+        font-size: 15px !important;
+        letter-spacing: 0.3px !important;
+        border-radius: 0 !important;
+    }
+    
+    .module h2:before {
+        content: "📌 ";
+    }
+    
+    /* ==================== TABLE STYLING ==================== */
+    .module table {
+        width: 100% !important;
+        border-collapse: collapse !important;
+    }
+    
+    .module table th {
+        background: #f8f9ff !important;
+        color: #4F46E5 !important;
+        font-weight: 600 !important;
+        padding: 10px 16px !important;
+        border-bottom: 2px solid #e8ecf1 !important;
+        text-align: left !important;
+        font-size: 13px !important;
+    }
+    
+    .module table td {
+        padding: 10px 16px !important;
+        border-bottom: 1px solid #f0f0f0 !important;
+        color: #333 !important;
+        font-size: 14px !important;
+        vertical-align: middle !important;
+    }
+    
+    .module table tr:last-child td {
+        border-bottom: none !important;
+    }
+    
+    .module table tr:hover td {
+        background: #f8f9ff !important;
+    }
+    
+    .module table td a {
+        color: #4F46E5 !important;
+        font-weight: 500 !important;
+        text-decoration: none !important;
+        transition: color 0.3s !important;
+    }
+    
+    .module table td a:hover {
+        color: #7C3AED !important;
+        text-decoration: underline !important;
+    }
+    
+    /* ==================== ACTION BUTTONS IN TABLE ==================== */
+    .module table td .addlink,
+    .module table td .changelink,
+    .module table td .deletelink {
+        display: inline-block !important;
+        padding: 3px 12px !important;
+        border-radius: 5px !important;
+        font-size: 11px !important;
+        font-weight: 600 !important;
+        text-decoration: none !important;
+        margin: 0 3px !important;
+        color: white !important;
+        text-align: center !important;
+        min-width: 40px !important;
+    }
+    
+    .module table td .addlink {
+        background: #10B981 !important;
+    }
+    
+    .module table td .addlink:hover {
+        background: #059669 !important;
+        text-decoration: none !important;
+    }
+    
+    .module table td .changelink {
+        background: #4F46E5 !important;
+    }
+    
+    .module table td .changelink:hover {
+        background: #4338CA !important;
+        text-decoration: none !important;
+    }
+    
+    .module table td .deletelink {
+        background: #EF4444 !important;
+    }
+    
+    .module table td .deletelink:hover {
+        background: #DC2626 !important;
+        text-decoration: none !important;
+    }
+    
+    /* ==================== APP LIST (NON-TABLE) ==================== */
+    .module ul {
+        padding: 10px 0 !important;
+        margin: 0 !important;
+        list-style: none !important;
+    }
+    
+    .module ul li {
+        padding: 10px 20px !important;
+        border-bottom: 1px solid #f5f5f5 !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: space-between !important;
+        gap: 10px !important;
+        flex-wrap: wrap !important;
+    }
+    
+    .module ul li:last-child {
+        border-bottom: none !important;
+    }
+    
+    .module ul li:hover {
+        background: #f8f9ff !important;
+    }
+    
+    .module ul li .app-name {
+        flex: 1 !important;
+        font-weight: 500 !important;
+        color: #333 !important;
+        min-width: 120px !important;
+    }
+    
+    .module ul li .app-name a {
+        color: #333 !important;
+        text-decoration: none !important;
+    }
+    
+    .module ul li .app-name a:hover {
+        color: #4F46E5 !important;
+    }
+    
+    .module ul li .actions {
+        display: flex !important;
+        gap: 5px !important;
+        flex-wrap: wrap !important;
+    }
+    
+    .module ul li .actions a {
+        padding: 3px 12px !important;
+        border-radius: 5px !important;
+        font-size: 11px !important;
+        font-weight: 600 !important;
+        text-decoration: none !important;
+        color: white !important;
+        text-align: center !important;
+        min-width: 40px !important;
+    }
+    
+    .module ul li .actions .addlink {
+        background: #10B981 !important;
+    }
+    
+    .module ul li .actions .addlink:hover {
+        background: #059669 !important;
+        text-decoration: none !important;
+    }
+    
+    .module ul li .actions .changelink {
+        background: #4F46E5 !important;
+    }
+    
+    .module ul li .actions .changelink:hover {
+        background: #4338CA !important;
+        text-decoration: none !important;
+    }
+    
+    .module ul li .actions .deletelink {
+        background: #EF4444 !important;
+    }
+    
+    .module ul li .actions .deletelink:hover {
+        background: #DC2626 !important;
+        text-decoration: none !important;
+    }
+    
+    /* ==================== RECENT ACTIONS ==================== */
+    #recent-actions-module {
+        background: white !important;
+        border-radius: 16px !important;
+        overflow: hidden !important;
+        box-shadow: 0 2px 12px rgba(0,0,0,0.08) !important;
+        margin-top: 0 !important;
+    }
+    
+    #recent-actions-module h2 {
+        background: linear-gradient(135deg, #EC4899 0%, #F43F5E 100%) !important;
+        color: white !important;
+        padding: 14px 20px !important;
+        margin: 0 !important;
+        font-weight: 600 !important;
+        font-size: 15px !important;
+    }
+    
+    #recent-actions-module h2:before {
+        content: "🔄 ";
+    }
+    
+    #recent-actions-module ul {
+        padding: 0 !important;
+        margin: 0 !important;
+        list-style: none !important;
+    }
+    
+    #recent-actions-module ul li:last-child {
+        border-bottom: none !important;
+    }
+    
+    #recent-actions-module ul li:hover {
+        background: #f8f9ff !important;
+    }
+    
+    #recent-actions-module ul li .action-info {
+        display: flex !important;
+        align-items: center !important;
+        gap: 8px !important;
+        flex: 1 !important;
+    }
+    
+    #recent-actions-module ul li .action-info:before {
+        content: "✨ ";
+        font-size: 14px !important;
+    }
+    
+    #recent-actions-module ul li .action-info a {
+        color: #333 !important;
+        text-decoration: none !important;
+        font-weight: 500 !important;
+        transition: color 0.3s !important;
+    }
+    
+    #recent-actions-module ul li .action-info a:hover {
+        color: #4F46E5 !important;
+    }
+    
+    #recent-actions-module ul li .action-time {
+        color: #999 !important;
+        font-size: 12px !important;
+        white-space: nowrap !important;
+    }
+    
+    /* ==================== SIDEBAR ==================== */
+    #content-related .module {
+        background: white !important;
+        border-radius: 16px !important;
+        overflow: hidden !important;
+        box-shadow: 0 2px 12px rgba(0,0,0,0.08) !important;
+        margin-bottom: 20px !important;
+    }
+    
+    #content-related .module h2 {
+        background: linear-gradient(135deg, #4F46E5 0%, #7C3AED 100%) !important;
+        color: white !important;
+        padding: 14px 20px !important;
+        margin: 0 !important;
+        font-weight: 600 !important;
+        font-size: 15px !important;
+    }
+    
+    #content-related .module ul {
+        padding: 8px 0 !important;
+        margin: 0 !important;
+        list-style: none !important;
+    }
+    
+    #content-related .module ul li {
+        padding: 8px 20px !important;
+        border-bottom: 1px solid #f5f5f5 !important;
+    }
+    
+    #content-related .module ul li:last-child {
+        border-bottom: none !important;
+    }
+    
+    #content-related .module ul li a {
+        color: #333 !important;
+        text-decoration: none !important;
+        transition: color 0.3s !important;
+        font-weight: 500 !important;
+    }
+
+    #content-related .module ul li a:hover {
+        color: #4F46E5 !important;
+    }
+
+    #content-related .module ul li a:before {
+        content: "▸ ";
+        color: #4F46E5 !important;
+    }
+    
+    /* ==================== RESPONSIVE ==================== */
+    @media (max-width: 768px) {
+        #content-main {
+            grid-template-columns: 1fr !important;
+            gap: 20px !important;
+        }
+        
+        #content {
+            padding: 15px !important;
+        }
+        
+        #header {
+            padding: 15px 20px !important;
+        }
+        
+        #header h1 {
+            font-size: 20px !important;
+        }
+        
+        div.breadcrumbs {
+            padding: 10px 20px !important;
+        }
+        
+        .welcome-card {
+            padding: 20px !important;
+        }
+        
+        .welcome-card h2 {
+            font-size: 18px !important;
+        }
+        
+        .module ul li {
+            flex-direction: column !important;
+            align-items: stretch !important;
+        }
+        
+        .module ul li .actions {
+            margin-top: 5px !important;
+        }
+        
+        #recent-actions-module ul li .action-time {
+            margin-left: 0 !important;
+        }
+    }
+    
+    @media (max-width: 480px) {
+        .module ul li .actions a {
+            font-size: 10px !important;
+            padding: 2px 8px !important;
+            min-width: 30px !important;
+        }
+    }
+    
+    /* ==================== DARK MODE ==================== */
+    @media (prefers-color-scheme: dark) {
+        body {
+            background: #0f0e1a !important;
+        }
+        
+        .module {
+            background: #1a1a2e !important;
+        }
+        
+        .module table td {
+            color: #d0d0d0 !important;
+            border-bottom-color: #2a2a4a !important;
+        }
+        
+        .module table th {
+            background: #1a1a3e !important;
+            color: #8b8bff !important;
+        }
+        
+        .module ul li {
+            border-bottom-color: #2a2a4a !important;
+        }
+        
+        .module ul li .app-name {
+            color: #d0d0d0 !important;
+        }
+        
+        .module ul li .app-name a {
+            color: #d0d0d0 !important;
+        }
+        
+        .module ul li .app-name a:hover {
+            color: #8b8bff !important;
+        }
+        
+        .module ul li:hover {
+            background: #1a1a3e !important;
+        }
+        
+        #recent-actions-module {
+            background: #1a1a2e !important;
+        }
+        
+        #recent-actions-module ul li .action-info a {
+            color: #d0d0d0 !important;
+        }
+        
+        #recent-actions-module ul li .action-info a:hover {
+            color: #8b8bff !important;
+        }
+        
+        #recent-actions-module ul li:hover {
+            background: #1a1a3e !important;
+        }
+        
+        #content-related .module {
+            background: #1a1a2e !important;
+        }
+        
+        #content-related .module ul li a {
+            color: #d0d0d0 !important;
+        }
+        
+        #content-related .module ul li {
+            border-bottom-color: #2a2a4a !important;
+        }
+        
+        #content-related .module ul li a:hover {
+            color: #8b8bff !important;
+        }
+    }
+        /* =========================================
+    GOVTEXAMWALA ADMIN WIDTH FIX
+    ========================================= */
+
+    .module {
+        min-width: 450px !important;
+    }
+
+    .module table td,
+    .module table th {
+        white-space: nowrap !important;
+    }
+
+    .app-auth,
+    .app-accounts,
+    .app-analytics,
+    .app-exams,
+    .app-interviews {
+        width: 100% !important;
+    }
+
+    @media (max-width: 768px) {
+        .module table td,
+        .module table th {
+            white-space: normal !important;
+        }
+
+        .app-list {
+            grid-template-columns: 1fr !important;
+        }
+
+        .app-list .app {
+            min-width: 100% !important;
+        }
+    }
+
+    /* =========================================
+    RECENT ACTIONS
+    ========================================= */
+
+    #recent-actions-module ul {
+        padding: 0 !important;
+        margin: 0 !important;
+    }
+
+    #recent-actions-module ul li {
+        position: relative !important;
+        padding: 12px 180px 12px 20px !important;
+        border-bottom: 1px solid #f0f0f0 !important;
+    }
+
+    #recent-actions-module ul li:last-child {
+        border-bottom: none !important;
+    }
+
+    /* Keep links clickable and blue */
+    #recent-actions-module ul li a {
+        color: #2563eb !important;
+        text-decoration: none !important;
+    }
+
+    #recent-actions-module ul li a:hover {
+        text-decoration: underline !important;
+    }
+
+    /* Right side label */
+    #recent-actions-module .mini.quiet {
+        position: absolute !important;
+        right: 20px !important;
+        top: 50% !important;
+        transform: translateY(-50%) !important;
+
+        color: #666 !important;
+        font-size: 12px !important;
+        font-weight: 600 !important;
+        white-space: nowrap !important;
+    }
+
+    /* Hide Django line break */
+    #recent-actions-module br {
+        display: none !important;
+    }
+
+    </style>
+
+    <script>
+    document.addEventListener("DOMContentLoaded", function () {
+
+        const recentActions = document.getElementById("recent-actions-module");
+        const contentMain = document.getElementById("content-main");
+
+        if (recentActions && contentMain) {
+
+            // Create wrapper
+            const recentWrapper = document.createElement("div");
+            recentWrapper.style.marginBottom = "30px";
+
+            // Move Recent Actions to top
+            recentWrapper.appendChild(recentActions);
+
+            // Insert before app cards
+            contentMain.parentNode.insertBefore(
+                recentWrapper,
+                contentMain
+            );
+        }
+    });
+    </script>
+
+{% endblock %}
+
+{% block content %}
+<!-- Welcome Banner -->
+<!-- <div class="welcome-card">
+    <h2>🏠 Welcome to GovtExamWala Dashboard</h2>
+    <p>Manage your exam preparation platform with ease</p>
+</div> -->
+
+<!-- Original dashboard content -->
+{{ block.super }}
+{% endblock %}

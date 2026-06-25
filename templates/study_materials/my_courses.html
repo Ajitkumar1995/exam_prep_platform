@@ -1,0 +1,82 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load study_extras %}
+
+{% block title %}My Courses - GovtExamWala{% endblock %}
+
+{% block content %}
+<div class="bg-gradient-to-r from-purple-600 to-indigo-600 text-white py-12">
+    <div class="container mx-auto px-4 text-center">
+        <i class="fas fa-graduation-cap text-5xl mb-4"></i>
+        <h1 class="text-4xl font-bold mb-2">My Courses</h1>
+        <p class="text-xl opacity-90">Track your learning progress</p>
+    </div>
+</div>
+
+<div class="container mx-auto px-4 py-8">
+    {% if enrollments %}
+    <div class="grid grid-cols-1 gap-6">
+        {% for enrollment in enrollments %}
+        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden">
+            <div class="flex flex-col md:flex-row">
+                <div class="md:w-1/4">
+                    {% if enrollment.course.thumbnail %}
+                    <img src="{{ enrollment.course.thumbnail.url }}" alt="{{ enrollment.course.title }}" class="w-full h-48 md:h-full object-cover">
+                    {% else %}
+                    <div class="w-full h-48 md:h-full bg-gradient-to-r from-purple-600 to-indigo-600 flex items-center justify-center">
+                        <i class="fas fa-graduation-cap text-6xl text-white"></i>
+                    </div>
+                    {% endif %}
+                </div>
+                <div class="flex-1 p-6">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <h3 class="text-xl font-bold mb-2">{{ enrollment.course.title }}</h3>
+                            <p class="text-gray-600 dark:text-gray-400 mb-4">{{ enrollment.course.subtitle }}</p>
+                        </div>
+                        {% if enrollment.is_completed %}
+                        <span class="bg-green-100 text-green-600 px-3 py-1 rounded-full text-sm">Completed</span>
+                        {% else %}
+                        <span class="bg-yellow-100 text-yellow-600 px-3 py-1 rounded-full text-sm">In Progress</span>
+                        {% endif %}
+                    </div>
+                    
+                    <!-- Progress Bar -->
+                    <div class="mb-4">
+                        <div class="flex justify-between text-sm mb-1">
+                            <span>Progress</span>
+                            <span>{{ enrollment.progress|floatformat:0 }}%</span>
+                        </div>
+                        <div class="w-full bg-gray-200 rounded-full h-2">
+                            <div class="bg-purple-600 h-2 rounded-full" style="width: {{ enrollment.progress }}%"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="flex flex-wrap gap-4 text-sm text-gray-500 mb-4">
+                        <span><i class="fas fa-calendar mr-1"></i> Enrolled: {{ enrollment.enrolled_at|date:"M d, Y" }}</span>
+                        <span><i class="fas fa-video mr-1"></i> {{ enrollment.course.total_lectures }} lectures</span>
+                        <span><i class="fas fa-clock mr-1"></i> {{ enrollment.course.total_duration|duration_format }}</span>
+                    </div>
+                    
+                    <a href="{% url 'study_materials:course_detail' enrollment.course.slug %}" class="inline-block bg-purple-600 text-white px-6 py-2 rounded-lg hover:bg-purple-700 transition">
+                        Continue Learning
+                    </a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="text-center py-12">
+        <i class="fas fa-graduation-cap text-6xl text-gray-400 mb-4"></i>
+        <p class="text-xl text-gray-500">You haven't enrolled in any courses yet</p>
+        <p class="text-gray-400 mt-2">Start learning today!</p>
+        <div class="mt-6">
+            <a href="{% url 'study_materials:course_list' %}" class="bg-purple-600 text-white px-6 py-2 rounded-lg hover:bg-purple-700 transition">
+                Browse Courses
+            </a>
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,1025 @@
+================================================================================
+DATABASE SCHEMA SUMMARY
+Generated: 2026-06-14 15:56:27
+================================================================================
+
+
+============================================================
+APP: ACCOUNT
+============================================================
+
+📌 EmailAddress
+   Table: account_emailaddress
+   Fields:
+     • user: ForeignKey
+       └─ relates to: accounts.User
+     • email: EmailField
+     • verified: BooleanField
+     • primary: BooleanField
+
+📌 EmailConfirmation
+   Table: account_emailconfirmation
+   Fields:
+     • email_address: ForeignKey
+       └─ relates to: account.EmailAddress
+     • created: DateTimeField
+     • sent: DateTimeField
+     • key: CharField
+
+============================================================
+APP: ACCOUNTS
+============================================================
+
+📌 OTP
+   Table: accounts_otp
+   Fields:
+     • user: ForeignKey
+       └─ relates to: accounts.User
+     • otp: CharField
+     • otp_type: CharField
+     • is_used: BooleanField
+     • created_at: DateTimeField
+     • expires_at: DateTimeField
+
+📌 User
+   Table: accounts_user
+   Fields:
+     • password: CharField
+     • last_login: DateTimeField
+     • is_superuser: BooleanField
+     • username: CharField
+     • first_name: CharField
+     • last_name: CharField
+     • is_staff: BooleanField
+     • is_active: BooleanField
+     • date_joined: DateTimeField
+     • email: EmailField
+     • profile_pic: ImageField
+     • is_verified: BooleanField
+     • created_at: DateTimeField
+     • updated_at: DateTimeField
+     • groups: ManyToManyField
+       └─ relates to: auth.Group
+     • user_permissions: ManyToManyField
+       └─ relates to: auth.Permission
+
+============================================================
+APP: ADMIN
+============================================================
+
+📌 LogEntry
+   Table: django_admin_log
+   Fields:
+     • action_time: DateTimeField
+     • user: ForeignKey
+       └─ relates to: accounts.User
+     • content_type: ForeignKey
+       └─ relates to: contenttypes.ContentType
+     • object_id: TextField
+     • object_repr: CharField
+     • action_flag: PositiveSmallIntegerField
+     • change_message: TextField
+
+============================================================
+APP: ANALYTICS
+============================================================
+
+📌 DailyActivity
+   Table: analytics_dailyactivity
+   Fields:
+     • user: ForeignKey
+       └─ relates to: accounts.User
+     • date: DateField
+     • tests_taken: IntegerField
+     • questions_attempted: IntegerField
+     • correct_answers: IntegerField
+     • wrong_answers: IntegerField
+     • time_spent: IntegerField
+     • streak: IntegerField
+
+📌 ExamPerformance
+   Table: analytics_examperformance
+   Fields:
+     • user: ForeignKey
+       └─ relates to: accounts.User
+     • exam: ForeignKey
+       └─ relates to: exams.Exam
+     • total_attempts: IntegerField
+     • total_correct: IntegerField
+     • total_wrong: IntegerField
+     • total_skipped: IntegerField
+     • accuracy: FloatField
+     • average_score: FloatField
+     • best_score: FloatField
+     • last_attempt_date: DateTimeField
+     • last_updated: DateTimeField
+
+📌 SubjectPerformance
+   Table: analytics_subjectperformance
+   Fields:
+     • user: ForeignKey
+       └─ relates to: accounts.User
+     • subject: ForeignKey
+       └─ relates to: exams.Subject
+     • total_questions: IntegerField
+     • correct_answers: IntegerField
+     • wrong_answers: IntegerField
+     • accuracy: FloatField
+     • average_time: FloatField
+     • last_updated: DateTimeField
+
+📌 TopicPerformance
+   Table: analytics_topicperformance
+   Fields:
+     • user: ForeignKey
+       └─ relates to: accounts.User
+     • topic: ForeignKey
+       └─ relates to: exams.Topic
+     • total_questions: IntegerField
+     • correct_answers: IntegerField
+     • wrong_answers: IntegerField
+     • accuracy: FloatField
+     • average_time: FloatField
+     • is_weak: BooleanField
+     • is_strong: BooleanField
+     • last_updated: DateTimeField
+
+📌 UserPerformance
+   Table: analytics_userperformance
+   Fields:
+     • user: OneToOneField
+       └─ relates to: accounts.User
+     • total_tests_taken: IntegerField
+     • total_questions_attempted: IntegerField
+     • total_correct_answers: IntegerField
+     • total_wrong_answers: IntegerField
+     • total_skipped_answers: IntegerField
+     • overall_accuracy: FloatField
+     • average_score: FloatField
+     • total_time_spent: IntegerField
+     • rank: IntegerField
+     • percentile: FloatField
+     • last_updated: DateTimeField
+
+============================================================
+APP: AUTH
+============================================================
+
+📌 Group
+   Table: auth_group
+   Fields:
+     • name: CharField
+     • permissions: ManyToManyField
+       └─ relates to: auth.Permission
+
+📌 Permission
+   Table: auth_permission
+   Fields:
+     • name: CharField
+     • content_type: ForeignKey
+       └─ relates to: contenttypes.ContentType
+     • codename: CharField
+
+============================================================
+APP: CONTENTTYPES
+============================================================
+
+📌 ContentType
+   Table: django_content_type
+   Fields:
+     • app_label: CharField
+     • model: CharField
+
+============================================================
+APP: DJANGO_CELERY_BEAT
+============================================================
+
+📌 ClockedSchedule
+   Table: django_celery_beat_clockedschedule
+   Fields:
+     • clocked_time: DateTimeField
+
+📌 CrontabSchedule
+   Table: django_celery_beat_crontabschedule
+   Fields:
+     • minute: CharField
+     • hour: CharField
+     • day_of_week: CharField
+     • day_of_month: CharField
+     • month_of_year: CharField
+     • timezone: TimeZoneField
+
+📌 IntervalSchedule
+   Table: django_celery_beat_intervalschedule
+   Fields:
+     • every: IntegerField
+     • period: CharField
+
+📌 PeriodicTask
+   Table: django_celery_beat_periodictask
+   Fields:
+     • name: CharField
+     • task: CharField
+     • interval: ForeignKey
+       └─ relates to: django_celery_beat.IntervalSchedule
+     • crontab: ForeignKey
+       └─ relates to: django_celery_beat.CrontabSchedule
+     • solar: ForeignKey
+       └─ relates to: django_celery_beat.SolarSchedule
+     • clocked: ForeignKey
+       └─ relates to: django_celery_beat.ClockedSchedule
+     • args: TextField
+     • kwargs: TextField
+     • queue: CharField
+     • exchange: CharField
+     • routing_key: CharField
+     • headers: TextField
+     • priority: PositiveIntegerField
+     • expires: DateTimeField
+     • expire_seconds: PositiveIntegerField
+     • one_off: BooleanField
+     • start_time: DateTimeField
+     • enabled: BooleanField
+     • last_run_at: DateTimeField
+     • total_run_count: PositiveIntegerField
+     • date_changed: DateTimeField
+     • description: TextField
+
+📌 PeriodicTasks
+   Table: django_celery_beat_periodictasks
+   Fields:
+     • ident: SmallIntegerField
+     • last_update: DateTimeField
+
+📌 SolarSchedule
+   Table: django_celery_beat_solarschedule
+   Fields:
+     • event: CharField
+     • latitude: DecimalField
+     • longitude: DecimalField
+
+============================================================
+APP: EXAMS
+============================================================
+
+📌 ChallengeParticipant
+   Table: exams_challengeparticipant
+   Fields:
+     • challenge: ForeignKey
+       └─ relates to: exams.DailyChallenge
+     • user: ForeignKey
+       └─ relates to: accounts.User
+     • score: FloatField
+     • percentage: FloatField
+     • time_taken: IntegerField
+     • is_completed: BooleanField
+     • completed_at: DateTimeField
+     • xp_earned: IntegerField
+     • coins_earned: IntegerField
+
+📌 DailyChallenge
+   Table: exams_dailychallenge
+   Fields:
+     • title: CharField
+     • slug: SlugField
+     • description: TextField
+     • challenge_type: CharField
+     • difficulty: CharField
+     • total_questions: IntegerField
+     • duration_minutes: IntegerField
+     • xp_reward: IntegerField
+     • coin_reward: IntegerField
+     • test_url: URLField
+     • mock_test: ForeignKey
+       └─ relates to: mocktests.MockTest
+     • challenge_date: DateField
+     • is_active: BooleanField
+     • is_featured: BooleanField
+     • total_participants: IntegerField
+     • total_completed: IntegerField
+     • created_at: DateTimeField
+     • updated_at: DateTimeField
+
+📌 Exam
+   Table: exams_exam
+   Fields:
+     • category: ForeignKey
+       └─ relates to: exams.ExamCategory
+     • name: CharField
+     • slug: SlugField
+     • short_name: CharField
+     • exam_level: CharField
+     • description: RichTextField
+     • eligibility: RichTextField
+     • exam_pattern: RichTextField
+     • syllabus: RichTextField
+     • important_dates: TextField
+     • official_website: URLField
+     • logo: ImageField
+     • duration_minutes: IntegerField
+     • total_marks: IntegerField
+     • total_questions: IntegerField
+     • negative_marking: BooleanField
+     • is_active: BooleanField
+     • order: IntegerField
+     • created_at: DateTimeField
+     • updated_at: DateTimeField
+     • is_paid: BooleanField
+     • price: DecimalField
+     • discount_price: DecimalField
+
+📌 ExamAnnouncement
+   Table: exams_examannouncement
+   Fields:
+     • exam: ForeignKey
+       └─ relates to: exams.Exam
+     • title: CharField
+     • content: RichTextField
+     • announcement_date: DateTimeField
+     • is_important: BooleanField
+     • is_active: BooleanField
+     • created_at: DateTimeField
+
+📌 ExamCategory
+   Table: exams_examcategory
+   Fields:
+     • name: CharField
+     • slug: SlugField
+     • icon: CharField
+     • description: TextField
+     • order: IntegerField
+     • is_active: BooleanField
+     • created_at: DateTimeField
+     • updated_at: DateTimeField
+
+📌 ExamFaq
+   Table: exams_examfaq
+   Fields:
+     • exam: ForeignKey
+       └─ relates to: exams.Exam
+     • question: CharField
+     • answer: RichTextField
+     • order: IntegerField
+     • is_active: BooleanField
+
+📌 LeaderboardEntry
+   Table: exams_leaderboardentry
+   Fields:
+     • user: ForeignKey
+       └─ relates to: accounts.User
+     • exam: ForeignKey
+       └─ relates to: exams.Exam
+     • challenge: ForeignKey
+       └─ relates to: exams.DailyChallenge
+     • period: CharField
+     • score: FloatField
+     • rank: IntegerField
+     • accuracy: FloatField
+     • total_tests: IntegerField
+     • date: DateField
+
+📌 LiveTestCard
+   Table: exams_livetestcard
+   Fields:
+     • exam: ForeignKey
+       └─ relates to: exams.Exam
+     • title: CharField
+     • subtitle: CharField
+     • badge_text: CharField
+     • badge_color: CharField
+     • total_participants: IntegerField
+     • enrolled_percentage: IntegerField
+     • has_timer: BooleanField
+     • timer_hours: IntegerField
+     • timer_minutes: IntegerField
+     • timer_seconds: IntegerField
+     • button_text: CharField
+     • button_url: URLField
+     • order: IntegerField
+     • is_active: BooleanField
+     • is_featured: BooleanField
+     • start_date: DateTimeField
+     • end_date: DateTimeField
+     • created_at: DateTimeField
+     • updated_at: DateTimeField
+
+📌 Option
+   Table: exams_option
+   Fields:
+     • question: ForeignKey
+       └─ relates to: exams.Question
+     • option_text: TextField
+     • option_text_hindi: TextField
+     • is_correct: BooleanField
+     • order: IntegerField
+
+📌 Question
+   Table: exams_question
+   Fields:
+     • exam: ForeignKey
+       └─ relates to: exams.Exam
+     • subject: ForeignKey
+       └─ relates to: exams.Subject
+     • topic: ForeignKey
+       └─ relates to: exams.Topic
+     • question_type: CharField
+     • question_text: RichTextField
+     • question_text_hindi: RichTextField
+     • difficulty: CharField
+     • marks: FloatField
+     • negative_marks: FloatField
+     • estimated_time: IntegerField
+     • explanation: RichTextField
+     • explanation_hindi: RichTextField
+     • image: ImageField
+     • tags: CharField
+     • is_active: BooleanField
+     • created_at: DateTimeField
+     • updated_at: DateTimeField
+
+📌 StudyMaterial
+   Table: exams_studymaterial
+   Fields:
+     • exam: ForeignKey
+       └─ relates to: exams.Exam
+     • subject: ForeignKey
+       └─ relates to: exams.Subject
+     • title: CharField
+     • material_type: CharField
+     • description: RichTextField
+     • file: FileField
+     • video_url: URLField
+     • thumbnail: ImageField
+     • duration: CharField
+     • downloads: IntegerField
+     • views: IntegerField
+     • is_free: BooleanField
+     • is_active: BooleanField
+     • created_at: DateTimeField
+
+📌 Subject
+   Table: exams_subject
+   Fields:
+     • exam: ForeignKey
+       └─ relates to: exams.Exam
+     • name: CharField
+     • code: CharField
+     • description: TextField
+     • weightage: FloatField
+     • total_questions: IntegerField
+     • total_marks: IntegerField
+     • order: IntegerField
+     • is_active: BooleanField
+     • created_at: DateTimeField
+
+📌 Topic
+   Table: exams_topic
+   Fields:
+     • subject: ForeignKey
+       └─ relates to: exams.Subject
+     • name: CharField
+     • description: TextField
+     • difficulty_level: CharField
+     • weightage: FloatField
+     • total_questions: IntegerField
+     • order: IntegerField
+     • is_active: BooleanField
+     • created_at: DateTimeField
+
+============================================================
+APP: INTERVIEWS
+============================================================
+
+📌 InterviewCategory
+   Table: interviews_interviewcategory
+   Fields:
+     • name: CharField
+     • slug: SlugField
+     • description: TextField
+     • icon: CharField
+     • order: IntegerField
+     • is_active: BooleanField
+     • created_at: DateTimeField
+
+📌 InterviewQuestion
+   Table: interviews_interviewquestion
+   Fields:
+     • category: ForeignKey
+       └─ relates to: interviews.InterviewCategory
+     • question_type: CharField
+     • question_text: TextField
+     • difficulty: CharField
+     • sample_answer: RichTextField
+     • keywords: CharField
+     • tips: TextField
+     • time_limit: IntegerField
+     • is_active: BooleanField
+     • created_at: DateTimeField
+
+📌 UserInterviewProgress
+   Table: interviews_userinterviewprogress
+   Fields:
+     • user: ForeignKey
+       └─ relates to: accounts.User
+     • question: ForeignKey
+       └─ relates to: interviews.InterviewQuestion
+     • user_answer: TextField
+     • score: FloatField
+     • feedback: TextField
+     • is_completed: BooleanField
+     • attempted_at: DateTimeField
+     • updated_at: DateTimeField
+
+============================================================
+APP: MOCKTESTS
+============================================================
+
+📌 MockTest
+   Table: mocktests_mocktest
+   Fields:
+     • exam: ForeignKey
+       └─ relates to: exams.Exam
+     • subject: ForeignKey
+       └─ relates to: exams.Subject
+     • topic: ForeignKey
+       └─ relates to: exams.Topic
+     • name: CharField
+     • slug: SlugField
+     • test_type: CharField
+     • description: TextField
+     • instructions: TextField
+     • duration_minutes: IntegerField
+     • total_questions: IntegerField
+     • total_marks: IntegerField
+     • passing_marks: IntegerField
+     • negative_marking: BooleanField
+     • negative_mark_value: FloatField
+     • marks_per_question: FloatField
+     • is_paid: BooleanField
+     • price: DecimalField
+     • shuffle_questions: BooleanField
+     • shuffle_options: BooleanField
+     • attempts_allowed: IntegerField
+     • is_active: BooleanField
+     • order: IntegerField
+     • created_at: DateTimeField
+
+📌 MockTestQuestion
+   Table: mocktests_mocktestquestion
+   Fields:
+     • mock_test: ForeignKey
+       └─ relates to: mocktests.MockTest
+     • question: ForeignKey
+       └─ relates to: exams.Question
+     • marks: FloatField
+     • order: IntegerField
+
+📌 TestAnswer
+   Table: mocktests_testanswer
+   Fields:
+     • attempt: ForeignKey
+       └─ relates to: mocktests.TestAttempt
+     • question: ForeignKey
+       └─ relates to: exams.Question
+     • selected_option: CharField
+     • is_correct: BooleanField
+     • is_skipped: BooleanField
+     • marks_obtained: FloatField
+     • time_taken: IntegerField
+     • answered_at: DateTimeField
+
+📌 TestAttempt
+   Table: mocktests_testattempt
+   Fields:
+     • user: ForeignKey
+       └─ relates to: accounts.User
+     • session_id: CharField
+     • mock_test: ForeignKey
+       └─ relates to: mocktests.MockTest
+     • status: CharField
+     • start_time: DateTimeField
+     • end_time: DateTimeField
+     • score: FloatField
+     • percentage: FloatField
+     • rank: IntegerField
+     • percentile: FloatField
+     • correct_answers: IntegerField
+     • wrong_answers: IntegerField
+     • skipped_answers: IntegerField
+     • total_time_taken: IntegerField
+     • created_at: DateTimeField
+
+============================================================
+APP: NOTIFICATIONS
+============================================================
+
+📌 Announcement
+   Table: notifications_announcement
+   Fields:
+     • title: CharField
+     • slug: SlugField
+     • content: RichTextField
+     • summary: CharField
+     • announcement_type: CharField
+     • bg_color: CharField
+     • text_color: CharField
+     • start_date: DateTimeField
+     • end_date: DateTimeField
+     • is_active: BooleanField
+     • is_urgent: BooleanField
+     • is_sticky: BooleanField
+     • order: IntegerField
+     • created_at: DateTimeField
+
+📌 Notification
+   Table: notifications_notification
+   Fields:
+     • title: CharField
+     • slug: SlugField
+     • message: RichTextField
+     • priority: CharField
+     • display_location: CharField
+     • show_bell_icon: BooleanField
+     • show_on_homepage: BooleanField
+     • show_as_popup: BooleanField
+     • action_url: URLField
+     • button_text: CharField
+     • image: ImageField
+     • start_date: DateTimeField
+     • end_date: DateTimeField
+     • is_active: BooleanField
+     • order: IntegerField
+     • views: IntegerField
+     • clicks: IntegerField
+     • created_at: DateTimeField
+     • updated_at: DateTimeField
+
+📌 NotificationClick
+   Table: notifications_notificationclick
+   Fields:
+     • notification: ForeignKey
+       └─ relates to: notifications.Notification
+     • session_key: CharField
+     • ip_address: GenericIPAddressField
+     • clicked_at: DateTimeField
+
+📌 NotificationView
+   Table: notifications_notificationview
+   Fields:
+     • notification: ForeignKey
+       └─ relates to: notifications.Notification
+     • session_key: CharField
+     • ip_address: GenericIPAddressField
+     • viewed_at: DateTimeField
+
+============================================================
+APP: PAYMENTS
+============================================================
+
+📌 Cart
+   Table: payments_cart
+   Fields:
+     • user: OneToOneField
+       └─ relates to: accounts.User
+     • created_at: DateTimeField
+     • updated_at: DateTimeField
+
+📌 CartItem
+   Table: payments_cartitem
+   Fields:
+     • cart: ForeignKey
+       └─ relates to: payments.Cart
+     • item_type: CharField
+     • exam: ForeignKey
+       └─ relates to: exams.Exam
+     • mock_test: ForeignKey
+       └─ relates to: mocktests.MockTest
+     • quantity: IntegerField
+     • added_at: DateTimeField
+
+📌 Order
+   Table: payments_order
+   Fields:
+     • order_id: CharField
+     • user: ForeignKey
+       └─ relates to: accounts.User
+     • total_amount: DecimalField
+     • discount_amount: DecimalField
+     • final_amount: DecimalField
+     • status: CharField
+     • razorpay_order_id: CharField
+     • razorpay_payment_id: CharField
+     • razorpay_signature: CharField
+     • created_at: DateTimeField
+     • updated_at: DateTimeField
+     • paid_at: DateTimeField
+
+📌 OrderItem
+   Table: payments_orderitem
+   Fields:
+     • order: ForeignKey
+       └─ relates to: payments.Order
+     • item_type: CharField
+     • exam: ForeignKey
+       └─ relates to: exams.Exam
+     • mock_test: ForeignKey
+       └─ relates to: mocktests.MockTest
+     • price: DecimalField
+     • quantity: IntegerField
+
+📌 PaymentTransaction
+   Table: payments_paymenttransaction
+   Fields:
+     • order_id: CharField
+     • merchant_transaction_id: CharField
+     • user: ForeignKey
+       └─ relates to: accounts.User
+     • item_type: CharField
+     • exam: ForeignKey
+       └─ relates to: exams.Exam
+     • mock_test: ForeignKey
+       └─ relates to: mocktests.MockTest
+     • amount: DecimalField
+     • phonepe_merchant_id: CharField
+     • phonepe_transaction_id: CharField
+     • phonepe_payment_id: CharField
+     • qr_code_url: URLField
+     • qr_code_base64: TextField
+     • status: CharField
+     • webhook_received: BooleanField
+     • webhook_verified: BooleanField
+     • created_at: DateTimeField
+     • updated_at: DateTimeField
+     • paid_at: DateTimeField
+     • admin_notes: TextField
+
+📌 UnlockedExam
+   Table: payments_unlockedexam
+   Fields:
+     • user: ForeignKey
+       └─ relates to: accounts.User
+     • exam: ForeignKey
+       └─ relates to: exams.Exam
+     • unlocked_at: DateTimeField
+
+📌 UnlockedMockTest
+   Table: payments_unlockedmocktest
+   Fields:
+     • user: ForeignKey
+       └─ relates to: accounts.User
+     • mock_test: ForeignKey
+       └─ relates to: mocktests.MockTest
+     • unlocked_at: DateTimeField
+
+============================================================
+APP: SESSIONS
+============================================================
+
+📌 Session
+   Table: django_session
+   Fields:
+     • session_key: CharField
+     • session_data: TextField
+     • expire_date: DateTimeField
+
+============================================================
+APP: SOCIALACCOUNT
+============================================================
+
+📌 SocialAccount
+   Table: socialaccount_socialaccount
+   Fields:
+     • user: ForeignKey
+       └─ relates to: accounts.User
+     • provider: CharField
+     • uid: CharField
+     • last_login: DateTimeField
+     • date_joined: DateTimeField
+     • extra_data: JSONField
+
+📌 SocialApp
+   Table: socialaccount_socialapp
+   Fields:
+     • provider: CharField
+     • provider_id: CharField
+     • name: CharField
+     • client_id: CharField
+     • secret: CharField
+     • key: CharField
+     • settings: JSONField
+
+📌 SocialToken
+   Table: socialaccount_socialtoken
+   Fields:
+     • app: ForeignKey
+       └─ relates to: socialaccount.SocialApp
+     • account: ForeignKey
+       └─ relates to: socialaccount.SocialAccount
+     • token: TextField
+     • token_secret: TextField
+     • expires_at: DateTimeField
+
+============================================================
+APP: STUDY_MATERIALS
+============================================================
+
+📌 Bookmark
+   Table: study_materials_bookmark
+   Fields:
+     • user: ForeignKey
+       └─ relates to: accounts.User
+     • content_type: CharField
+     • content_id: IntegerField
+     • created_at: DateTimeField
+
+📌 Course
+   Table: study_materials_course
+   Fields:
+     • category: ForeignKey
+       └─ relates to: study_materials.CourseCategory
+     • exam: ForeignKey
+       └─ relates to: exams.Exam
+     • title: CharField
+     • slug: SlugField
+     • subtitle: CharField
+     • description: RichTextField
+     • objectives: RichTextField
+     • requirements: RichTextField
+     • difficulty: CharField
+     • thumbnail: ImageField
+     • promo_video: URLField
+     • is_free: BooleanField
+     • price: DecimalField
+     • discounted_price: DecimalField
+     • total_lectures: IntegerField
+     • total_duration: IntegerField
+     • total_enrollments: IntegerField
+     • rating: FloatField
+     • is_active: BooleanField
+     • is_featured: BooleanField
+     • order: IntegerField
+     • created_at: DateTimeField
+     • updated_at: DateTimeField
+
+📌 CourseCategory
+   Table: study_materials_coursecategory
+   Fields:
+     • name: CharField
+     • slug: SlugField
+     • icon: CharField
+     • description: TextField
+     • order: IntegerField
+     • is_active: BooleanField
+     • created_at: DateTimeField
+
+📌 CurrentAffair
+   Table: study_materials_currentaffair
+   Fields:
+     • title: CharField
+     • slug: SlugField
+     • category: CharField
+     • content: RichTextField
+     • summary: TextField
+     • date: DateField
+     • source: CharField
+     • author: CharField
+     • image: ImageField
+     • tags: CharField
+     • important_for: CharField
+     • views: IntegerField
+     • likes: IntegerField
+     • is_active: BooleanField
+     • is_featured: BooleanField
+     • created_at: DateTimeField
+     • updated_at: DateTimeField
+
+📌 EBook
+   Table: study_materials_ebook
+   Fields:
+     • exam: ForeignKey
+       └─ relates to: exams.Exam
+     • title: CharField
+     • slug: SlugField
+     • description: RichTextField
+     • author: CharField
+     • publisher: CharField
+     • edition: CharField
+     • year: IntegerField
+     • pages: IntegerField
+     • cover_image: ImageField
+     • pdf_file: FileField
+     • is_free: BooleanField
+     • price: DecimalField
+     • downloads: IntegerField
+     • views: IntegerField
+     • tags: CharField
+     • is_active: BooleanField
+     • is_featured: BooleanField
+     • order: IntegerField
+     • created_at: DateTimeField
+     • updated_at: DateTimeField
+
+📌 Lecture
+   Table: study_materials_lecture
+   Fields:
+     • section: ForeignKey
+       └─ relates to: study_materials.Section
+     • title: CharField
+     • description: RichTextField
+     • lecture_type: CharField
+     • video_url: URLField
+     • video_embed_code: TextField
+     • document: FileField
+     • content: RichTextField
+     • duration: IntegerField
+     • order: IntegerField
+     • is_free_preview: BooleanField
+     • is_active: BooleanField
+     • created_at: DateTimeField
+     • updated_at: DateTimeField
+
+📌 Note
+   Table: study_materials_note
+   Fields:
+     • exam: ForeignKey
+       └─ relates to: exams.Exam
+     • subject: ForeignKey
+       └─ relates to: exams.Subject
+     • title: CharField
+     • slug: SlugField
+     • description: TextField
+     • content: RichTextField
+     • note_type: CharField
+     • pdf_file: FileField
+     • cover_image: ImageField
+     • author: CharField
+     • pages: IntegerField
+     • file_size: CharField
+     • views: IntegerField
+     • downloads: IntegerField
+     • likes: IntegerField
+     • tags: CharField
+     • is_free: BooleanField
+     • is_active: BooleanField
+     • is_featured: BooleanField
+     • order: IntegerField
+     • created_at: DateTimeField
+     • updated_at: DateTimeField
+
+📌 Section
+   Table: study_materials_section
+   Fields:
+     • course: ForeignKey
+       └─ relates to: study_materials.Course
+     • title: CharField
+     • description: TextField
+     • order: IntegerField
+     • is_active: BooleanField
+     • created_at: DateTimeField
+
+📌 UserEnrollment
+   Table: study_materials_userenrollment
+   Fields:
+     • user: ForeignKey
+       └─ relates to: accounts.User
+     • course: ForeignKey
+       └─ relates to: study_materials.Course
+     • enrolled_at: DateTimeField
+     • progress: FloatField
+     • is_completed: BooleanField
+     • completed_at: DateTimeField
+
+📌 UserLectureProgress
+   Table: study_materials_userlectureprogress
+   Fields:
+     • user: ForeignKey
+       └─ relates to: accounts.User
+     • lecture: ForeignKey
+       └─ relates to: study_materials.Lecture
+     • is_completed: BooleanField
+     • completed_at: DateTimeField
+     • last_watched: DateTimeField
+     • watch_time: IntegerField
+
+📌 VideoLecture
+   Table: study_materials_videolecture
+   Fields:
+     • exam: ForeignKey
+       └─ relates to: exams.Exam
+     • subject: ForeignKey
+       └─ relates to: exams.Subject
+     • title: CharField
+     • slug: SlugField
+     • description: RichTextField
+     • video_url: URLField
+     • thumbnail: ImageField
+     • duration: CharField
+     • views: IntegerField
+     • likes: IntegerField
+     • tags: CharField
+     • is_free: BooleanField
+     • is_active: BooleanField
+     • is_featured: BooleanField
+     • order: IntegerField
+     • created_at: DateTimeField
+     • updated_at: DateTimeField

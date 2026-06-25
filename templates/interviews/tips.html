@@ -1,0 +1,202 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Interview Tips & Guidance | GovtExamWala{% endblock %}
+
+{% block content %}
+<div class="bg-gradient-to-r from-purple-600 to-indigo-600 text-white py-12">
+    <div class="container mx-auto px-4 text-center">
+        <i class="fas fa-lightbulb text-5xl mb-4"></i>
+        <h1 class="text-4xl font-bold mb-2">Interview Tips & Guidance</h1>
+        <p class="text-xl opacity-90">Master the art of interviewing with expert tips</p>
+    </div>
+</div>
+
+<div class="container mx-auto px-4 py-8">
+    <!-- Tip Categories -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <!-- General Tips -->
+        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden">
+            <div class="bg-gradient-to-r from-blue-500 to-cyan-500 p-4 text-white">
+                <i class="fas fa-users text-3xl mb-2"></i>
+                <h2 class="text-xl font-bold">General Interview Tips</h2>
+            </div>
+            <div class="p-6 space-y-4">
+                <div>
+                    <h3 class="font-bold text-lg mb-2">🔍 Research the Organization</h3>
+                    <p class="text-gray-600 dark:text-gray-400">Thoroughly research the company, its culture, values, recent achievements, and challenges. This shows genuine interest and preparation.</p>
+                </div>
+                <div>
+                    <h3 class="font-bold text-lg mb-2">👔 Dress Professionally</h3>
+                    <p class="text-gray-600 dark:text-gray-400">Dress appropriately for the interview. Formal attire is always safe. First impressions matter significantly.</p>
+                </div>
+                <div>
+                    <h3 class="font-bold text-lg mb-2">⏰ Arrive Early</h3>
+                    <p class="text-gray-600 dark:text-gray-400">Plan to arrive 10-15 minutes before the scheduled time. This gives you time to compose yourself and observe the environment.</p>
+                </div>
+                <div>
+                    <h3 class="font-bold text-lg mb-2">📄 Bring Documents</h3>
+                    <p class="text-gray-600 dark:text-gray-400">Carry multiple copies of your resume, portfolio, certificates, and a notepad for taking notes.</p>
+                </div>
+                <div>
+                    <h3 class="font-bold text-lg mb-2">💪 Practice Body Language</h3>
+                    <p class="text-gray-600 dark:text-gray-400">Maintain eye contact, sit straight, offer a firm handshake, and smile genuinely throughout the interview.</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Technical Tips -->
+        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden">
+            <div class="bg-gradient-to-r from-green-500 to-teal-500 p-4 text-white">
+                <i class="fas fa-code text-3xl mb-2"></i>
+                <h2 class="text-xl font-bold">Technical Interview Tips</h2>
+            </div>
+            <div class="p-6 space-y-4">
+                <div>
+                    <h3 class="font-bold text-lg mb-2">📚 Review Fundamentals</h3>
+                    <p class="text-gray-600 dark:text-gray-400">Go through basic concepts of your technical domain thoroughly. Be ready for core questions about data structures, algorithms, and system design.</p>
+                </div>
+                <div>
+                    <h3 class="font-bold text-lg mb-2">💻 Practice Coding</h3>
+                    <p class="text-gray-600 dark:text-gray-400">Solve problems on platforms like LeetCode, HackerRank, and GeeksforGeeks. Focus on common patterns and optimal solutions.</p>
+                </div>
+                <div>
+                    <h3 class="font-bold text-lg mb-2">📁 Know Your Projects</h3>
+                    <p class="text-gray-600 dark:text-gray-400">Be ready to explain your projects in detail - architecture, technologies used, challenges faced, and your specific contribution.</p>
+                </div>
+                <div>
+                    <h3 class="font-bold text-lg mb-2">🏗️ System Design</h3>
+                    <p class="text-gray-600 dark:text-gray-400">Understand basic system design principles for senior roles. Practice designing common systems like URL shortener, chat system, etc.</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- HR Tips -->
+        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden">
+            <div class="bg-gradient-to-r from-purple-500 to-pink-500 p-4 text-white">
+                <i class="fas fa-handshake text-3xl mb-2"></i>
+                <h2 class="text-xl font-bold">HR Interview Tips</h2>
+            </div>
+            <div class="p-6 space-y-4">
+                <div>
+                    <h3 class="font-bold text-lg mb-2">🎤 Tell Me About Yourself</h3>
+                    <p class="text-gray-600 dark:text-gray-400">Prepare a 2-minute introduction focusing on your professional journey, key achievements, and career aspirations.</p>
+                </div>
+                <div>
+                    <h3 class="font-bold text-lg mb-2">⭐ STAR Method</h3>
+                    <p class="text-gray-600 dark:text-gray-400">Use Situation, Task, Action, Result framework for behavioral questions. This structure helps deliver clear and impactful answers.</p>
+                </div>
+                <div>
+                    <h3 class="font-bold text-lg mb-2">⚖️ Strengths & Weaknesses</h3>
+                    <p class="text-gray-600 dark:text-gray-400">Be honest but strategic about your strengths and areas of improvement. Always show how you're working on weaknesses.</p>
+                </div>
+                <div>
+                    <h3 class="font-bold text-lg mb-2">🏢 Why This Company</h3>
+                    <p class="text-gray-600 dark:text-gray-400">Show genuine interest by researching the company's values, mission, and recent achievements. Connect them with your career goals.</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Government Interview Tips -->
+        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden">
+            <div class="bg-gradient-to-r from-yellow-500 to-orange-500 p-4 text-white">
+                <i class="fas fa-landmark text-3xl mb-2"></i>
+                <h2 class="text-xl font-bold">Government Interview Tips</h2>
+            </div>
+            <div class="p-6 space-y-4">
+                <div>
+                    <h3 class="font-bold text-lg mb-2">📰 Current Affairs</h3>
+                    <p class="text-gray-600 dark:text-gray-400">Stay updated with recent government schemes, policies, national/international events, and economic developments.</p>
+                </div>
+                <div>
+                    <h3 class="font-bold text-lg mb-2">⚖️ Constitutional Knowledge</h3>
+                    <p class="text-gray-600 dark:text-gray-400">Understand basic constitutional provisions, fundamental rights, duties, and important articles relevant to the position.</p>
+                </div>
+                <div>
+                    <h3 class="font-bold text-lg mb-2">🎯 Ethical Scenarios</h3>
+                    <p class="text-gray-600 dark:text-gray-400">Practice ethical dilemma questions with logical reasoning, integrity, and a balanced approach.</p>
+                </div>
+                <div>
+                    <h3 class="font-bold text-lg mb-2">🏛️ Department Knowledge</h3>
+                    <p class="text-gray-600 dark:text-gray-400">Research the specific department you're applying to - its functions, recent initiatives, achievements, and key personnel.</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Banking Interview Tips -->
+        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden">
+            <div class="bg-gradient-to-r from-indigo-500 to-blue-500 p-4 text-white">
+                <i class="fas fa-university text-3xl mb-2"></i>
+                <h2 class="text-xl font-bold">Banking Interview Tips</h2>
+            </div>
+            <div class="p-6 space-y-4">
+                <div>
+                    <h3 class="font-bold text-lg mb-2">🏦 Banking Awareness</h3>
+                    <p class="text-gray-600 dark:text-gray-400">Know about RBI, monetary policy, banking terms, latest banking news, and financial regulations.</p>
+                </div>
+                <div>
+                    <h3 class="font-bold text-lg mb-2">📊 Financial Knowledge</h3>
+                    <p class="text-gray-600 dark:text-gray-400">Understand basics of finance, investments, loans, digital banking, and financial products.</p>
+                </div>
+                <div>
+                    <h3 class="font-bold text-lg mb-2">🎯 Customer Service</h3>
+                    <p class="text-gray-600 dark:text-gray-400">Be prepared for questions about handling customers, resolving complaints, and maintaining professional relationships.</p>
+                </div>
+                <div>
+                    <h3 class="font-bold text-lg mb-2">🛡️ Regulatory Compliance</h3>
+                    <p class="text-gray-600 dark:text-gray-400">Understand basic banking regulations, KYC norms, AML guidelines, and compliance requirements.</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Do's and Don'ts -->
+        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden">
+            <div class="bg-gradient-to-r from-red-500 to-pink-500 p-4 text-white">
+                <i class="fas fa-check-circle text-3xl mb-2"></i>
+                <h2 class="text-xl font-bold">Interview Do's & Don'ts</h2>
+            </div>
+            <div class="p-6">
+                <div class="mb-4">
+                    <h3 class="font-bold text-lg mb-2 text-green-600">✅ Do's</h3>
+                    <ul class="list-disc list-inside space-y-2 text-gray-600 dark:text-gray-400">
+                        <li>Research the company thoroughly</li>
+                        <li>Prepare questions to ask the interviewer</li>
+                        <li>Practice common interview questions</li>
+                        <li>Arrive 10-15 minutes early</li>
+                        <li>Dress professionally and appropriately</li>
+                        <li>Maintain eye contact and good posture</li>
+                        <li>Listen carefully before answering</li>
+                        <li>Send a thank-you email after the interview</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="font-bold text-lg mb-2 text-red-600">❌ Don'ts</h3>
+                    <ul class="list-disc list-inside space-y-2 text-gray-600 dark:text-gray-400">
+                        <li>Don't interrupt the interviewer</li>
+                        <li>Avoid negative comments about previous employers</li>
+                        <li>Don't use your phone during the interview</li>
+                        <li>Avoid one-word answers - elaborate</li>
+                        <li>Don't lie or exaggerate on your resume</li>
+                        <li>Avoid asking about salary too early</li>
+                        <li>Don't forget to follow up after the interview</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- CTA -->
+    <div class="bg-gradient-to-r from-purple-600 to-indigo-600 rounded-2xl p-8 text-center mt-12">
+        <h2 class="text-2xl font-bold text-white mb-3">Ready to Practice?</h2>
+        <p class="text-white opacity-90 mb-4">Apply these tips and practice with real interview questions</p>
+        <div class="flex justify-center gap-4">
+            <a href="{% url 'interviews:questions' %}" class="bg-white text-purple-600 px-6 py-2 rounded-lg font-semibold hover:shadow-lg transition">
+                Start Practicing Now
+            </a>
+            <a href="{% url 'interviews:mock_interview' %}" class="border-2 border-white text-white px-6 py-2 rounded-lg font-semibold hover:bg-white hover:text-purple-600 transition">
+                Take Mock Interview
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}

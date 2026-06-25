@@ -1,0 +1,121 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Mock Tests - GovtExamWala{% endblock %}
+
+{% block content %}
+<div class="bg-gradient-to-r from-purple-600 to-indigo-600 text-white py-12">
+    <div class="container mx-auto px-4 text-center">
+        <h1 class="text-4xl font-bold mb-4">Practice Mock Tests</h1>
+        <p class="text-xl opacity-90">Attempt real exam-like tests and track your progress</p>
+    </div>
+</div>
+
+<div class="container mx-auto px-4 py-8">
+    <div class="flex flex-wrap justify-between items-center gap-4 mb-8">
+        <h2 class="text-2xl font-bold">Available Tests</h2>
+        <div class="relative">
+        <input type="text" id="searchTest" placeholder="Search by name, exam or description..." 
+            class="w-80 px-5 py-3 pl-10 border-2 border-purple-400 rounded-xl focus:outline-none focus:ring-4 focus:ring-purple-300 focus:border-purple-600 dark:bg-gray-800 dark:border-purple-600 text-lg shadow-md">
+            <i class="fas fa-search absolute left-3 top-3 text-gray-400"></i>
+        </div>
+    </div>
+    
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="testsContainer">
+        {% for test in mock_tests %}
+        <div class="test-card bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition">
+            <div class="p-6">
+                <div class="flex justify-between items-start mb-3">
+                    <span class="text-xs bg-purple-100 text-purple-600 px-2 py-1 rounded">
+                        {{ test.get_test_type_display }}
+                    </span>
+                    {% if test.id in attempted_tests %}
+                    <span class="text-xs bg-green-100 text-green-600 px-2 py-1 rounded">✓ Attempted</span>
+                    {% endif %}
+                </div>
+                <h3 class="text-xl font-bold mb-2 test-name">{{ test.name }}</h3>
+                <p class="text-gray-600 dark:text-gray-400 text-sm mb-4 test-exam">{{ test.exam.name }}</p>
+                <p class="text-gray-500 text-sm mb-4 line-clamp-2 test-description">{{ test.description|truncatewords:20 }}</p>
+                
+                <div class="grid grid-cols-2 gap-3 mb-4">
+                    <div class="text-center">
+                        <p class="text-2xl font-bold text-purple-600">{{ test.duration_minutes }}</p>
+                        <p class="text-xs text-gray-500">Minutes</p>
+                    </div>
+                    <div class="text-center">
+                        <p class="text-2xl font-bold text-purple-600">{{ test.total_questions }}</p>
+                        <p class="text-xs text-gray-500">Questions</p>
+                    </div>
+                </div>
+                
+                <a href="{% url 'mocktests:detail' test.slug %}" 
+                   class="block text-center bg-purple-600 text-white py-2 rounded-lg hover:bg-purple-700 transition">
+                    View Details →
+                </a>
+            </div>
+        </div>
+        {% empty %}
+        <div class="col-span-3 text-center py-12">
+            <p class="text-gray-500">No mock tests available yet.</p>
+        </div>
+        {% endfor %}
+    </div>
+    
+    <!-- No results message -->
+    <div id="noResults" class="hidden text-center py-12">
+        <i class="fas fa-search text-6xl text-gray-400 mb-4"></i>
+        <h3 class="text-xl font-bold text-gray-600">No tests found</h3>
+        <p class="text-gray-500">Try searching with different keywords.</p>
+    </div>
+    
+    {% if mock_tests.has_other_pages %}
+    <div class="flex justify-center mt-8">
+        <div class="flex gap-2">
+            {% if mock_tests.has_previous %}
+            <a href="?page={{ mock_tests.previous_page_number }}" class="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300 transition">Previous</a>
+            {% endif %}
+            <span class="px-4 py-2 bg-purple-600 text-white rounded">{{ mock_tests.number }}</span>
+            {% if mock_tests.has_next %}
+            <a href="?page={{ mock_tests.next_page_number }}" class="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300 transition">Next</a>
+            {% endif %}
+        </div>
+    </div>
+    {% endif %}
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const searchInput = document.getElementById('searchTest');
+    const testCards = document.querySelectorAll('.test-card');
+    const testsContainer = document.getElementById('testsContainer');
+    const noResultsDiv = document.getElementById('noResults');
+    
+    if (searchInput) {
+        searchInput.addEventListener('input', function() {
+            const searchTerm = this.value.toLowerCase().trim();
+            let visibleCount = 0;
+            
+            testCards.forEach(card => {
+                const name = card.querySelector('.test-name')?.innerText.toLowerCase() || '';
+                const exam = card.querySelector('.test-exam')?.innerText.toLowerCase() || '';
+                const description = card.querySelector('.test-description')?.innerText.toLowerCase() || '';
+                
+                if (name.includes(searchTerm) || exam.includes(searchTerm) || description.includes(searchTerm)) {
+                    card.style.display = 'block';
+                    visibleCount++;
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+            
+            // Show/hide no results message
+            if (visibleCount === 0 && testsContainer) {
+                noResultsDiv.classList.remove('hidden');
+            } else {
+                noResultsDiv.classList.add('hidden');
+            }
+        });
+    }
+});
+</script>
+{% endblock %}

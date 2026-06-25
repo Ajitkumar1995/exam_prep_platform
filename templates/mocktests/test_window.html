@@ -1,0 +1,330 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ mock_test.name }} - Mock Test{% endblock %}
+
+{% block content %}
+<div class="bg-gradient-to-r from-blue-600 to-indigo-600 text-white py-3 sticky top-0 z-10">
+    <div class="container mx-auto px-4">
+        <div class="flex justify-between items-center">
+            <div>
+                <h1 class="text-xl font-bold">{{ mock_test.name }}</h1>
+                <p class="text-sm opacity-90">{{ mock_test.exam.name }}</p>
+            </div>
+            <div class="text-right">
+                <div class="text-sm">Time Remaining</div>
+                <div id="timer" class="text-2xl font-mono font-bold">--:--</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container mx-auto px-4 py-6">
+    <div class="flex flex-wrap -mx-4">
+        <!-- Main Questions Area -->
+        <div class="w-full lg:w-2/3 px-4">
+            <form method="post" id="testForm" action="{% url 'mocktests:submit' attempt.id %}">
+                {% csrf_token %}
+                
+                {% for question in questions %}
+                <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md mb-6 p-6" id="question-{{ forloop.counter }}" data-qid="{{ question.id }}" data-qnum="{{ forloop.counter }}">
+                    <div class="flex justify-between items-start mb-4">
+                        <div>
+                            <span class="text-sm text-gray-500">Question {{ forloop.counter }} of {{ total_questions }}</span>
+                            <span class="ml-3 text-sm font-semibold text-purple-600">Marks: {{ question.marks }}</span>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            {% if question.negative_marks > 0 %}
+                            <span class="text-sm text-red-500">Negative: {{ question.negative_marks }}</span>
+                            {% endif %}
+                            <button type="button" class="mark-review-btn text-sm px-3 py-1 rounded border border-yellow-500 text-yellow-600 hover:bg-yellow-50 transition" data-qnum="{{ forloop.counter }}" data-qid="{{ question.id }}">
+                                <i class="far fa-flag mr-1"></i> Mark for Review
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <p class="text-gray-800 dark:text-white text-lg mb-4">{{ question.text|safe }}</p>
+                    
+                    <div class="space-y-3 ml-4">
+                        {% for option in question.options %}
+                        <label class="flex items-start p-3 rounded-lg cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700 transition option-label">
+                            <input type="radio" 
+                                   name="question_{{ question.id }}" 
+                                   value="{{ option.id }}" 
+                                   class="mr-3 mt-1 question-radio"
+                                   data-qnum="{{ forloop.parentloop.counter }}"
+                                   data-qid="{{ question.id }}"
+                                   data-option-id="{{ option.id }}">
+                            <span class="text-gray-700 dark:text-gray-300">{{ option.option_text }}</span>
+                        </label>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endfor %}
+                
+                <!-- Hidden inputs for marked questions will be added here dynamically -->
+                <div id="markedQuestionsContainer"></div>
+                
+                <!-- Submit Button -->
+                <div class="text-center mt-6 mb-12">
+                    <button type="button" id="submitBtn" class="bg-green-600 text-white px-10 py-3 rounded-lg font-bold hover:bg-green-700 transition transform hover:scale-105 shadow-lg">
+                        <i class="fas fa-check-circle mr-2"></i> Submit Test
+                    </button>
+                </div>
+            </form>
+        </div>
+        
+        <!-- Right Sidebar - Question Palette -->
+        <div class="w-full lg:w-1/3 px-4">
+            <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-4 sticky top-20">
+                <h3 class="font-bold text-lg mb-3">Question Palette</h3>
+                
+                <div class="grid grid-cols-5 gap-2 mb-4" id="questionPalette">
+                    {% for i in total_questions|rjust:"100"|make_list %}
+                        {% if forloop.counter <= total_questions %}
+                        <button class="palette-btn w-10 h-10 rounded-lg text-sm font-semibold transition bg-gray-200 text-gray-700 hover:bg-gray-300"
+                                data-qnum="{{ forloop.counter }}">
+                            {{ forloop.counter }}
+                        </button>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+                
+                <div class="mt-4 pt-3 border-t">
+                    <div class="flex items-center justify-between text-xs mb-2">
+                        <div class="flex items-center">
+                            <div class="w-4 h-4 bg-green-500 rounded mr-1"></div>
+                            <span>Answered</span>
+                        </div>
+                        <div class="flex items-center">
+                            <div class="w-4 h-4 bg-yellow-500 rounded mr-1"></div>
+                            <span>Marked for Review</span>
+                        </div>
+                        <div class="flex items-center">
+                            <div class="w-4 h-4 bg-gray-300 rounded mr-1"></div>
+                            <span>Not Answered</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="mt-4 pt-3 border-t">
+                    <button type="button" id="scrollToTopBtn" class="w-full bg-purple-600 text-white py-2 rounded-lg text-sm hover:bg-purple-700 transition">
+                        <i class="fas fa-arrow-up mr-1"></i> Scroll to Top
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Timer functionality
+let timeRemaining = {{ mock_test.duration_minutes }} * 60;
+const timerElement = document.getElementById('timer');
+let timerInterval;
+
+function updateTimer() {
+    if (timeRemaining <= 0) {
+        clearInterval(timerInterval);
+        timerElement.innerHTML = "00:00";
+        alert("Time's up! Submitting test.");
+        document.getElementById('testForm').submit();
+        return;
+    }
+    const minutes = Math.floor(timeRemaining / 60);
+    const seconds = timeRemaining % 60;
+    timerElement.innerHTML = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+    timeRemaining--;
+}
+timerInterval = setInterval(updateTimer, 1000);
+updateTimer();
+
+// Track answered questions and marked for review
+let answeredQuestions = new Set();
+let markedForReview = new Set();
+
+// Save answer when radio button is clicked
+document.querySelectorAll('.question-radio').forEach(radio => {
+    radio.addEventListener('change', function() {
+        const questionNum = parseInt(this.dataset.qnum);
+        const questionId = this.dataset.qid;
+        const optionId = this.dataset.optionId;
+        const isMarked = markedForReview.has(questionNum);
+        
+        // Add to answered set
+        answeredQuestions.add(questionNum);
+        
+        // Update palette button color
+        updatePaletteButton(questionNum);
+        
+        // Save to server via AJAX with marked status
+        fetch("{% url 'mocktests:save_answer' %}", {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': '{{ csrf_token }}'
+            },
+            body: JSON.stringify({
+                attempt_id: {{ attempt.id }},
+                question_id: questionId,
+                selected_option: optionId,
+                time_taken: 0,
+                is_marked_for_review: isMarked
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                console.log('Answer saved for question', questionNum);
+            }
+        })
+        .catch(error => console.error('Error:', error));
+    });
+});
+
+// Mark for Review functionality
+document.querySelectorAll('.mark-review-btn').forEach(btn => {
+    btn.addEventListener('click', function() {
+        const questionNum = parseInt(this.dataset.qnum);
+        const questionId = this.dataset.qid;
+        
+        if (markedForReview.has(questionNum)) {
+            markedForReview.delete(questionNum);
+            this.classList.remove('bg-yellow-100', 'border-yellow-600');
+            this.classList.add('border-yellow-500', 'text-yellow-600');
+            this.innerHTML = '<i class="far fa-flag mr-1"></i> Mark for Review';
+        } else {
+            markedForReview.add(questionNum);
+            this.classList.add('bg-yellow-100', 'border-yellow-600');
+            this.classList.remove('border-yellow-500', 'text-yellow-600');
+            this.innerHTML = '<i class="fas fa-flag mr-1"></i> Marked for Review';
+        }
+        
+        updatePaletteButton(questionNum);
+        
+        // Update server with marked status
+        const selectedOption = document.querySelector(`input[name="question_${questionId}"]:checked`);
+        const optionId = selectedOption ? selectedOption.value : null;
+        
+        fetch("{% url 'mocktests:save_answer' %}", {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': '{{ csrf_token }}'
+            },
+            body: JSON.stringify({
+                attempt_id: {{ attempt.id }},
+                question_id: questionId,
+                selected_option: optionId,
+                time_taken: 0,
+                is_marked_for_review: markedForReview.has(questionNum)
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                console.log('Mark status updated for question', questionNum);
+            }
+        })
+        .catch(error => console.error('Error updating mark status:', error));
+    });
+});
+
+// Update palette button color
+function updatePaletteButton(questionNum) {
+    const paletteBtn = document.querySelector(`.palette-btn[data-qnum="${questionNum}"]`);
+    if (!paletteBtn) return;
+    
+    const isMarked = markedForReview.has(questionNum);
+    const isAnswered = answeredQuestions.has(questionNum);
+    
+    if (isMarked) {
+        paletteBtn.className = 'palette-btn w-10 h-10 rounded-lg text-sm font-semibold transition bg-yellow-500 text-white';
+        paletteBtn.textContent = '📌' + questionNum;
+    } else if (isAnswered) {
+        paletteBtn.className = 'palette-btn w-10 h-10 rounded-lg text-sm font-semibold transition bg-green-500 text-white';
+        paletteBtn.textContent = questionNum;
+    } else {
+        paletteBtn.className = 'palette-btn w-10 h-10 rounded-lg text-sm font-semibold transition bg-gray-200 text-gray-700 hover:bg-gray-300';
+        paletteBtn.textContent = questionNum;
+    }
+}
+
+// Scroll to question when palette button is clicked
+document.querySelectorAll('.palette-btn').forEach(btn => {
+    btn.addEventListener('click', function() {
+        const questionNum = this.dataset.qnum;
+        const targetQuestion = document.getElementById(`question-${questionNum}`);
+        if (targetQuestion) {
+            targetQuestion.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            targetQuestion.classList.add('ring-2', 'ring-purple-500');
+            setTimeout(() => {
+                targetQuestion.classList.remove('ring-2', 'ring-purple-500');
+            }, 1500);
+        }
+    });
+});
+
+// Scroll to top button
+document.getElementById('scrollToTopBtn')?.addEventListener('click', function() {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+});
+
+// Submit confirmation
+document.getElementById('submitBtn').addEventListener('click', function() {
+    const totalQuestions = {{ total_questions }};
+    const answered = answeredQuestions.size;
+    const marked = markedForReview.size;
+    
+    // Add hidden inputs for marked questions BEFORE submitting
+    const container = document.getElementById('markedQuestionsContainer');
+    container.innerHTML = ''; // Clear previous
+    
+    markedForReview.forEach(questionNum => {
+        const questionDiv = document.getElementById(`question-${questionNum}`);
+        if (questionDiv) {
+            const questionId = questionDiv.dataset.qid;
+            const input = document.createElement('input');
+            input.type = 'hidden';
+            input.name = `marked_${questionId}`;
+            input.value = 'true';
+            container.appendChild(input);
+        }
+    });
+    
+    if (confirm(`You have answered ${answered} out of ${totalQuestions} questions.\nMarked for review: ${marked}.\n\nAre you sure you want to submit the test?`)) {
+        document.getElementById('testForm').submit();
+    }
+});
+
+// Load saved answers on page load
+document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('.question-radio:checked').forEach(radio => {
+        const questionNum = parseInt(radio.dataset.qnum);
+        answeredQuestions.add(questionNum);
+        updatePaletteButton(questionNum);
+    });
+});
+</script>
+
+<style>
+.palette-btn {
+    transition: all 0.2s ease;
+    cursor: pointer;
+    font-size: 11px;
+    font-weight: 600;
+}
+.palette-btn:hover {
+    transform: scale(1.05);
+}
+.option-label {
+    transition: all 0.2s ease;
+}
+.option-label:hover {
+    background-color: #f9fafb;
+}
+.dark .option-label:hover {
+    background-color: #374151;
+}
+</style>
+{% endblock %}

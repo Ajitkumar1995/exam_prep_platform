@@ -1,0 +1,115 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}My Bookmarks - GovtExamWala{% endblock %}
+
+{% block content %}
+<div class="bg-gradient-to-r from-purple-600 to-indigo-600 text-white py-12">
+    <div class="container mx-auto px-4 text-center">
+        <i class="fas fa-bookmark text-5xl mb-4"></i>
+        <h1 class="text-4xl font-bold mb-2">My Bookmarks</h1>
+        <p class="text-xl opacity-90">Your saved study materials</p>
+    </div>
+</div>
+
+<div class="container mx-auto px-4 py-8">
+    {% if notes or videos or ebooks or affairs %}
+    
+    <!-- Notes -->
+    {% if notes %}
+    <h2 class="text-2xl font-bold mb-4">📄 Notes</h2>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
+        {% for note in notes %}
+        <a href="{% url 'study_materials:note_detail' note.slug %}" class="bg-white dark:bg-gray-800 rounded-lg shadow p-4 hover:shadow-lg transition flex items-start gap-3">
+            <div class="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center">
+                <i class="fas fa-file-pdf text-purple-600 text-2xl"></i>
+            </div>
+            <div class="flex-1">
+                <h3 class="font-semibold">{{ note.title }}</h3>
+                <div class="flex gap-3 text-xs text-gray-500 mt-1">
+                    <span>{{ note.note_type|title }}</span>
+                    <span>{{ note.views }} views</span>
+                </div>
+            </div>
+        </a>
+        {% endfor %}
+    </div>
+    {% endif %}
+    
+    <!-- Videos -->
+    {% if videos %}
+    <h2 class="text-2xl font-bold mb-4">🎥 Video Lectures</h2>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
+        {% for video in videos %}
+        <a href="{% url 'study_materials:video_detail' video.slug %}" class="bg-white dark:bg-gray-800 rounded-lg shadow p-4 hover:shadow-lg transition flex items-start gap-3">
+            <div class="w-12 h-12 bg-red-100 rounded-lg flex items-center justify-center">
+                <i class="fas fa-play-circle text-red-600 text-2xl"></i>
+            </div>
+            <div class="flex-1">
+                <h3 class="font-semibold">{{ video.title }}</h3>
+                <div class="flex gap-3 text-xs text-gray-500 mt-1">
+                    <span>{{ video.duration }}</span>
+                    <span>{{ video.views }} views</span>
+                </div>
+            </div>
+        </a>
+        {% endfor %}
+    </div>
+    {% endif %}
+    
+    <!-- Ebooks -->
+    {% if ebooks %}
+    <h2 class="text-2xl font-bold mb-4">📚 E-Books</h2>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
+        {% for ebook in ebooks %}
+        <a href="{% url 'study_materials:download_ebook' ebook.id %}" class="bg-white dark:bg-gray-800 rounded-lg shadow p-4 hover:shadow-lg transition flex items-start gap-3">
+            <div class="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
+                <i class="fas fa-book text-green-600 text-2xl"></i>
+            </div>
+            <div class="flex-1">
+                <h3 class="font-semibold">{{ ebook.title }}</h3>
+                <div class="flex gap-3 text-xs text-gray-500 mt-1">
+                    <span>{{ ebook.author }}</span>
+                    <span>{{ ebook.downloads }} downloads</span>
+                </div>
+            </div>
+        </a>
+        {% endfor %}
+    </div>
+    {% endif %}
+    
+    <!-- Current Affairs -->
+    {% if affairs %}
+    <h2 class="text-2xl font-bold mb-4">📰 Current Affairs</h2>
+    <div class="grid grid-cols-1 gap-4">
+        {% for affair in affairs %}
+        <a href="{% url 'study_materials:current_affair_detail' affair.slug %}" class="bg-white dark:bg-gray-800 rounded-lg shadow p-4 hover:shadow-lg transition">
+            <div class="flex justify-between items-start">
+                <div class="flex-1">
+                    <div class="flex gap-2 mb-2">
+                        <span class="text-xs bg-purple-100 text-purple-600 px-2 py-1 rounded">{{ affair.get_category_display }}</span>
+                        <span class="text-xs text-gray-500">{{ affair.date|date:"M d, Y" }}</span>
+                    </div>
+                    <h3 class="font-semibold">{{ affair.title }}</h3>
+                    <p class="text-sm text-gray-600 dark:text-gray-400 mt-1">{{ affair.summary|truncatechars:100 }}</p>
+                </div>
+            </div>
+        </a>
+        {% endfor %}
+    </div>
+    {% endif %}
+    
+    {% else %}
+    <div class="text-center py-12">
+        <i class="fas fa-bookmark text-6xl text-gray-400 mb-4"></i>
+        <p class="text-xl text-gray-500">No bookmarks yet</p>
+        <p class="text-gray-400 mt-2">Start bookmarking study materials to see them here!</p>
+        <div class="mt-6">
+            <a href="{% url 'study_materials:note_list' %}" class="bg-purple-600 text-white px-6 py-2 rounded-lg hover:bg-purple-700 transition">
+                Browse Study Materials
+            </a>
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

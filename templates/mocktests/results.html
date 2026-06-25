@@ -1,0 +1,252 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Test Results - {{ attempt.mock_test.name }}{% endblock %}
+
+{% block content %}
+<div class="bg-gradient-to-r from-purple-600 to-indigo-600 text-white py-8">
+    <div class="container mx-auto px-4 text-center">
+        <div class="w-20 h-20 bg-white rounded-full flex items-center justify-center mx-auto mb-4">
+            <i class="fas fa-check-circle text-4xl text-green-600"></i>
+        </div>
+        <h1 class="text-3xl font-bold mb-2">Test Completed!</h1>
+        <p class="text-lg opacity-90">{{ attempt.mock_test.name }} - {{ attempt.mock_test.exam.name }}</p>
+    </div>
+</div>
+
+<div class="container mx-auto px-4 py-8">
+    <!-- ============================================ -->
+    <!-- 1. SCORE OVERVIEW CARDS                      -->
+    <!-- ============================================ -->
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 text-center">
+            <p class="text-gray-500 text-sm">Total Score</p>
+            <p class="text-3xl font-bold text-purple-600">{{ attempt.score|floatformat:1 }}/{{ attempt.mock_test.total_marks }}</p>
+        </div>
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 text-center">
+            <p class="text-gray-500 text-sm">Percentage</p>
+            <p class="text-3xl font-bold {% if attempt.percentage >= 60 %}text-green-600{% elif attempt.percentage >= 40 %}text-yellow-600{% else %}text-red-600{% endif %}">
+                {{ attempt.percentage|floatformat:1 }}%
+            </p>
+        </div>
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 text-center">
+            <p class="text-gray-500 text-sm">Attempted Questions</p>
+            <p class="text-3xl font-bold text-blue-600">{{ attempted_count }}/{{ total_questions }}</p>
+        </div>
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 text-center">
+            <p class="text-gray-500 text-sm">Accuracy (Attempted Only)</p>
+            <p class="text-3xl font-bold text-green-600">{{ accuracy_on_attempted|floatformat:1 }}%</p>
+        </div>
+    </div>
+    
+    <!-- ============================================ -->
+    <!-- 2. QUESTION STATS CARDS                     -->
+    <!-- ============================================ -->
+    <div class="grid grid-cols-1 md:grid-cols-6 gap-4 mb-8">
+        <!-- Correct -->
+        <div class="bg-green-50 dark:bg-green-900/20 rounded-lg p-4 text-center">
+            <i class="fas fa-check-circle text-green-600 text-3xl mb-2"></i>
+            <p class="text-2xl font-bold text-green-600">{{ correct_count|default:attempt.correct_answers }}</p>
+            <p class="text-gray-600">Correct</p>
+        </div>
+        <!-- Wrong -->
+        <div class="bg-red-50 dark:bg-red-900/20 rounded-lg p-4 text-center">
+            <i class="fas fa-times-circle text-red-600 text-3xl mb-2"></i>
+            <p class="text-2xl font-bold text-red-600">{{ wrong_count|default:attempt.wrong_answers }}</p>
+            <p class="text-gray-600">Wrong</p>
+        </div>
+        <!-- Marked + Answered (NEW) -->
+        <div class="bg-blue-50 dark:bg-blue-900/20 rounded-lg p-4 text-center">
+            <i class="fas fa-flag text-blue-600 text-3xl mb-2"></i>
+            <p class="text-2xl font-bold text-blue-600">{{ marked_answered_count|default:0 }}</p>
+            <p class="text-gray-600">Marked (Answered)</p>
+        </div>
+        <!-- Marked + Skipped (NEW) -->
+        <div class="bg-yellow-50 dark:bg-yellow-900/20 rounded-lg p-4 text-center">
+            <i class="fas fa-flag text-yellow-600 text-3xl mb-2"></i>
+            <p class="text-2xl font-bold text-yellow-600">{{ skipped_count|default:0 }}</p>
+            <p class="text-gray-600">Marked (Skipped)</p>
+        </div>
+        <!-- Not Answered -->
+        <div class="bg-gray-50 dark:bg-gray-700 rounded-lg p-4 text-center">
+            <i class="fas fa-question-circle text-gray-600 text-3xl mb-2"></i>
+            <p class="text-2xl font-bold text-gray-600">{{ not_answered_count|default:0 }}</p>
+            <p class="text-gray-600">Not Answered</p>
+        </div>
+        <!-- Total -->
+        <div class="bg-blue-50 dark:bg-blue-900/20 rounded-lg p-4 text-center">
+            <i class="fas fa-chart-line text-blue-600 text-3xl mb-2"></i>
+            <p class="text-2xl font-bold text-blue-600">{{ total_questions }}</p>
+            <p class="text-gray-600">Total Questions</p>
+        </div>
+    </div>
+    
+    <!-- ============================================ -->
+    <!-- 3. PERFORMANCE SUMMARY                      -->
+    <!-- ============================================ -->
+    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 mb-8">
+        <h2 class="text-xl font-bold mb-4">Performance Summary</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+                <p class="text-gray-600 mb-2">Accuracy on Attempted Questions:</p>
+                <div class="w-full bg-gray-200 rounded-full h-4">
+                    <div class="bg-green-600 h-4 rounded-full" style="width: {{ accuracy_on_attempted }}%"></div>
+                </div>
+                <p class="text-right text-sm mt-1">{{ accuracy_on_attempted|floatformat:1 }}%</p>
+            </div>
+            <div>
+                <p class="text-gray-600 mb-2">Overall Performance:</p>
+                <div class="w-full bg-gray-200 rounded-full h-4">
+                    <div class="bg-purple-600 h-4 rounded-full" style="width: {{ attempt.percentage }}%"></div>
+                </div>
+                <p class="text-right text-sm mt-1">{{ attempt.percentage|floatformat:1 }}%</p>
+            </div>
+        </div>
+        <div class="mt-4 p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
+            <p class="text-sm text-gray-600">
+                <i class="fas fa-info-circle mr-2"></i>
+                <strong>Note:</strong> Questions marked for review but answered are counted as "Marked (Answered)". 
+                Questions marked for review but not answered are counted as "Marked (Skipped)".
+            </p>
+        </div>
+    </div>
+    
+    <!-- ============================================ -->
+    <!-- 4. SECTION-WISE PERFORMANCE                 -->
+    <!-- ============================================ -->
+    {% if section_stats %}
+    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 mb-8">
+        <h2 class="text-xl font-bold mb-4">Section-wise Performance</h2>
+        <div class="space-y-4">
+            {% for section, stats in section_stats.items %}
+            <div>
+                <div class="flex justify-between mb-1">
+                    <span class="font-semibold">{{ section }}</span>
+                    <span>{{ stats.correct }}/{{ stats.attempted }} attempted ({{ stats.accuracy|floatformat:1 }}%)</span>
+                </div>
+                <div class="w-full bg-gray-200 rounded-full h-2">
+                    <div class="bg-green-600 h-2 rounded-full" style="width: {{ stats.accuracy }}%"></div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+    
+    <!-- ============================================ -->
+    <!-- 5. DETAILED QUESTION ANALYSIS               -->
+    <!-- ============================================ -->
+    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
+        <h2 class="text-xl font-bold mb-4 flex items-center gap-2">
+            <i class="fas fa-list-check text-purple-600"></i> Detailed Question Analysis
+            <span class="text-sm text-gray-500 font-normal">({{ total_questions }} Questions)</span>
+        </h2>
+        <div class="space-y-4">
+            {% for qa in question_analysis %}
+            <div class="border rounded-lg p-4 
+                {% if qa.status == 'correct' %}border-green-200 bg-green-50 dark:bg-green-900/20
+                {% elif qa.status == 'marked_for_review_answered' %}border-blue-200 bg-blue-50 dark:bg-blue-900/20
+                {% elif qa.status == 'marked_for_review_skipped' %}border-yellow-200 bg-yellow-50 dark:bg-yellow-900/20
+                {% elif qa.status == 'not_answered' %}border-gray-200 bg-gray-50 dark:bg-gray-700
+                {% else %}border-red-200 bg-red-50 dark:bg-red-900/20{% endif %}">
+                
+                <!-- Question Header -->
+                <div class="flex flex-wrap justify-between items-start mb-3">
+                    <div class="flex flex-wrap gap-2">
+                        <span class="text-sm font-medium">Q{{ forloop.counter }}</span>
+                        <!-- Status Badge -->
+                        {% if qa.status == 'correct' %}
+                            <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-semibold bg-green-100 text-green-800">
+                                <i class="fas fa-check-circle mr-1"></i> Correct
+                            </span>
+                        {% elif qa.status == 'marked_for_review_answered' %}
+                            <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-semibold bg-blue-100 text-blue-800">
+                                <i class="fas fa-flag mr-1"></i> Marked (Answered)
+                            </span>
+                        {% elif qa.status == 'marked_for_review_skipped' %}
+                            <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-semibold bg-yellow-100 text-yellow-800">
+                                <i class="fas fa-flag mr-1"></i> Marked (Skipped)
+                            </span>
+                        {% elif qa.status == 'not_answered' %}
+                            <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-semibold bg-gray-100 text-gray-600">
+                                <i class="fas fa-question-circle mr-1"></i> Not Answered
+                            </span>
+                        {% else %}
+                            <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-semibold bg-red-100 text-red-800">
+                                <i class="fas fa-times-circle mr-1"></i> Incorrect
+                            </span>
+                        {% endif %}
+                        <!-- Marks -->
+                        <span class="text-sm text-gray-500">Marks: {{ qa.marks_obtained|floatformat:1 }}/{{ qa.question.marks }}</span>
+                    </div>
+                    <!-- Time taken -->
+                    <span class="text-sm text-gray-500">{{ qa.time_taken }} sec</span>
+                </div>
+                
+                <!-- Question Text -->
+                <p class="font-medium text-gray-800 dark:text-white mb-3">
+                    {{ qa.question.question_text|safe }}
+                </p>
+                
+                <!-- Answer Section -->
+                <div class="ml-4 space-y-2">
+                    <!-- User's Answer -->
+                    <p class="text-sm">
+                        <span class="font-semibold">Your Answer:</span> 
+                        {% if qa.status == 'marked_for_review_skipped' %}
+                            <span class="text-yellow-600 italic">Skipped (Marked for Review)</span>
+                        {% elif qa.status == 'not_answered' %}
+                            <span class="text-gray-500 italic">Not answered</span>
+                        {% elif qa.user_answer_text %}
+                            {{ qa.user_answer_text }}
+                            {% if qa.is_marked_for_review %}
+                                <span class="text-blue-600 text-xs ml-2">(Marked for Review)</span>
+                            {% endif %}
+                        {% else %}
+                            <span class="text-red-500 italic">No answer selected</span>
+                        {% endif %}
+                    </p>
+                    
+                    <!-- Correct Answer - Always shown -->
+                    <p class="text-sm text-green-600">
+                        <span class="font-semibold">Correct Answer:</span> 
+                        {% if qa.correct_option %}
+                            {{ qa.correct_option.option_text }}
+                        {% else %}
+                            <span class="text-gray-500">Not available</span>
+                        {% endif %}
+                    </p>
+                    
+                    <!-- Explanation -->
+                    {% if qa.question.explanation %}
+                    <div class="mt-2 p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
+                        <p class="text-sm text-gray-700 dark:text-gray-300">
+                            <span class="font-semibold">Explanation:</span> {{ qa.question.explanation|safe }}
+                        </p>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    
+    <!-- ============================================ -->
+    <!-- 6. ACTION BUTTONS                           -->
+    <!-- ============================================ -->
+    <div class="flex flex-wrap justify-center gap-4 mt-8">
+        <a href="{% url 'mocktests:start' attempt.mock_test.slug %}" 
+           class="bg-purple-600 text-white px-6 py-2 rounded-lg hover:bg-purple-700 transition">
+            <i class="fas fa-redo-alt mr-2"></i> Retake Test
+        </a>
+        <a href="{% url 'mocktests:list' %}" 
+           class="bg-gray-600 text-white px-6 py-2 rounded-lg hover:bg-gray-700 transition">
+            <i class="fas fa-list mr-2"></i> More Tests
+        </a>
+        <a href="{% url 'analytics:dashboard' %}" 
+           class="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition">
+            <i class="fas fa-chart-line mr-2"></i> View Dashboard
+        </a>
+    </div>
+</div>
+{% endblock %}

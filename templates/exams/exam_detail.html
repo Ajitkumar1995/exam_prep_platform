@@ -1,0 +1,407 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ exam.name }} - Complete Preparation Guide{% endblock %}
+
+{% block content %}
+<div class="bg-gradient-to-r from-blue-600 to-indigo-600 text-white py-12">
+    <div class="container mx-auto px-4">
+        <div class="flex flex-wrap justify-between items-center">
+            <div>
+                <div class="flex items-center space-x-3 mb-2">
+                    {% if exam.logo %}
+                    <img src="{{ exam.logo.url }}" alt="{{ exam.name }}" class="h-12 w-12 object-contain bg-white rounded-lg p-1">
+                    {% endif %}
+                    <h1 class="text-4xl md:text-5xl font-bold">{{ exam.name }}</h1>
+                </div>
+                <p class="text-xl opacity-90">{{ exam.category.name }} Examination</p>
+                <div class="flex flex-wrap gap-4 mt-4">
+                    <span class="bg-white/20 px-3 py-1 rounded-full text-sm">
+                        <i class="far fa-clock mr-1"></i> Duration: {{ exam.duration_minutes }} mins
+                    </span>
+                    <span class="bg-white/20 px-3 py-1 rounded-full text-sm">
+                        <i class="fas fa-tasks mr-1"></i> Total Questions: {{ total_questions }}
+                    </span>
+                    <span class="bg-white/20 px-3 py-1 rounded-full text-sm">
+                        <i class="fas fa-chalkboard mr-1"></i> Mock Tests: {{ total_mock_tests }}
+                    </span>
+                </div>
+            </div>
+            <div class="mt-4 md:mt-0 space-x-3">
+                <!-- Replace this section -->
+                {% if free_mock_test %}
+                <a href="{% url 'exams:start_free_mock_test' exam.slug %}" 
+                class="bg-green-500 text-white px-6 py-3 rounded-lg font-semibold hover:bg-green-600 transition shadow-lg inline-block">
+                    🎯 Start Free Mock Test Now
+                </a>
+                {% else %}
+                <a href="{% url 'exams:mock_tests' exam.slug %}" 
+                class="bg-green-500 text-white px-6 py-3 rounded-lg font-semibold hover:bg-green-600 transition shadow-lg inline-block">
+                    🎯 View Mock Tests
+                </a>
+                {% endif %}
+                <a href="{% url 'exams:coaching' exam.slug %}" 
+                   class="bg-yellow-500 text-white px-6 py-3 rounded-lg font-semibold hover:bg-yellow-600 transition shadow-lg inline-block">
+                    📚 Get Coaching
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container mx-auto px-4 py-8">
+    <div class="flex flex-wrap -mx-4">
+        <!-- Sidebar -->
+        <div class="w-full md:w-1/4 px-4 mb-8 md:mb-0">
+            <div class="bg-white rounded-lg shadow-md p-4 sticky top-20">
+                <h3 class="font-bold text-lg mb-4 pb-2 border-b">Quick Navigation</h3>
+                <ul class="space-y-2">
+                    <li><a href="#description" class="text-gray-600 hover:text-blue-500 block py-1">📖 Exam Overview</a></li>
+                    {% if exam.eligibility %}
+                    <li><a href="#eligibility" class="text-gray-600 hover:text-blue-500 block py-1">✅ Eligibility</a></li>
+                    {% endif %}
+                    {% if exam.exam_pattern %}
+                    <li><a href="#pattern" class="text-gray-600 hover:text-blue-500 block py-1">📊 Exam Pattern</a></li>
+                    {% endif %}
+                    {% if exam.syllabus %}
+                    <li><a href="#syllabus" class="text-gray-600 hover:text-blue-500 block py-1">📚 Syllabus</a></li>
+                    {% endif %}
+                    {% if subjects %}
+                    <li><a href="#subjects" class="text-gray-600 hover:text-blue-500 block py-1">📖 Subjects</a></li>
+                    {% endif %}
+                    {% if study_materials %}
+                    <li><a href="#study-material" class="text-gray-600 hover:text-blue-500 block py-1">📝 Study Material</a></li>
+                    {% endif %}
+                    <li><a href="#mock-tests" class="text-gray-600 hover:text-blue-500 block py-1">🎯 Mock Tests</a></li>
+                    {% if announcements %}
+                    <li><a href="#announcements" class="text-gray-600 hover:text-blue-500 block py-1">📢 Announcements</a></li>
+                    {% endif %}
+                    {% if faqs %}
+                    <li><a href="#faqs" class="text-gray-600 hover:text-blue-500 block py-1">❓ FAQs</a></li>
+                    {% endif %}
+                </ul>
+                
+                {% if exam.official_website %}
+                <div class="mt-6 p-4 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg">
+                    <h4 class="font-bold text-gray-800 mb-2">Official Website</h4>
+                    <a href="{{ exam.official_website }}" target="_blank" class="text-blue-500 text-sm break-all">
+                        {{ exam.official_website }}
+                    </a>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="w-full md:w-3/4 px-4">
+            <!-- Free Mock Test CTA -->
+            {% if free_mock_test %}
+            <div class="bg-gradient-to-r from-green-50 to-emerald-50 rounded-lg p-6 mb-6 border-2 border-green-300">
+                <div class="flex flex-wrap justify-between items-center">
+                    <div>
+                        <h3 class="text-xl font-bold text-green-800">🎯 Free Mock Test Available!</h3>
+                        <p class="text-gray-700 mt-1">Test your preparation with our free mock test</p>
+                    </div>
+                    <a href="{% url 'exams:start_free_mock_test' exam.slug %}" 
+                       class="bg-green-600 text-white px-6 py-2 rounded-lg font-semibold hover:bg-green-700 transition">
+                        Start Free Test Now →
+                    </a>
+                </div>
+            </div>
+            {% endif %}
+
+            <!-- Description Section -->
+            <div id="description" class="bg-white rounded-lg shadow-md p-6 mb-6">
+                <h2 class="text-2xl font-bold text-gray-800 mb-4 flex items-center">
+                    <i class="fas fa-info-circle text-blue-500 mr-2"></i>
+                    Exam Overview
+                </h2>
+                <div class="prose max-w-none">
+                    {{ exam.description|safe }}
+                </div>
+            </div>
+
+            <!-- Eligibility Section -->
+            {% if exam.eligibility %}
+            <div id="eligibility" class="bg-white rounded-lg shadow-md p-6 mb-6">
+                <h2 class="text-2xl font-bold text-gray-800 mb-4 flex items-center">
+                    <i class="fas fa-check-circle text-green-500 mr-2"></i>
+                    Eligibility Criteria
+                </h2>
+                <div class="prose max-w-none">
+                    {{ exam.eligibility|safe }}
+                </div>
+            </div>
+            {% endif %}
+
+            <!-- Exam Pattern Section -->
+            {% if exam.exam_pattern %}
+            <div id="pattern" class="bg-white rounded-lg shadow-md p-6 mb-6">
+                <h2 class="text-2xl font-bold text-gray-800 mb-4 flex items-center">
+                    <i class="fas fa-chart-bar text-purple-500 mr-2"></i>
+                    Exam Pattern
+                </h2>
+                <div class="prose max-w-none">
+                    {{ exam.exam_pattern|safe }}
+                </div>
+                <div class="mt-4 p-4 bg-gray-50 rounded-lg">
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
+                        <div>
+                            <div class="text-2xl font-bold text-blue-600">{{ exam.duration_minutes }}</div>
+                            <div class="text-xs text-gray-600">Duration (mins)</div>
+                        </div>
+                        <div>
+                            <div class="text-2xl font-bold text-green-600">{{ exam.total_questions }}</div>
+                            <div class="text-xs text-gray-600">Total Questions</div>
+                        </div>
+                        <div>
+                            <div class="text-2xl font-bold text-purple-600">{{ exam.total_marks }}</div>
+                            <div class="text-xs text-gray-600">Total Marks</div>
+                        </div>
+                        <div>
+                            <div class="text-2xl font-bold text-red-600">
+                                {% if exam.negative_marking %}Yes{% else %}No{% endif %}
+                            </div>
+                            <div class="text-xs text-gray-600">Negative Marking</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+            
+            {% if exam.is_paid and exam.price > 0 %}
+            <div class="mt-6 flex flex-wrap gap-4">
+                <!-- Add to Cart Button -->
+                <a href="{% url 'payments:add_to_cart' 'exam' exam.id %}" 
+                class="bg-yellow-500 text-white px-8 py-3 rounded-lg font-semibold hover:bg-yellow-600 transition shadow-md inline-flex items-center">
+                    <i class="fas fa-shopping-cart mr-2"></i> 
+                    Add to Cart (₹{{ exam.price }})
+                </a>
+                
+                <!-- Buy Now Button (Direct Payment) -->
+                <a href="{% url 'payments:payment_page' 'exam' exam.id %}" 
+                class="bg-green-500 text-white px-8 py-3 rounded-lg font-semibold hover:bg-green-600 transition shadow-md inline-flex items-center">
+                    <i class="fas fa-bolt mr-2"></i> 
+                    Buy Now (₹{{ exam.price }})
+                </a>
+            </div>
+            {% elif exam.is_paid and exam.price == 0 %}
+            <div class="mt-6">
+                <a href="{% url 'exams:detail' exam.slug %}" 
+                class="bg-green-500 text-white px-8 py-3 rounded-lg font-semibold hover:bg-green-600 transition shadow-md inline-flex items-center">
+                    <i class="fas fa-gift mr-2"></i> 
+                    Free - Start Learning
+                </a>
+            </div>
+            {% else %}
+            <div class="mt-6">
+                <a href="{% url 'exams:detail' exam.slug %}" 
+                class="bg-blue-500 text-white px-8 py-3 rounded-lg font-semibold hover:bg-blue-600 transition shadow-md inline-flex items-center">
+                    <i class="fas fa-play mr-2"></i> 
+                    Start Learning
+                </a>
+            </div>
+            {% endif %}
+
+
+            <!-- Syllabus Section -->
+            {% if exam.syllabus %}
+            <div id="syllabus" class="bg-white rounded-lg shadow-md p-6 mb-6">
+                <h2 class="text-2xl font-bold text-gray-800 mb-4 flex items-center">
+                    <i class="fas fa-book-open text-orange-500 mr-2"></i>
+                    Syllabus
+                </h2>
+                <div class="prose max-w-none">
+                    {{ exam.syllabus|safe }}
+                </div>
+            </div>
+            {% endif %}
+
+            <!-- Subjects Section -->
+            {% if subjects %}
+            <div id="subjects" class="bg-white rounded-lg shadow-md p-6 mb-6">
+                <h2 class="text-2xl font-bold text-gray-800 mb-4 flex items-center">
+                    <i class="fas fa-layer-group text-green-500 mr-2"></i>
+                    Subjects Covered
+                </h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {% for subject in subjects %}
+                    <div class="bg-gray-50 rounded-lg p-4 hover:shadow-md transition">
+                        <h3 class="font-bold text-gray-800">{{ subject.name }}</h3>
+                        <p class="text-sm text-gray-600 mt-1">{{ subject.description|truncatewords:20 }}</p>
+                        <div class="flex justify-between mt-2 text-sm">
+                            <span class="text-gray-500">Topics: {{ subject.total_topics }}</span>
+                            <span class="text-gray-500">Weightage: {{ subject.weightage }}%</span>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
+
+            <!-- Study Material Section -->
+            {% if study_materials %}
+            <div id="study-material" class="bg-white rounded-lg shadow-md p-6 mb-6">
+                <h2 class="text-2xl font-bold text-gray-800 mb-4 flex items-center justify-between">
+                    <span><i class="fas fa-graduation-cap text-purple-500 mr-2"></i> Study Material</span>
+                    <a href="{% url 'exams:study_material' exam.slug %}" class="text-sm text-blue-500">View All →</a>
+                </h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {% for material in study_materials %}
+                    <div class="border rounded-lg p-4 hover:shadow-md transition">
+                        <div class="flex items-start space-x-3">
+                            {% if material.material_type == 'video' %}
+                            <i class="fas fa-video text-red-500 text-2xl"></i>
+                            {% elif material.material_type == 'pdf' %}
+                            <i class="fas fa-file-pdf text-red-500 text-2xl"></i>
+                            {% else %}
+                            <i class="fas fa-file-alt text-blue-500 text-2xl"></i>
+                            {% endif %}
+                            <div class="flex-1">
+                                <h3 class="font-semibold text-gray-800">{{ material.title }}</h3>
+                                <p class="text-sm text-gray-600">{{ material.description|striptags|truncatewords:10 }}</p>
+                                <div class="flex justify-between items-center mt-2">
+                                    <span class="text-xs text-gray-500">{{ material.get_material_type_display }}</span>
+                                    {% if material.file %}
+                                    <a href="{{ material.file.url }}" class="text-blue-500 text-sm">
+                                        Download <i class="fas fa-download ml-1"></i>
+                                    </a>
+                                    {% elif material.video_url %}
+                                    <a href="{{ material.video_url }}" target="_blank" class="text-blue-500 text-sm">
+                                        Watch <i class="fas fa-play ml-1"></i>
+                                    </a>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
+
+            <!-- Mock Tests Section -->
+            <div id="mock-tests" class="bg-white rounded-lg shadow-md p-6 mb-6">
+                <h2 class="text-2xl font-bold text-gray-800 mb-4 flex items-center justify-between">
+                    <span><i class="fas fa-tasks text-orange-500 mr-2"></i> Mock Tests</span>
+                    <a href="{% url 'exams:mock_tests' exam.slug %}" class="text-sm text-blue-500">View All →</a>
+                </h2>
+                <div class="space-y-3">
+                    {% for mock_test in exam.mock_tests.all|slice:":3" %}
+                    <div class="flex justify-between items-center p-4 border rounded-lg hover:bg-gray-50">
+                        <div>
+                            <h3 class="font-semibold text-gray-800">{{ mock_test.name }}</h3>
+                            <div class="flex gap-3 text-sm text-gray-500 mt-1">
+                                <span><i class="far fa-clock"></i> {{ mock_test.duration_minutes }} mins</span>
+                                <span><i class="fas fa-question-circle"></i> {{ mock_test.total_questions }} Qs</span>
+                                <span><i class="fas fa-chart-line"></i> {{ mock_test.total_marks }} Marks</span>
+                                {% if mock_test.is_paid %}
+                                <span class="text-yellow-600"><i class="fas fa-crown"></i> Premium</span>
+                                {% else %}
+                                <span class="text-green-600"><i class="fas fa-gift"></i> Free</span>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <a href="{% url 'mocktests:take_mock_test' mock_test.id %}" 
+                           class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 transition text-sm">
+                            Start Test
+                        </a>
+                    </div>
+                    {% empty %}
+                    <p class="text-gray-500 text-center py-4">No mock tests available yet. Coming soon!</p>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <!-- Announcements Section -->
+            {% if announcements %}
+            <div id="announcements" class="bg-white rounded-lg shadow-md p-6 mb-6">
+                <h2 class="text-2xl font-bold text-gray-800 mb-4 flex items-center">
+                    <i class="fas fa-bullhorn text-red-500 mr-2"></i>
+                    Latest Announcements
+                </h2>
+                <div class="space-y-3">
+                    {% for announcement in announcements %}
+                    <div class="border-l-4 {% if announcement.is_important %}border-red-500 bg-red-50{% else %}border-blue-500 bg-blue-50{% endif %} p-4 rounded">
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <h3 class="font-semibold text-gray-800">{{ announcement.title }}</h3>
+                                <div class="text-gray-600 text-sm mt-1">{{ announcement.content|safe|truncatewords:30 }}</div>
+                            </div>
+                            <span class="text-xs text-gray-500">{{ announcement.announcement_date|date:"M d, Y" }}</span>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
+
+            <!-- FAQs Section -->
+            {% if faqs %}
+            <div id="faqs" class="bg-white rounded-lg shadow-md p-6 mb-6">
+                <h2 class="text-2xl font-bold text-gray-800 mb-4 flex items-center">
+                    <i class="fas fa-question-circle text-yellow-500 mr-2"></i>
+                    Frequently Asked Questions
+                </h2>
+                <div class="space-y-3">
+                    {% for faq in faqs %}
+                    <div class="border rounded-lg">
+                        <button class="faq-question w-full text-left p-4 font-semibold text-gray-800 hover:bg-gray-50 transition flex justify-between items-center">
+                            {{ faq.question }}
+                            <i class="fas fa-chevron-down text-gray-500"></i>
+                        </button>
+                        <div class="faq-answer hidden p-4 pt-0 text-gray-600 border-t">
+                            {{ faq.answer|safe }}
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<!-- Related Exams -->
+{% if related_exams %}
+<div class="bg-gray-100 py-12 mt-8">
+    <div class="container mx-auto px-4">
+        <h2 class="text-2xl font-bold text-gray-800 mb-6">Related Exams</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {% for related in related_exams %}
+            <div class="bg-white rounded-lg shadow-md p-4 hover:shadow-lg transition">
+                <h3 class="font-bold text-gray-800 mb-2">{{ related.name }}</h3>
+                <p class="text-sm text-gray-500 mb-3">{{ related.duration_minutes }} minutes • {{ related.total_questions_count }} questions</p>
+                <a href="{% url 'exams:detail' related.slug %}" class="text-blue-500 text-sm">View Details →</a>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endif %}
+
+<script>
+// FAQ Accordion functionality
+document.querySelectorAll('.faq-question').forEach(button => {
+    button.addEventListener('click', () => {
+        const answer = button.nextElementSibling;
+        const icon = button.querySelector('i');
+        
+        answer.classList.toggle('hidden');
+        icon.classList.toggle('fa-chevron-down');
+        icon.classList.toggle('fa-chevron-up');
+    });
+});
+
+// Smooth scrolling for navigation links
+document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    anchor.addEventListener('click', function (e) {
+        e.preventDefault();
+        const target = document.querySelector(this.getAttribute('href'));
+        if (target) {
+            target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+    });
+});
+</script>
+{% endblock %}

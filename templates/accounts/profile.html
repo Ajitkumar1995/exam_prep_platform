@@ -1,0 +1,102 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}My Profile - GovtExamWala{% endblock %}
+
+{% block content %}
+<div class="bg-gradient-to-r from-purple-600 to-indigo-600 text-white py-8">
+    <div class="container mx-auto px-4">
+        <h1 class="text-3xl font-bold mb-2">My Profile</h1>
+        <p class="text-lg opacity-90">Manage your account information</p>
+    </div>
+</div>
+
+<div class="container mx-auto px-4 py-8">
+    <div class="max-w-2xl mx-auto">
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden">
+            <div class="p-6">
+                <!-- Profile Picture -->
+                <div class="flex justify-center mb-6">
+                    <div class="relative">
+                        {% if user.profile_pic %}
+                            <img src="{{ user.profile_pic.url }}" alt="{{ user.email }}" class="w-32 h-32 rounded-full object-cover border-4 border-purple-500">
+                        {% else %}
+                            <div class="w-32 h-32 rounded-full bg-gradient-to-r from-purple-600 to-indigo-600 flex items-center justify-center text-white text-4xl font-bold">
+                                {{ user.email|first|upper }}
+                            </div>
+                        {% endif %}
+                        <form method="post" enctype="multipart/form-data" class="absolute bottom-0 right-0">
+                            {% csrf_token %}
+                            <label class="cursor-pointer">
+                                <input type="file" name="profile_pic" class="hidden" onchange="this.form.submit()">
+                                <div class="bg-purple-600 text-white p-2 rounded-full hover:bg-purple-700 transition">
+                                    <i class="fas fa-camera text-sm"></i>
+                                </div>
+                            </label>
+                        </form>
+                    </div>
+                </div>
+                
+                <!-- Account Information -->
+                <div class="space-y-4">
+                    <div class="border-b pb-3">
+                        <label class="text-sm text-gray-500">Email Address</label>
+                        <p class="text-lg font-semibold text-gray-800 dark:text-white">{{ user.email }}</p>
+                    </div>
+                    
+                    <div class="border-b pb-3">
+                        <label class="text-sm text-gray-500">Username</label>
+                        <p class="text-lg font-semibold text-gray-800 dark:text-white">{{ user.username }}</p>
+                    </div>
+                    
+                    <div class="border-b pb-3">
+                        <label class="text-sm text-gray-500">Account Created</label>
+                        <p class="text-lg font-semibold text-gray-800 dark:text-white">{{ user.date_joined|date:"F d, Y" }}</p>
+                    </div>
+                    
+                    <div class="border-b pb-3">
+                        <label class="text-sm text-gray-500">Last Login</label>
+                        <p class="text-lg font-semibold text-gray-800 dark:text-white">{{ user.last_login|date:"F d, Y H:i"|default:"Never" }}</p>
+                    </div>
+                </div>
+                
+                <!-- Password Management Section -->
+                <div class="mt-6 pt-4 border-t">
+                    <h3 class="text-lg font-semibold mb-3">Password Management</h3>
+                    
+                    {% if user.has_usable_password %}
+                        <!-- User has password - Show Change Password button -->
+                        <div class="flex items-center justify-between p-3 bg-green-50 dark:bg-green-900/20 rounded-lg">
+                            <div>
+                                <i class="fas fa-check-circle text-green-600 mr-2"></i>
+                                <span class="text-green-700 dark:text-green-300">Password is set</span>
+                            </div>
+                            <a href="{% url 'accounts:change_password' %}" 
+                               class="bg-purple-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-purple-700 transition">
+                                <i class="fas fa-key mr-1"></i> Change Password
+                            </a>
+                        </div>
+                    {% else %}
+                        <!-- User has no password - Show Set Password button -->
+                        <div class="flex items-center justify-between p-3 bg-yellow-50 dark:bg-yellow-900/20 rounded-lg">
+                            <div>
+                                <i class="fas fa-exclamation-triangle text-yellow-600 mr-2"></i>
+                                <span class="text-yellow-700 dark:text-yellow-300">No password set for this account</span>
+                            </div>
+                            <a href="{% url 'accounts:set_password' %}" 
+                               class="bg-purple-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-purple-700 transition">
+                                <i class="fas fa-plus mr-1"></i> Add Password
+                            </a>
+                        </div>
+                    {% endif %}
+                    
+                    <p class="text-xs text-gray-500 mt-3">
+                        <i class="fas fa-info-circle mr-1"></i>
+                        After setting a password, you can login using email + password. OTP login will still work.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

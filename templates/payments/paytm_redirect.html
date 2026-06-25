@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% block title %}Redirecting to PayTM...{% endblock %}
+
+{% block content %}
+<div class="min-h-screen flex items-center justify-center bg-gray-100">
+    <div class="text-center">
+        <div class="mb-4">
+            <div class="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-orange-600"></div>
+        </div>
+        <h2 class="text-xl font-semibold mb-2">Redirecting to PayTM Secure Gateway...</h2>
+        <p class="text-gray-600">Please do not refresh the page</p>
+        
+        <form method="post" action="{{ paytm_url }}" name="paytm_form">
+            {% for key, value in payment_params.items %}
+                <input type="hidden" name="{{ key }}" value="{{ value }}">
+            {% endfor %}
+        </form>
+    </div>
+</div>
+
+<script>
+    document.paytm_form.submit();
+</script>
+{% endblock %}

@@ -1,0 +1,679 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}FAQ - GovtExamWala{% endblock %}
+
+{% block extra_css %}
+<style>
+    .hero-faq {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .hero-faq::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320"><path fill="rgba(255,255,255,0.1)" d="M0,96L48,112C96,128,192,160,288,160C384,160,480,128,576,122.7C672,117,768,139,864,154.7C960,171,1056,181,1152,165.3C1248,149,1344,107,1392,85.3L1440,64L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path></svg>') no-repeat bottom;
+        background-size: cover;
+    }
+    
+    .search-box {
+        transition: all 0.3s ease;
+    }
+    
+    .search-box:focus-within {
+        transform: scale(1.02);
+        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    }
+    
+    .category-tab {
+        transition: all 0.3s ease;
+        cursor: pointer;
+    }
+    
+    .category-tab.active {
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        color: white;
+    }
+    
+    .category-tab:hover:not(.active) {
+        background: #f3f4f6;
+    }
+    
+    .faq-item {
+        border: 1px solid #e5e7eb;
+        border-radius: 12px;
+        margin-bottom: 1rem;
+        overflow: hidden;
+        transition: all 0.3s ease;
+    }
+    
+    .faq-item:hover {
+        box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+    }
+    
+    .faq-question {
+        background: white;
+        padding: 1.25rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    
+    .faq-question h3 {
+        font-size: 1.1rem;
+        font-weight: 600;
+        margin: 0;
+        padding-right: 2rem;
+    }
+    
+    .faq-question i {
+        transition: transform 0.3s ease;
+        color: #8b5cf6;
+    }
+    
+    .faq-question.active i {
+        transform: rotate(180deg);
+    }
+    
+    .faq-answer {
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.3s ease;
+        background: #f9fafb;
+    }
+    
+    .faq-answer-content {
+        padding: 1.25rem;
+        border-top: 1px solid #e5e7eb;
+        color: #4b5563;
+        line-height: 1.6;
+    }
+    
+    .contact-card {
+        transition: all 0.3s ease;
+    }
+    
+    .contact-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+    }
+    
+    .no-results {
+        display: none;
+        text-align: center;
+        padding: 3rem;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="hero-faq text-white py-20">
+    <div class="container mx-auto px-4 relative z-10">
+        <div class="text-center max-w-3xl mx-auto">
+            <i class="fas fa-question-circle text-5xl mb-4"></i>
+            <h1 class="text-4xl md:text-5xl font-bold mb-4">Frequently Asked Questions</h1>
+            <p class="text-xl opacity-90">Find answers to common questions about GovtExamWala</p>
+            
+            <!-- Search Box -->
+            <div class="search-box mt-8 bg-white rounded-full overflow-hidden shadow-lg">
+                <div class="flex">
+                    <i class="fas fa-search absolute left-6 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                    <input type="text" id="searchFaq" placeholder="Search your question..." 
+                           class="w-full px-12 py-4 text-gray-800 outline-none">
+                    <button id="clearSearch" class="px-6 py-4 text-gray-500 hover:text-gray-700 hidden">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="container mx-auto px-4 py-12">
+    <!-- Category Tabs -->
+    <div class="flex flex-wrap justify-center gap-3 mb-12">
+        <button class="category-tab active px-6 py-2 rounded-full font-semibold transition" data-category="all">
+            All Questions
+        </button>
+        <button class="category-tab px-6 py-2 rounded-full font-semibold transition" data-category="general">
+            General
+        </button>
+        <button class="category-tab px-6 py-2 rounded-full font-semibold transition" data-category="exams">
+            Exams & Preparation
+        </button>
+        <button class="category-tab px-6 py-2 rounded-full font-semibold transition" data-category="mock-tests">
+            Mock Tests
+        </button>
+        <button class="category-tab px-6 py-2 rounded-full font-semibold transition" data-category="payment">
+            Payment & Subscription
+        </button>
+        <button class="category-tab px-6 py-2 rounded-full font-semibold transition" data-category="technical">
+            Technical Issues
+        </button>
+    </div>
+    
+    <!-- No Results Message -->
+    <div id="noResults" class="no-results">
+        <i class="fas fa-search text-6xl text-gray-400 mb-4"></i>
+        <h3 class="text-2xl font-bold mb-2">No questions found</h3>
+        <p class="text-gray-600">Try different keywords or browse our categories</p>
+    </div>
+    
+    <!-- FAQ Sections -->
+    <div class="max-w-4xl mx-auto">
+        
+        <!-- General Questions -->
+        <div class="faq-section mb-8" data-category="general">
+            <h2 class="text-2xl font-bold mb-4 flex items-center gap-2">
+                <i class="fas fa-info-circle text-purple-600"></i> General Questions
+            </h2>
+            
+            <div class="faq-item">
+                <div class="faq-question">
+                    <h3>What is GovtExamWala?</h3>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="faq-answer">
+                    <div class="faq-answer-content">
+                        GovtExamWala is India's leading online exam preparation platform that helps students prepare for various government competitive exams like SSC, Banking, Railway, UPSC, State PCS, Defence, and more. We offer mock tests, video lectures, study materials, current affairs, and AI-powered analytics.
+                    </div>
+                </div>
+            </div>
+            
+            <div class="faq-item">
+                <div class="faq-question">
+                    <h3>Is GovtExamWala free to use?</h3>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="faq-answer">
+                    <div class="faq-answer-content">
+                        GovtExamWala offers both free and paid content. We provide free mock tests, basic study materials, and practice questions. For advanced features like full-length tests, detailed analytics, and premium courses, we have affordable subscription plans starting at just ₹499/month.
+                    </div>
+                </div>
+            </div>
+            
+            <div class="faq-item">
+                <div class="faq-question">
+                    <h3>Which exams does GovtExamWala cover?</h3>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="faq-answer">
+                    <div class="faq-answer-content">
+                        We cover a wide range of government exams including:
+                        <ul class="list-disc list-inside mt-2 space-y-1">
+                            <li>Banking: SBI PO, SBI Clerk, IBPS PO, IBPS Clerk, RBI Grade B, RBI Assistant</li>
+                            <li>SSC: SSC CGL, SSC CHSL, SSC MTS, SSC GD, SSC CPO</li>
+                            <li>Railway: RRB NTPC, RRB JE, RRB Group D, RRB ALP</li>
+                            <li>UPSC: Civil Services (IAS, IPS, IFS), CAPF, CDS</li>
+                            <li>State PCS: UPPSC, BPSC, MPPSC, RPSC, etc.</li>
+                            <li>Defence: NDA, CDS, AFCAT, CAPF</li>
+                            <li>Insurance: LIC AAO, NIACL AO, UIIC AO</li>
+                            <li>Teaching: CTET, UPTET, DSSSB, KVS, NVS</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="faq-item">
+                <div class="faq-question">
+                    <h3>How do I create an account?</h3>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="faq-answer">
+                    <div class="faq-answer-content">
+                        Creating an account is simple:
+                        <ol class="list-decimal list-inside mt-2 space-y-1">
+                            <li>Click on the "Register" button on the top right corner</li>
+                            <li>Fill in your name, email address, and create a password</li>
+                            <li>Verify your email with the OTP sent to your inbox</li>
+                            <li>Complete your profile and start learning!</li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Exams & Preparation -->
+        <div class="faq-section mb-8" data-category="exams">
+            <h2 class="text-2xl font-bold mb-4 flex items-center gap-2">
+                <i class="fas fa-graduation-cap text-purple-600"></i> Exams & Preparation
+            </h2>
+            
+            <div class="faq-item">
+                <div class="faq-question">
+                    <h3>How should I start my exam preparation?</h3>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="faq-answer">
+                    <div class="faq-answer-content">
+                        We recommend the following approach:
+                        <ol class="list-decimal list-inside mt-2 space-y-1">
+                            <li>Understand the exam pattern and syllabus thoroughly</li>
+                            <li>Take a diagnostic mock test to assess your current level</li>
+                            <li>Follow the AI-generated personalized study plan</li>
+                            <li>Study topic-wise using our video lectures and notes</li>
+                            <li>Practice with topic-wise and sectional tests</li>
+                            <li>Attempt full-length mock tests regularly</li>
+                            <li>Analyze your performance and work on weak areas</li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="faq-item">
+                <div class="faq-question">
+                    <h3>How accurate are the mock tests compared to real exams?</h3>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="faq-answer">
+                    <div class="faq-answer-content">
+                        Our mock tests are designed by experts who have analyzed previous years' papers and latest exam patterns. The difficulty level, question types, and interface closely match the actual exams. Many of our students have reported that the actual exam felt similar to our mock tests in terms of difficulty and pattern.
+                    </div>
+                </div>
+            </div>
+            
+            <div class="faq-item">
+                <div class="faq-question">
+                    <h3>How does the AI-powered analytics work?</h3>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="faq-answer">
+                    <div class="faq-answer-content">
+                        Our AI system analyzes your performance across multiple dimensions:
+                        <ul class="list-disc list-inside mt-2 space-y-1">
+                            <li>Tracks your accuracy and speed for each topic</li>
+                            <li>Identifies your strengths and weak areas</li>
+                            <li>Predicts your probable rank and percentile</li>
+                            <li>Provides personalized recommendations for improvement</li>
+                            <li>Compares your performance with toppers</li>
+                            <li>Suggests targeted practice questions</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Mock Tests -->
+        <div class="faq-section mb-8" data-category="mock-tests">
+            <h2 class="text-2xl font-bold mb-4 flex items-center gap-2">
+                <i class="fas fa-file-alt text-purple-600"></i> Mock Tests
+            </h2>
+            
+            <div class="faq-item">
+                <div class="faq-question">
+                    <h3>How many mock tests can I attempt?</h3>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="faq-answer">
+                    <div class="faq-answer-content">
+                        Free users can attempt up to 5 mock tests per month. Premium subscribers get unlimited access to all mock tests, including full-length, sectional, and topic-wise tests. We have over 500+ mock tests covering all major exams.
+                    </div>
+                </div>
+            </div>
+            
+            <div class="faq-item">
+                <div class="faq-question">
+                    <h3>Can I pause and resume a mock test?</h3>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="faq-answer">
+                    <div class="faq-answer-content">
+                        Yes, you can pause a mock test and resume it later. However, the timer continues to run in the background. If you close the browser, your progress is saved, and you can resume from where you left off. Note that the total time limit remains the same.
+                    </div>
+                </div>
+            </div>
+            
+            <div class="faq-item">
+                <div class="faq-question">
+                    <h3>Will I get solutions after the test?</h3>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="faq-answer">
+                    <div class="faq-answer-content">
+                        Absolutely! After completing a mock test, you get:
+                        <ul class="list-disc list-inside mt-2 space-y-1">
+                            <li>Detailed solutions for every question</li>
+                            <li>Video explanations for difficult questions</li>
+                            <li>Shortcut tricks and alternative methods</li>
+                            <li>Topic-wise performance analysis</li>
+                            <li>Comparison with other test-takers</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="faq-item">
+                <div class="faq-question">
+                    <h3>Is there negative marking in mock tests?</h3>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="faq-answer">
+                    <div class="faq-answer-content">
+                        Yes, our mock tests follow the same marking scheme as the actual exam. If the real exam has negative marking, our mock tests will also have it. This helps you practice time management and avoid guesswork. The negative marking value is clearly mentioned before starting the test.
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Payment & Subscription -->
+        <div class="faq-section mb-8" data-category="payment">
+            <h2 class="text-2xl font-bold mb-4 flex items-center gap-2">
+                <i class="fas fa-credit-card text-purple-600"></i> Payment & Subscription
+            </h2>
+            
+            <div class="faq-item">
+                <div class="faq-question">
+                    <h3>What payment methods are accepted?</h3>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="faq-answer">
+                    <div class="faq-answer-content">
+                        We accept various payment methods including:
+                        <ul class="list-disc list-inside mt-2 space-y-1">
+                            <li>Credit Cards (Visa, Mastercard, American Express)</li>
+                            <li>Debit Cards</li>
+                            <li>Net Banking (all major banks)</li>
+                            <li>UPI (Google Pay, PhonePe, Paytm, Amazon Pay)</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="faq-item">
+                <div class="faq-question">
+                    <h3>What is your refund policy?</h3>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="faq-answer">
+                    <div class="faq-answer-content">
+                        We offer a 7-day money-back guarantee if you're not satisfied with our services. To request a refund, contact our support team within 7 days of purchase. Refunds are processed within 7-10 business days. No questions asked!
+                    </div>
+                </div>
+            </div>
+            
+            <div class="faq-item">
+                <div class="faq-question">
+                    <h3>Can I cancel my subscription anytime?</h3>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="faq-answer">
+                    <div class="faq-answer-content">
+                        Yes, you can cancel your subscription anytime from your account settings. Your access will continue until the end of your current billing cycle. There are no cancellation fees. You can also re-subscribe whenever you want.
+                    </div>
+                </div>
+            </div>
+            
+            <div class="faq-item">
+                <div class="faq-question">
+                    <h3>Are there any discounts for students?</h3>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="faq-answer">
+                    <div class="faq-answer-content">
+                        Yes! We offer special discounts for students. You can get up to 40% off on annual plans. Additionally, we have referral discounts, festive offers, and coupon codes. Check our "Offers" section for current promotions.
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Technical Issues -->
+        <div class="faq-section mb-8" data-category="technical">
+            <h2 class="text-2xl font-bold mb-4 flex items-center gap-2">
+                <i class="fas fa-laptop-code text-purple-600"></i> Technical Issues
+            </h2>
+            
+            <div class="faq-item">
+                <div class="faq-question">
+                    <h3>What should I do if the test window freezes?</h3>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="faq-answer">
+                    <div class="faq-answer-content">
+                        If the test window freezes, try the following:
+                        <ol class="list-decimal list-inside mt-2 space-y-1">
+                            <li>Refresh the page - your answers are auto-saved</li>
+                            <li>Check your internet connection</li>
+                            <li>Clear your browser cache and cookies</li>
+                            <li>Try using a different browser (Chrome is recommended)</li>
+                            <li>Contact our support team with screenshots</li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="faq-item">
+                <div class="faq-question">
+                    <h3>Is GovtExamWala available on mobile?</h3>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="faq-answer">
+                    <div class="faq-answer-content">
+                        Yes! GovtExamWala is fully responsive and works on all devices. We also have dedicated mobile apps for Android and iOS available on Google Play Store and Apple App Store. You can access all features, including mock tests, video lectures, and study materials on your mobile phone.
+                    </div>
+                </div>
+            </div>
+            
+            <div class="faq-item">
+                <div class="faq-question">
+                    <h3>I forgot my password. How do I reset it?</h3>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="faq-answer">
+                    <div class="faq-answer-content">
+                        To reset your password:
+                        <ol class="list-decimal list-inside mt-2 space-y-1">
+                            <li>Click on "Login" on the top right</li>
+                            <li>Click on "Forgot Password?" link</li>
+                            <li>Enter your registered email address</li>
+                            <li>You'll receive a password reset link in your email</li>
+                            <li>Click the link and set a new password</li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="faq-item">
+                <div class="faq-question">
+                    <h3>How can I contact support?</h3>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="faq-answer">
+                    <div class="faq-answer-content">
+                        You can reach our support team through:
+                        <ul class="list-disc list-inside mt-2 space-y-1">
+                            <li>Email: support@govtexamwala.com</li>
+                            <li>Live Chat: Available 9 AM to 9 PM, Monday to Saturday</li>
+                            <li>Phone: +91-XXXXXXXXXX (10 AM to 6 PM)</li>
+                            <li>WhatsApp: +91-XXXXXXXXXX</li>
+                            <li>Help Center: Submit a ticket from your dashboard</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Still Have Questions? -->
+    <div class="max-w-4xl mx-auto mt-12">
+        <div class="bg-gradient-to-r from-purple-600 to-indigo-600 rounded-2xl p-8 text-center text-white">
+            <i class="fas fa-headset text-4xl mb-4"></i>
+            <h2 class="text-2xl font-bold mb-3">Still have questions?</h2>
+            <p class="mb-6 opacity-90">Can't find what you're looking for? Our support team is here to help!</p>
+            <div class="flex flex-wrap justify-center gap-4">
+                <a href="#" class="bg-white text-purple-600 px-6 py-2 rounded-lg font-semibold hover:shadow-lg transition">
+                    <i class="fas fa-envelope mr-2"></i> Email Support
+                </a>
+                <a href="#" class="border-2 border-white px-6 py-2 rounded-lg font-semibold hover:bg-white hover:text-purple-600 transition">
+                    <i class="fas fa-comment mr-2"></i> Live Chat
+                </a>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Contact Options Cards -->
+    <div class="max-w-4xl mx-auto mt-8">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div class="contact-card bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 text-center">
+                <div class="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <i class="fas fa-phone-alt text-2xl text-purple-600"></i>
+                </div>
+                <h3 class="font-bold mb-2">Call Us</h3>
+                <p class="text-gray-600 dark:text-gray-400">+91-XXXXXXXXXX</p>
+                <p class="text-sm text-gray-500">Mon-Sat, 10 AM - 6 PM</p>
+            </div>
+            
+            <div class="contact-card bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 text-center">
+                <div class="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <i class="fas fa-envelope text-2xl text-purple-600"></i>
+                </div>
+                <h3 class="font-bold mb-2">Email Us</h3>
+                <p class="text-gray-600 dark:text-gray-400">support@govtexamwala.com</p>
+                <p class="text-sm text-gray-500">24x7 Support</p>
+            </div>
+            
+            <div class="contact-card bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 text-center">
+                <div class="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <i class="fab fa-whatsapp text-2xl text-purple-600"></i>
+                </div>
+                <h3 class="font-bold mb-2">WhatsApp</h3>
+                <p class="text-gray-600 dark:text-gray-400">+91-XXXXXXXXXX</p>
+                <p class="text-sm text-gray-500">Quick responses</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // FAQ Accordion
+    document.querySelectorAll('.faq-question').forEach(question => {
+        question.addEventListener('click', () => {
+            const answer = question.nextElementSibling;
+            const isActive = question.classList.contains('active');
+            
+            // Close all other answers
+            document.querySelectorAll('.faq-question').forEach(q => {
+                if (q !== question) {
+                    q.classList.remove('active');
+                    q.nextElementSibling.style.maxHeight = null;
+                }
+            });
+            
+            // Toggle current answer
+            if (!isActive) {
+                question.classList.add('active');
+                answer.style.maxHeight = answer.scrollHeight + 'px';
+            } else {
+                question.classList.remove('active');
+                answer.style.maxHeight = null;
+            }
+        });
+    });
+    
+    // Category Filter
+    const categoryTabs = document.querySelectorAll('.category-tab');
+    const faqSections = document.querySelectorAll('.faq-section');
+    const searchInput = document.getElementById('searchFaq');
+    const clearBtn = document.getElementById('clearSearch');
+    const noResults = document.getElementById('noResults');
+    const faqItems = document.querySelectorAll('.faq-item');
+    
+    function filterFAQs() {
+        const activeCategory = document.querySelector('.category-tab.active').getAttribute('data-category');
+        const searchTerm = searchInput.value.toLowerCase().trim();
+        
+        let hasVisible = false;
+        
+        faqSections.forEach(section => {
+            const sectionCategory = section.getAttribute('data-category');
+            
+            // Check if section should be visible based on category
+            let sectionVisible = activeCategory === 'all' || sectionCategory === activeCategory;
+            
+            if (sectionVisible && searchTerm) {
+                // Check if any question in this section matches search
+                const questions = section.querySelectorAll('.faq-question h3');
+                let hasMatch = false;
+                
+                questions.forEach(question => {
+                    const questionText = question.textContent.toLowerCase();
+                    const answerText = question.closest('.faq-item').querySelector('.faq-answer-content').textContent.toLowerCase();
+                    
+                    if (questionText.includes(searchTerm) || answerText.includes(searchTerm)) {
+                        hasMatch = true;
+                        // Highlight matching items
+                        question.closest('.faq-item').style.display = 'block';
+                    } else if (searchTerm) {
+                        question.closest('.faq-item').style.display = 'none';
+                    }
+                });
+                
+                sectionVisible = sectionVisible && hasMatch;
+            } else if (searchTerm) {
+                // No search term, show all items in visible sections
+                section.querySelectorAll('.faq-item').forEach(item => {
+                    item.style.display = 'block';
+                });
+            }
+            
+            section.style.display = sectionVisible ? 'block' : 'none';
+            if (sectionVisible) hasVisible = true;
+        });
+        
+        // Show/hide no results message
+        if (!hasVisible && searchTerm) {
+            noResults.style.display = 'block';
+        } else {
+            noResults.style.display = 'none';
+        }
+        
+        // Show/hide clear button
+        if (searchTerm) {
+            clearBtn.classList.remove('hidden');
+        } else {
+            clearBtn.classList.add('hidden');
+        }
+    }
+    
+    // Category click handler
+    categoryTabs.forEach(tab => {
+        tab.addEventListener('click', () => {
+            categoryTabs.forEach(t => t.classList.remove('active'));
+            tab.classList.add('active');
+            filterFAQs();
+        });
+    });
+    
+    // Search handler
+    searchInput.addEventListener('input', filterFAQs);
+    
+    // Clear search
+    clearBtn.addEventListener('click', () => {
+        searchInput.value = '';
+        filterFAQs();
+        // Close all open answers
+        document.querySelectorAll('.faq-question.active').forEach(q => {
+            q.classList.remove('active');
+            q.nextElementSibling.style.maxHeight = null;
+        });
+    });
+    
+    // Open FAQ from URL hash
+    if (window.location.hash) {
+        const hash = window.location.hash.substring(1);
+        const faqItem = document.querySelector(`.faq-item:has(h3:contains("${decodeURIComponent(hash)}"))`);
+        if (faqItem) {
+            faqItem.querySelector('.faq-question').click();
+            faqItem.scrollIntoView({ behavior: 'smooth' });
+        }
+    }
+</script>
+{% endblock %}

@@ -1,0 +1,135 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Question Bank - Interview Preparation | GovtExamWala{% endblock %}
+
+{% block content %}
+<div class="bg-gradient-to-r from-purple-600 to-indigo-600 text-white py-12">
+    <div class="container mx-auto px-4 text-center">
+        <h1 class="text-4xl font-bold mb-4">Question Bank</h1>
+        <p class="text-xl opacity-90">Practice with real interview questions across all categories</p>
+    </div>
+</div>
+
+<div class="container mx-auto px-4 py-8">
+    <!-- Filters -->
+    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 mb-8">
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+            <div>
+                <label class="block text-sm font-medium mb-2">Category</label>
+                <select id="categoryFilter" class="w-full px-3 py-2 border rounded-lg dark:bg-gray-700">
+                    <option value="">All Categories</option>
+                    {% for cat in categories %}
+                    <option value="{{ cat.slug }}" {% if selected_category == cat.slug %}selected{% endif %}>{{ cat.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div>
+                <label class="block text-sm font-medium mb-2">Question Type</label>
+                <select id="typeFilter" class="w-full px-3 py-2 border rounded-lg dark:bg-gray-700">
+                    <option value="">All Types</option>
+                    <option value="hr" {% if selected_type == 'hr' %}selected{% endif %}>HR Interview</option>
+                    <option value="technical" {% if selected_type == 'technical' %}selected{% endif %}>Technical Interview</option>
+                    <option value="behavioral" {% if selected_type == 'behavioral' %}selected{% endif %}>Behavioral</option>
+                    <option value="government" {% if selected_type == 'government' %}selected{% endif %}>Government</option>
+                </select>
+            </div>
+            <div>
+                <label class="block text-sm font-medium mb-2">Difficulty</label>
+                <select id="difficultyFilter" class="w-full px-3 py-2 border rounded-lg dark:bg-gray-700">
+                    <option value="">All Levels</option>
+                    <option value="beginner" {% if selected_difficulty == 'beginner' %}selected{% endif %}>Beginner</option>
+                    <option value="intermediate" {% if selected_difficulty == 'intermediate' %}selected{% endif %}>Intermediate</option>
+                    <option value="advanced" {% if selected_difficulty == 'advanced' %}selected{% endif %}>Advanced</option>
+                    <option value="expert" {% if selected_difficulty == 'expert' %}selected{% endif %}>Expert</option>
+                </select>
+            </div>
+            <div>
+                <label class="block text-sm font-medium mb-2">Search</label>
+                <input type="text" id="searchInput" placeholder="Search questions..." value="{{ search_query }}" class="w-full px-3 py-2 border rounded-lg dark:bg-gray-700">
+            </div>
+        </div>
+    </div>
+    
+    <!-- Questions Grid -->
+    <div class="grid grid-cols-1 gap-4" id="questionsContainer">
+        {% for question in questions %}
+        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition">
+            <div class="p-6">
+                <div class="flex justify-between items-start">
+                    <div class="flex-1">
+                        <div class="flex flex-wrap gap-2 mb-3">
+                            <span class="text-xs bg-purple-100 text-purple-600 px-2 py-1 rounded-full">{{ question.get_question_type_display }}</span>
+                            <span class="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded-full">{{ question.get_difficulty_display }}</span>
+                            {% if question.id in answered_questions %}
+                            <span class="text-xs bg-green-100 text-green-600 px-2 py-1 rounded-full">
+                                <i class="fas fa-check-circle mr-1"></i> Completed
+                            </span>
+                            {% endif %}
+                        </div>
+                        <h3 class="text-lg font-medium mb-3">{{ question.question_text }}</h3>
+                        <div class="flex flex-wrap gap-4 text-sm text-gray-500">
+                            <span><i class="fas fa-clock mr-1"></i> {{ question.time_limit }} sec</span>
+                            <span><i class="fas fa-key mr-1"></i> {{ question.keywords|length }} keywords</span>
+                        </div>
+                    </div>
+                    <a href="{% url 'interviews:practice' question.id %}" class="bg-purple-600 text-white px-6 py-2 rounded-lg font-semibold hover:bg-purple-700 transition ml-4">
+                        Practice
+                    </a>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div class="text-center py-12">
+            <i class="fas fa-folder-open text-6xl text-gray-400 mb-4"></i>
+            <p class="text-xl text-gray-500">No questions found.</p>
+            <p class="text-gray-400 mt-2">Check back later for new questions!</p>
+        </div>
+        {% endfor %}
+    </div>
+    
+    <!-- Pagination -->
+    {% if questions.has_other_pages %}
+    <div class="flex justify-center mt-8">
+        <div class="flex gap-2">
+            {% if questions.has_previous %}
+            <a href="?page={{ questions.previous_page_number }}{% if selected_category %}&category={{ selected_category }}{% endif %}{% if selected_type %}&type={{ selected_type }}{% endif %}{% if selected_difficulty %}&difficulty={{ selected_difficulty }}{% endif %}{% if search_query %}&q={{ search_query }}{% endif %}" class="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300">Previous</a>
+            {% endif %}
+            
+            <span class="px-4 py-2 bg-purple-600 text-white rounded">{{ questions.number }}</span>
+            
+            {% if questions.has_next %}
+            <a href="?page={{ questions.next_page_number }}{% if selected_category %}&category={{ selected_category }}{% endif %}{% if selected_type %}&type={{ selected_type }}{% endif %}{% if selected_difficulty %}&difficulty={{ selected_difficulty }}{% endif %}{% if search_query %}&q={{ search_query }}{% endif %}" class="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300">Next</a>
+            {% endif %}
+        </div>
+    </div>
+    {% endif %}
+</div>
+
+<script>
+    // Filter functionality
+    const categoryFilter = document.getElementById('categoryFilter');
+    const typeFilter = document.getElementById('typeFilter');
+    const difficultyFilter = document.getElementById('difficultyFilter');
+    const searchInput = document.getElementById('searchInput');
+    
+    function applyFilters() {
+        const params = new URLSearchParams();
+        if (categoryFilter.value) params.set('category', categoryFilter.value);
+        if (typeFilter.value) params.set('type', typeFilter.value);
+        if (difficultyFilter.value) params.set('difficulty', difficultyFilter.value);
+        if (searchInput.value) params.set('q', searchInput.value);
+        window.location.href = `?${params.toString()}`;
+    }
+    
+    categoryFilter.addEventListener('change', applyFilters);
+    typeFilter.addEventListener('change', applyFilters);
+    difficultyFilter.addEventListener('change', applyFilters);
+    
+    let searchTimeout;
+    searchInput.addEventListener('input', function() {
+        clearTimeout(searchTimeout);
+        searchTimeout = setTimeout(applyFilters, 500);
+    });
+</script>
+{% endblock %}

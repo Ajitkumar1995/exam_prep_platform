@@ -1,0 +1,1034 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}India's Most Advanced Exam Preparation Platform{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* Modern Color Scheme - Blue/Teal Gradient */
+    :root {
+        --primary-gradient: linear-gradient(135deg, #1e3c72 0%, #2a5298 50%, #00b4db 100%);
+        --secondary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+        --accent-gradient: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        --success-gradient: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+        --card-bg: rgba(255, 255, 255, 0.95);
+        --dark-card-bg: rgba(26, 26, 46, 0.95);
+    }
+    
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+    
+    /* Hero Section Animation */
+    .hero-section {
+        background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .hero-section::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320"><path fill="rgba(255,255,255,0.05)" d="M0,96L48,112C96,128,192,160,288,160C384,160,480,128,576,122.7C672,117,768,139,864,154.7C960,171,1056,181,1152,165.3C1248,149,1344,107,1392,85.3L1440,64L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path></svg>') no-repeat bottom;
+        background-size: cover;
+        opacity: 0.3;
+        animation: slideUp 20s linear infinite;
+    }
+    
+    @keyframes slideUp {
+        0% { transform: translateY(0); }
+        100% { transform: translateY(-100px); }
+    }
+    
+    /* Floating Animation */
+    @keyframes float {
+        0%, 100% { transform: translateY(0px); }
+        50% { transform: translateY(-20px); }
+    }
+    
+    @keyframes floatDelay {
+        0%, 100% { transform: translateY(0px); }
+        50% { transform: translateY(-15px); }
+    }
+    
+    .float-animation {
+        animation: float 3s ease-in-out infinite;
+    }
+    
+    .float-delay {
+        animation: floatDelay 4s ease-in-out infinite;
+    }
+    
+    /* Glow Effect */
+    @keyframes glow {
+        0%, 100% { box-shadow: 0 0 5px rgba(0, 180, 219, 0.5); }
+        50% { box-shadow: 0 0 20px rgba(0, 180, 219, 0.8); }
+    }
+    
+    /* Card Hover Effects */
+    .premium-card {
+        background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+        border-radius: 20px;
+        transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .premium-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+        transition: left 0.5s;
+    }
+    
+    .premium-card:hover::before {
+        left: 100%;
+    }
+    
+    .premium-card:hover {
+        transform: translateY(-10px) scale(1.02);
+        box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+    }
+    
+    /* Animated Counter */
+    .counter-number {
+        font-size: 3rem;
+        font-weight: bold;
+        background: var(--primary-gradient);
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+        display: inline-block;
+    }
+    
+    /* Ripple Effect */
+    .ripple-btn {
+        position: relative;
+        overflow: hidden;
+        transition: all 0.3s;
+    }
+    
+    .ripple-btn:after {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 0;
+        height: 0;
+        border-radius: 50%;
+        background: rgba(255,255,255,0.5);
+        transform: translate(-50%, -50%);
+        transition: width 0.6s, height 0.6s;
+    }
+    
+    .ripple-btn:hover:after {
+        width: 300px;
+        height: 300px;
+    }
+    
+    /* Progress Ring */
+    .progress-ring {
+        transform: rotate(-90deg);
+    }
+    
+    .progress-ring-circle {
+        transition: stroke-dashoffset 0.5s;
+    }
+    
+    /* Shimmer Text */
+    .shimmer-text {
+        background: linear-gradient(120deg, #1e3c72 0%, #2a5298 40%, #00b4db 60%, #2a5298 80%, #1e3c72 100%);
+        background-size: 200% auto;
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+        animation: shimmer 3s linear infinite;
+    }
+    
+    @keyframes shimmer {
+        0% { background-position: 0% 50%; }
+        100% { background-position: 200% 50%; }
+    }
+    
+    /* Particle Background */
+    .particle-bg {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+    }
+    
+    .particle {
+        position: absolute;
+        background: rgba(255,255,255,0.3);
+        border-radius: 50%;
+        animation: particleFloat 10s infinite;
+    }
+    
+    @keyframes particleFloat {
+        0% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
+        50% { opacity: 1; }
+        100% { transform: translateY(-100vh) rotate(360deg); opacity: 0; }
+    }
+    
+    /* Neumorphism Cards */
+    .neumorph-card {
+        background: #e0e5ec;
+        border-radius: 30px;
+        box-shadow: 20px 20px 60px #bebebe, -20px -20px 60px #ffffff;
+        transition: all 0.3s;
+    }
+    
+    .neumorph-card:hover {
+        box-shadow: 10px 10px 30px #bebebe, -10px -10px 30px #ffffff;
+        transform: translateY(-5px);
+    }
+    
+    /* Dark mode adjustments */
+    .dark .premium-card {
+        background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+        color: white;
+    }
+    
+    .dark .neumorph-card {
+        background: #1a1a2e;
+        box-shadow: 20px 20px 60px #0f0f1a, -20px -20px 60px #252542;
+    }
+    
+    /* Testimonial Animation */
+    .testimonial-card {
+        animation: fadeInUp 0.6s ease-out;
+    }
+    
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+    
+    /* Stats Card Animation */
+    .stat-card {
+        transition: all 0.3s;
+        cursor: pointer;
+    }
+    
+    .stat-card:hover {
+        transform: translateY(-5px) scale(1.05);
+    }
+    
+    /* Live Badge Pulse */
+    .live-pulse {
+        animation: livePulse 1s ease-in-out infinite;
+    }
+    
+    @keyframes livePulse {
+        0%, 100% { opacity: 1; transform: scale(1); }
+        50% { opacity: 0.5; transform: scale(1.1); }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Hero Section with Particles -->
+<section class="hero-section text-white relative overflow-hidden min-h-screen flex items-center">
+    <div class="particle-bg" id="particles"></div>
+    
+    <div class="container mx-auto px-4 py-20 relative z-10">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+            <div data-aos="fade-right" data-aos-duration="1000">
+                <div class="inline-flex items-center gap-2 bg-white/20 backdrop-blur-sm rounded-full px-4 py-2 mb-6 animate-pulse">
+                    <span class="relative flex h-3 w-3">
+                        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+                        <span class="relative inline-flex rounded-full h-3 w-3 bg-green-500"></span>
+                    </span>
+                        <span class="text-sm font-semibold">
+                        <span id="studentCount">0</span>+ Students Online Now
+                    </span>
+                </div>
+                
+                <h1 class="text-5xl lg:text-7xl font-bold mb-6 leading-tight">
+                    Master Government Exams with<br>
+                    <span class="shimmer-text">AI-Powered Excellence</span>
+                </h1>
+                
+                <p class="text-xl mb-8 opacity-90 leading-relaxed">
+                    Join <span class="font-bold text-cyan-300">2+ Crore</span> successful aspirants. Get personalized AI coaching, 
+                    real-time analytics, and unlimited practice tests for all competitive exams.
+                </p>
+                
+                <!-- Animated Home page -->
+                <div class="flex flex-wrap gap-4">
+                    <a href="{% url 'mocktests:list' %}" class="ripple-btn bg-gradient-to-r from-cyan-500 to-blue-600 px-8 py-4 rounded-xl font-semibold hover:shadow-2xl transition-all transform hover:scale-105 inline-flex items-center gap-2">
+                         📚 Try Free Mock Test
+                        <svg class="w-5 h-5 group-hover:translate-x-1 transition" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                        </svg>
+                    </a>
+                    <a href="{% url 'exams:list' %}" class="border-2 border-white/50 backdrop-blur-sm px-8 py-4 rounded-xl font-semibold hover:bg-white hover:text-gray-900 transition-all transform hover:scale-105">
+                        📚 Explore Exams
+                    </a>
+                </div>
+            </div>
+            
+            <div data-aos="fade-left" data-aos-duration="1000" data-aos-delay="200">
+                <!-- Live Test Cards Section -->
+                <div class="relative">
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        {% for card in live_cards %}
+                        <div class="bg-white/10 backdrop-blur-md rounded-3xl p-2 float-animation hover:scale-105 transition-all duration-500">
+                            <div class="flex justify-between items-start mb-6">
+                                <div>
+                                    <span class="text-sm {{ card.get_badge_color_class }} px-3 py-1 rounded-full">
+                                        {{ card.badge_text }}
+                                    </span>
+                                    <h3 class="text-2xl font-bold mt-3">{{ card.title }}</h3>
+                                    <p class="text-cyan-200">{{ card.subtitle }}</p>
+                                </div>
+                                <div class="text-right">
+                                    <div class="text-4xl font-bold text-yellow-400">{{ card.enrolled_percentage }}%</div>
+                                    <div class="text-sm">Enrolled</div>
+                                </div>
+                            </div>
+                            
+                            <!-- Progress Ring -->
+                            <div class="flex justify-center mb-6">
+                                <div class="relative w-32 h-32">
+                                    <svg class="w-32 h-32 progress-ring" viewBox="0 0 120 120">
+                                        <circle cx="60" cy="60" r="54" fill="none" stroke="rgba(255,255,255,0.2)" stroke-width="8"/>
+                                        <circle class="progress-ring-circle" cx="60" cy="60" r="54" fill="none" stroke="#fbbf24" stroke-width="8" 
+                                                stroke-dasharray="339.292" stroke-dashoffset="{{ card.get_circumference_offset }}"/>
+                                    </svg>
+                                    {% if card.has_timer %}
+                                    <div class="absolute inset-0 flex items-center justify-center">
+                                        <span class="text-3xl font-bold countdown-timer" 
+                                            data-hours="{{ card.timer_hours }}" 
+                                            data-minutes="{{ card.timer_minutes }}" 
+                                            data-seconds="{{ card.timer_seconds }}">
+                                            {{ card.timer_hours|stringformat:"02d" }}:{{ card.timer_minutes|stringformat:"02d" }}:{{ card.timer_seconds|stringformat:"02d" }}
+                                        </span>
+                                    </div>
+                                    {% else %}
+                                    <div class="absolute inset-0 flex items-center justify-center">
+                                        <span class="text-3xl font-bold">{{ card.enrolled_percentage }}%</span>
+                                    </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            
+                            <div class="space-y-3">
+                                <div class="flex justify-between text-sm">
+                                    <span>👥 Participants</span>
+                                    <span class="font-semibold">{{ card.total_participants|default:"0" }} enrolled</span>
+                                </div>
+                                <div class="w-full bg-white/20 rounded-full h-2">
+                                    <div class="bg-yellow-400 h-2 rounded-full animate-pulse" style="width: {{ card.enrolled_percentage }}%"></div>
+                                </div>
+                                <a href="{{ card.button_url|default:'#' }}" 
+                                class="block w-full bg-gradient-to-r from-yellow-400 to-orange-500 text-gray-900 py-3 rounded-xl font-bold hover:shadow-xl transition-all transform hover:scale-105 text-center">
+                                    {{ card.button_text }}
+                                </a>
+                            </div>
+                        </div>
+                        {% empty %}
+                        <!-- Default card if no live cards available -->
+                        <div class="bg-white/10 backdrop-blur-md rounded-3xl p-8 float-animation">
+                            <div class="text-center">
+                                <i class="fas fa-calendar-alt text-5xl mb-4"></i>
+                                <h3 class="text-2xl font-bold">No Live Tests Currently</h3>
+                                <p class="mt-2">Check back soon for upcoming live tests!</p>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Animated Stats Section -->
+<section class="py-20 bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800">
+    <div class="container mx-auto px-4">
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-8">
+            <div class="stat-card text-center" data-aos="zoom-in" data-aos-duration="800">
+                <div class="neumorph-card p-6">
+                    <div class="text-5xl mb-3 animate-bounce">👨‍🎓</div>
+                    <div class="counter-number" data-target="20000000">0</div>
+                    <p class="text-gray-600 dark:text-gray-400 mt-2">Happy Students</p>
+                    <div class="text-sm text-green-500 mt-2">↑ 45% this year</div>
+                </div>
+            </div>
+            <div class="stat-card text-center" data-aos="zoom-in" data-aos-duration="800" data-aos-delay="100">
+                <div class="neumorph-card p-6">
+                    <div class="text-5xl mb-3 animate-pulse">📝</div>
+                    <div class="counter-number" data-target="3500">0</div>
+                    <p class="text-gray-600 dark:text-gray-400 mt-2">Mock Tests</p>
+                    <div class="text-sm text-green-500 mt-2">↑ 120 new tests</div>
+                </div>
+            </div>
+            <div class="stat-card text-center" data-aos="zoom-in" data-aos-duration="800" data-aos-delay="200">
+                <div class="neumorph-card p-6">
+                    <div class="text-5xl mb-3 animate-spin">❓</div>
+                    <div class="counter-number" data-target="75000">0</div>
+                    <p class="text-gray-600 dark:text-gray-400 mt-2">Practice Questions</p>
+                    <div class="text-sm text-green-500 mt-2">Updated daily</div>
+                </div>
+            </div>
+            <div class="stat-card text-center" data-aos="zoom-in" data-aos-duration="800" data-aos-delay="300">
+                <div class="neumorph-card p-6">
+                    <div class="text-5xl mb-3 animate-pulse">👨‍🏫</div>
+                    <div class="counter-number" data-target="800">0</div>
+                    <p class="text-gray-600 dark:text-gray-400 mt-2">Expert Educators</p>
+                    <div class="text-sm text-green-500 mt-2">IIM/IIT alumni</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Personalized Dashboard for Logged-in Users -->
+{% if user.is_authenticated %}
+<section class="py-12">
+    <div class="container mx-auto px-4">
+        <div class="bg-gradient-to-r from-cyan-600 via-blue-600 to-indigo-600 rounded-3xl p-8 text-white transform hover:scale-105 transition-all duration-500">
+            <div class="flex flex-wrap justify-between items-center gap-6">
+                <div class="flex items-center gap-4">
+                    <div class="w-20 h-20 bg-white/20 rounded-full flex items-center justify-center text-4xl animate-bounce">
+                        {{ user.username|first|upper }}
+                    </div>
+                    <div>
+                        <h2 class="text-3xl font-bold mb-2">Welcome back, {{ user.first_name|default:user.username }}! 👋</h2>
+                        <p class="opacity-90">Your preparation journey is on fire! 🔥</p>
+                    </div>
+                </div>
+                <div class="flex gap-6">
+                    <div class="text-center">
+                        <div class="text-3xl font-bold animate-pulse">7</div>
+                        <p class="text-sm">Day Streak</p>
+                    </div>
+                    <div class="text-center">
+                        <div class="text-3xl font-bold">🏆</div>
+                        <p class="text-sm">12 Achievements</p>
+                    </div>
+                    <div class="text-center">
+                        <div class="text-3xl font-bold">📈</div>
+                        <p class="text-sm">Top 15%</p>
+                    </div>
+                </div>
+                <a href="{% url 'analytics:dashboard' %}" class="bg-white text-blue-600 px-8 py-3 rounded-xl font-bold hover:shadow-xl transition-all transform hover:scale-105">
+                    Go to Dashboard →
+                </a>
+            </div>
+            <div class="mt-6">
+                <div class="flex justify-between mb-2">
+                    <span>Weekly Target Progress</span>
+                    <span class="font-bold">75%</span>
+                </div>
+                <div class="w-full bg-white/30 rounded-full h-3 overflow-hidden">
+                    <div class="bg-gradient-to-r from-yellow-400 to-orange-500 h-3 rounded-full animate-pulse" style="width: 75%; animation: slideIn 1s ease-out;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endif %}
+
+<!-- Exam Categories with 3D Cards -->
+<section class="py-20 bg-gray-50 dark:bg-gray-900">
+    <div class="container mx-auto px-4">
+        <div class="text-center mb-16" data-aos="fade-up">
+            <span class="text-cyan-600 dark:text-cyan-400 font-semibold tracking-wide">COMPREHENSIVE COVERAGE</span>
+            <h2 class="text-4xl lg:text-5xl font-bold mt-2 mb-4">All Government Exams<br>One Platform</h2>
+            <p class="text-xl text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">Choose your exam and start your journey to success</p>
+        </div>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            {% for category in exam_categories %}
+            <div class="premium-card group cursor-pointer" data-aos="flip-left" data-aos-delay="{{ forloop.counter|add:100 }}">
+                <div class="relative h-48 bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center overflow-hidden">
+                    <i class="fas {{ category.icon }} text-6xl text-white transform group-hover:scale-110 transition-transform duration-500"></i>
+                    <div class="absolute top-2 right-2 bg-red-500 text-white text-xs px-2 py-1 rounded-full live-pulse">
+                        LIVE
+                    </div>
+                    <div class="absolute inset-0 bg-black opacity-0 group-hover:opacity-10 transition-opacity"></div>
+                </div>
+                <div class="p-6">
+                    <h3 class="text-2xl font-bold mb-2">{{ category.name }}</h3>
+                    <p class="text-gray-600 dark:text-gray-400 mb-4">{{ category.description|truncatewords:15 }}</p>
+                    <div class="flex justify-between items-center mb-4">
+                        <span class="text-sm text-gray-500">📝 {{ forloop.counter|add:40 }}0+ Tests</span>
+                        <span class="text-sm text-gray-500">👥 {{ forloop.counter|add:15 }}0K+ Users</span>
+                    </div>
+                    <a href="{% url 'exams:category_detail' category.slug %}" class="block text-center bg-gradient-to-r from-cyan-600 to-blue-600 text-white py-3 rounded-xl font-semibold hover:shadow-xl transition-all transform group-hover:scale-105">
+                        Explore {{ category.name }} →
+                    </a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- NOTIFICATIONS SECTION - ADDED HERE -->
+{% if notifications %}
+<section class="py-12 bg-white dark:bg-gray-800">
+    <div class="container mx-auto px-4">
+        <div class="text-center mb-8" data-aos="fade-up">
+            <h2 class="text-3xl font-bold mb-2">📢 Important Updates</h2>
+            <p class="text-gray-600 dark:text-gray-400">Stay informed with latest announcements</p>
+        </div>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {% for notification in notifications %}
+            <div class="bg-gray-50 dark:bg-gray-900 rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition transform hover:-translate-y-1" data-aos="fade-up" data-aos-delay="{{ forloop.counter|add:100 }}">
+                {% if notification.image %}
+                <img src="{{ notification.image.url }}" alt="{{ notification.title }}" class="w-full h-40 object-cover">
+                {% else %}
+                <div class="w-full h-40 bg-gradient-to-r from-purple-600 to-indigo-600 flex items-center justify-center">
+                    <i class="fas fa-bell text-5xl text-white"></i>
+                </div>
+                {% endif %}
+                <div class="p-5">
+                    <div class="flex justify-between items-start mb-2">
+                        <span class="text-xs px-2 py-1 rounded-full 
+                            {% if notification.priority == 'urgent' %}bg-red-100 text-red-600
+                            {% elif notification.priority == 'high' %}bg-orange-100 text-orange-600
+                            {% elif notification.priority == 'medium' %}bg-yellow-100 text-yellow-600
+                            {% else %}bg-blue-100 text-blue-600{% endif %}">
+                            {{ notification.get_priority_display }}
+                        </span>
+                        <span class="text-xs text-gray-500">{{ notification.created_at|date:"M d, Y" }}</span>
+                    </div>
+                    <h3 class="text-xl font-bold mb-2">{{ notification.title }}</h3>
+                    <p class="text-gray-600 dark:text-gray-400 mb-4 line-clamp-3">{{ notification.message|striptags|truncatechars:120 }}</p>
+                    {% if notification.action_url %}
+                    <a href="{% url 'notifications:track_click' notification.id %}" class="inline-flex items-center text-purple-600 hover:text-purple-700 font-semibold">
+                        {{ notification.button_text }} 
+                        <i class="fas fa-arrow-right ml-2"></i>
+                    </a>
+                    {% else %}
+                    <a href="{% url 'notifications:detail' notification.slug %}" class="inline-flex items-center text-purple-600 hover:text-purple-700 font-semibold">
+                        Read More 
+                        <i class="fas fa-arrow-right ml-2"></i>
+                    </a>
+                    {% endif %}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        
+        <div class="text-center mt-8" data-aos="fade-up">
+            <a href="{% url 'notifications:list' %}" class="inline-block bg-purple-600 text-white px-6 py-2 rounded-lg hover:bg-purple-700 transition">
+                View All Notifications
+            </a>
+        </div>
+    </div>
+</section>
+{% endif %}
+
+<!-- Daily Challenge & Live Classes -->
+<!-- Daily Challenge & Live Classes -->
+<section class="py-20 bg-white dark:bg-gray-800">
+    <div class="container mx-auto px-4">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <!-- Daily Challenge -->
+            <div class="relative overflow-hidden rounded-3xl bg-gradient-to-br from-orange-500 via-red-500 to-pink-600 p-8 text-white transform hover:scale-105 transition-all duration-500" data-aos="fade-right">
+                <div class="absolute top-0 right-0 w-40 h-40 bg-white/10 rounded-full filter blur-3xl"></div>
+                <div class="relative z-10">
+                    <div class="flex justify-between items-start mb-6">
+                        <div>
+                            <span class="text-sm bg-white/20 rounded-full px-4 py-2">
+                                {% if daily_challenge %}
+                                    ⚡ {{ daily_challenge.get_challenge_type_display }}
+                                {% else %}
+                                    ⚡ Daily Challenge
+                                {% endif %}
+                            </span>
+                            <h3 class="text-3xl font-bold mt-3">
+                                {% if daily_challenge %}
+                                    {{ daily_challenge.title }}
+                                {% else %}
+                                    Coming Soon
+                                {% endif %}
+                            </h3>
+                        </div>
+                        <div class="text-5xl animate-bounce">
+                            {% if daily_challenge %}
+                                {% if daily_challenge.challenge_type == 'quiz' %}📝
+                                {% elif daily_challenge.challenge_type == 'mock_test' %}📚
+                                {% elif daily_challenge.challenge_type == 'puzzle' %}🧩
+                                {% else %}🎯{% endif %}
+                            {% else %}
+                                🎯
+                            {% endif %}
+                        </div>
+                    </div>
+                    <p class="text-lg mb-6">
+                        {% if daily_challenge %}
+                            {{ daily_challenge.description }}
+                        {% else %}
+                            No active challenge today. Check back tomorrow for new challenges!
+                        {% endif %}
+                    </p>
+                    
+                    {% if daily_challenge %}
+                    <div class="flex justify-between items-center mb-6">
+                        <div>
+                            <div class="text-3xl font-bold">🏆 {{ daily_challenge.xp_reward }} XP</div>
+                            <div class="text-sm opacity-90">+ Bonus {{ daily_challenge.coin_reward }} coins</div>
+                        </div>
+                        <div class="text-right">
+                            <div class="text-2xl font-bold font-mono">
+                                📊 {{ daily_challenge.total_questions }} Questions
+                            </div>
+                            <div class="text-sm">in {{ daily_challenge.duration_minutes }} minutes</div>
+                        </div>
+                    </div>
+                    
+                    {% if user.is_authenticated %}
+                        {% if user_participation and user_participation.is_completed %}
+                            <div class="text-center mb-4">
+                                <div class="inline-block bg-green-500/30 rounded-full px-4 py-2">
+                                    <i class="fas fa-check-circle mr-2"></i> Completed! Score: {{ user_participation.score }}%
+                                </div>
+                            </div>
+                        {% else %}
+                            <a href="{{ daily_challenge.test_url|default:'#' }}" 
+                               class="block w-full bg-white text-orange-600 py-3 rounded-xl font-bold hover:shadow-xl transition-all transform hover:scale-105 text-center">
+                                Take Challenge Now →
+                            </a>
+                        {% endif %}
+                    {% else %}
+                        <a href="{% url 'accounts:login_signup' %}" 
+                           class="block w-full bg-white text-orange-600 py-3 rounded-xl font-bold hover:shadow-xl transition-all transform hover:scale-105 text-center">
+                            Login to Take Challenge →
+                        </a>
+                    {% endif %}
+                    {% else %}
+                    <div class="text-center">
+                        <p class="text-lg">No active challenge today</p>
+                        <p class="text-sm opacity-80 mt-2">Check back tomorrow for new challenges!</p>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+            
+            <!-- Leaderboard -->
+            <div class="relative overflow-hidden rounded-3xl bg-gradient-to-br from-green-500 via-teal-500 to-cyan-600 p-8 text-white transform hover:scale-105 transition-all duration-500" data-aos="fade-left">
+                <div class="absolute top-0 right-0 w-40 h-40 bg-white/10 rounded-full filter blur-3xl"></div>
+                <div class="relative z-10">
+                    <div class="flex justify-between items-center mb-6">
+                        <h3 class="text-3xl font-bold">🏆 Top Performers</h3>
+                        <a href="#" class="text-sm underline hover:text-yellow-300">View All →</a>
+                    </div>
+                    <div class="space-y-4">
+                        {% for performer in leaderboard %}
+                        <div class="flex items-center justify-between bg-white/10 rounded-xl p-4 transform hover:scale-105 transition-all">
+                            <div class="flex items-center gap-4">
+                                <span class="text-3xl font-bold 
+                                    {% if performer.rank == 1 %}text-yellow-400
+                                    {% elif performer.rank == 2 %}text-gray-300
+                                    {% elif performer.rank == 3 %}text-amber-600
+                                    {% else %}text-white{% endif %}">
+                                    {{ performer.rank }}
+                                </span>
+                                <div>
+                                    <p class="font-bold text-lg">{{ performer.name|truncatechars:20 }}</p>
+                                    <p class="text-xs opacity-80">{{ performer.exam }} Aspirant</p>
+                                </div>
+                            </div>
+                            <div class="text-right">
+                                <div class="font-bold text-xl">{{ performer.score }}%</div>
+                                <div class="text-xs">Accuracy: {{ performer.accuracy }}%</div>
+                            </div>
+                        </div>
+                        {% empty %}
+                        <div class="text-center py-8">
+                            <p class="text-lg">No data available</p>
+                            <p class="text-sm opacity-80 mt-2">Take tests to appear on leaderboard!</p>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- AI Features with 3D Icons -->
+<section class="py-20 bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800">
+    <div class="container mx-auto px-4">
+        <div class="text-center mb-16" data-aos="fade-up">
+            <span class="text-cyan-600 dark:text-cyan-400 font-semibold">AI-POWERED LEARNING</span>
+            <h2 class="text-4xl lg:text-5xl font-bold mt-2 mb-4">Smart Features for Smart Learning</h2>
+            <p class="text-xl text-gray-600 dark:text-gray-400">Leverage cutting-edge AI to accelerate your preparation</p>
+        </div>
+        
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div class="text-center group" data-aos="flip-up" data-aos-duration="800">
+                <div class="feature-icon w-28 h-28 mx-auto mb-6 bg-gradient-to-br from-cyan-500 to-blue-600 rounded-full flex items-center justify-center transform group-hover:rotate-12 transition-all duration-500">
+                    <i class="fas fa-brain text-5xl text-white"></i>
+                </div>
+                <h3 class="text-2xl font-bold mb-3">AI Study Planner</h3>
+                <p class="text-gray-600 dark:text-gray-400 mb-4">Personalized study schedule based on your strengths and weak areas</p>
+                <div class="inline-block bg-green-100 dark:bg-green-900 text-green-600 dark:text-green-300 px-4 py-2 rounded-full text-sm">
+                    ↑ 90% users improved scores
+                </div>
+            </div>
+            
+            <div class="text-center group" data-aos="flip-up" data-aos-duration="800" data-aos-delay="100">
+                <div class="feature-icon w-28 h-28 mx-auto mb-6 bg-gradient-to-br from-purple-500 to-pink-600 rounded-full flex items-center justify-center transform group-hover:rotate-12 transition-all duration-500">
+                    <i class="fas fa-chart-line text-5xl text-white"></i>
+                </div>
+                <h3 class="text-2xl font-bold mb-3">Smart Analytics</h3>
+                <p class="text-gray-600 dark:text-gray-400 mb-4">Real-time performance tracking with AI-powered insights</p>
+                <div class="inline-block bg-green-100 dark:bg-green-900 text-green-600 dark:text-green-300 px-4 py-2 rounded-full text-sm">
+                    🎯 Predict your AIR rank
+                </div>
+            </div>
+            
+            <div class="text-center group" data-aos="flip-up" data-aos-duration="800" data-aos-delay="200">
+                <div class="feature-icon w-28 h-28 mx-auto mb-6 bg-gradient-to-br from-orange-500 to-red-600 rounded-full flex items-center justify-center transform group-hover:rotate-12 transition-all duration-500">
+                    <i class="fas fa-robot text-5xl text-white"></i>
+                </div>
+                <h3 class="text-2xl font-bold mb-3">AI Interview Coach</h3>
+                <p class="text-gray-600 dark:text-gray-400 mb-4">Practice with AI-powered mock interviews & get instant feedback</p>
+                <div class="inline-block bg-green-100 dark:bg-green-900 text-green-600 dark:text-green-300 px-4 py-2 rounded-full text-sm">
+                    🎤 50,000+ interviews conducted
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Success Stories with Animation -->
+<section class="py-20 bg-white dark:bg-gray-800">
+    <div class="container mx-auto px-4">
+        <div class="text-center mb-16" data-aos="fade-up">
+            <span class="text-cyan-600 dark:text-cyan-400 font-semibold">SUCCESS STORIES</span>
+            <h2 class="text-4xl lg:text-5xl font-bold mt-2 mb-4">Our Students' Achievements</h2>
+            <p class="text-xl text-gray-600 dark:text-gray-400">25,000+ students achieved their dream jobs in 2024</p>
+        </div>
+        
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div class="testimonial-card premium-card p-8" data-aos="fade-right" data-aos-duration="800">
+                <div class="flex items-center mb-6">
+                    <div class="w-20 h-20 bg-gradient-to-br from-cyan-500 to-blue-600 rounded-full flex items-center justify-center text-white text-3xl font-bold mr-4 transform hover:rotate-12 transition">
+                        R
+                    </div>
+                    <div>
+                        <h4 class="font-bold text-xl">Rahul Sharma</h4>
+                        <p class="text-gray-500">SSC CGL AIR 12</p>
+                        <div class="flex text-yellow-400 mt-1">
+                            ★★★★★
+                        </div>
+                    </div>
+                </div>
+                <p class="text-gray-600 dark:text-gray-400 italic leading-relaxed">"The mock tests and analytics helped me identify my weak areas. GovtExamWala is the reason I cracked SSC CGL!"</p>
+                <div class="mt-4 pt-4 border-t border-gray-200 dark:border-gray-700">
+                    <div class="flex justify-between text-sm">
+                        <span class="text-green-600">📈 Improved from 45% to 92%</span>
+                        <span class="text-blue-600">⭐ 5.0 Rating</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="testimonial-card premium-card p-8" data-aos="fade-up" data-aos-duration="800" data-aos-delay="100">
+                <div class="flex items-center mb-6">
+                    <div class="w-20 h-20 bg-gradient-to-br from-purple-500 to-pink-600 rounded-full flex items-center justify-center text-white text-3xl font-bold mr-4 transform hover:rotate-12 transition">
+                        P
+                    </div>
+                    <div>
+                        <h4 class="font-bold text-xl">Priya Patel</h4>
+                        <p class="text-gray-500">IBPS PO Selected</p>
+                        <div class="flex text-yellow-400 mt-1">
+                            ★★★★★
+                        </div>
+                    </div>
+                </div>
+                <p class="text-gray-600 dark:text-gray-400 italic leading-relaxed">"The live tests and interview preparation module were game-changers. Thank you GovtExamWala!"</p>
+                <div class="mt-4 pt-4 border-t border-gray-200 dark:border-gray-700">
+                    <div class="flex justify-between text-sm">
+                        <span class="text-green-600">🏆 Top 100 in India</span>
+                        <span class="text-blue-600">⭐ 5.0 Rating</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="testimonial-card premium-card p-8" data-aos="fade-left" data-aos-duration="800" data-aos-delay="200">
+                <div class="flex items-center mb-6">
+                    <div class="w-20 h-20 bg-gradient-to-br from-orange-500 to-red-600 rounded-full flex items-center justify-center text-white text-3xl font-bold mr-4 transform hover:rotate-12 transition">
+                        A
+                    </div>
+                    <div>
+                        <h4 class="font-bold text-xl">Amit Kumar</h4>
+                        <p class="text-gray-500">UPSC CSE Rank 45</p>
+                        <div class="flex text-yellow-400 mt-1">
+                            ★★★★★
+                        </div>
+                    </div>
+                </div>
+                <p class="text-gray-600 dark:text-gray-400 italic leading-relaxed">"The current affairs module and test series are outstanding. Best investment for UPSC preparation."</p>
+                <div class="mt-4 pt-4 border-t border-gray-200 dark:border-gray-700">
+                    <div class="flex justify-between text-sm">
+                        <span class="text-green-600">📅 Cleared in first attempt</span>
+                        <span class="text-blue-600">⭐ 5.0 Rating</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Final CTA with Animation -->
+<section class="relative overflow-hidden py-24 bg-gradient-to-r from-cyan-600 via-blue-600 to-indigo-600">
+    <div class="absolute inset-0 bg-black opacity-10"></div>
+    <div class="absolute top-0 left-0 w-64 h-64 bg-white/10 rounded-full filter blur-3xl animate-pulse"></div>
+    <div class="absolute bottom-0 right-0 w-96 h-96 bg-white/10 rounded-full filter blur-3xl animate-pulse delay-1000"></div>
+    
+    <div class="container mx-auto px-4 text-center relative z-10" data-aos="zoom-in" data-aos-duration="1000">
+        <div class="inline-block bg-white/20 backdrop-blur-sm rounded-full px-6 py-2 mb-6 animate-bounce">
+            <span class="text-lg font-semibold">🎉 Limited Time Offer - 40% OFF</span>
+        </div>
+        <h2 class="text-4xl lg:text-6xl font-bold mb-6">Start Your Success Journey Today</h2>
+        <p class="text-xl mb-8 opacity-90 max-w-2xl mx-auto">Join 2 crore+ successful aspirants who trusted GovtExamWala for their government exam preparation</p>
+        <div class="flex flex-wrap justify-center gap-4">
+            <a href="{% url 'mocktests:list' %}" class="ripple-btn bg-white text-blue-600 px-10 py-4 rounded-xl font-bold text-lg hover:shadow-2xl transition-all transform hover:scale-105 inline-flex items-center gap-2">
+                📚 Try Free Mock Test
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"></path>
+                </svg>
+            </a>
+            <a href="{% url 'exams:list' %}" class="border-2 border-white px-10 py-4 rounded-xl font-bold text-lg hover:bg-white hover:text-blue-600 transition-all transform hover:scale-105">
+                Explore All Exams →
+            </a>
+        </div>
+        <p class="mt-6 text-sm opacity-75">✨ Free trial includes 1000+ mock tests & complete analytics ✨</p>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+
+    // Student Online Animation Counting
+    function animateNumber(element, start, end, duration = 1000) {
+    const startTime = performance.now();
+    
+    function update(currentTime) {
+        const elapsed = currentTime - startTime;
+        const progress = Math.min(elapsed / duration, 1);
+        const current = Math.floor(start + (end - start) * progress);
+        element.textContent = current.toLocaleString();
+        
+        if (progress < 1) {
+            requestAnimationFrame(update);
+        }
+    }
+    
+    requestAnimationFrame(update);
+    }
+
+    function getRandomStudentCount() {
+        // Generate random number between 35,000 and 85,000
+        return Math.floor(Math.random() * (85000 - 35000 + 1)) + 35000;
+    }
+
+    function updateStudentCount() {
+        const currentCount = parseInt(document.getElementById('studentCount').innerText.replace(/,/g, '')) || 35000;
+        const newCount = getRandomStudentCount();
+        animateNumber(document.getElementById('studentCount'), currentCount, newCount, 1500);
+    }
+
+    // Initial load with random number
+    const initialCount = getRandomStudentCount();
+    document.getElementById('studentCount').innerText = initialCount.toLocaleString();
+
+    // Update every 45 seconds with smooth animation
+    setInterval(updateStudentCount, 45000);
+
+
+    // Initialize countdown timers for all cards
+    document.querySelectorAll('.countdown-timer').forEach(timer => {
+        let hours = parseInt(timer.getAttribute('data-hours')) || 0;
+        let minutes = parseInt(timer.getAttribute('data-minutes')) || 0;
+        let seconds = parseInt(timer.getAttribute('data-seconds')) || 0;
+        let totalSeconds = hours * 3600 + minutes * 60 + seconds;
+        
+        const timerElement = timer;
+        
+        const countdownInterval = setInterval(() => {
+            if (totalSeconds <= 0) {
+                clearInterval(countdownInterval);
+                timerElement.innerHTML = "00:00:00";
+                timerElement.parentElement.parentElement.querySelector('.bg-yellow-400').style.width = '100%';
+                return;
+            }
+            
+            totalSeconds--;
+            const h = Math.floor(totalSeconds / 3600);
+            const m = Math.floor((totalSeconds % 3600) / 60);
+            const s = totalSeconds % 60;
+            
+            timerElement.innerHTML = `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+            
+            // Update progress ring
+            const progressRing = timerElement.closest('.relative').querySelector('.progress-ring-circle');
+            if (progressRing) {
+                const initialSeconds = hours * 3600 + minutes * 60 + seconds;
+                const progress = (totalSeconds / initialSeconds) * 339.292;
+                progressRing.style.strokeDashoffset = progress;
+            }
+        }, 1000);
+    });
+
+
+    // Hide suggestions when clicking outside
+    document.addEventListener('click', function(e) {
+        if (!searchInput.contains(e.target)) {
+            document.getElementById('searchSuggestions').classList.add('hidden');
+        }
+    });
+
+    // Animated Counter Function
+    function animateCounter(element, target, duration = 2000) {
+        let start = 0;
+        const increment = target / (duration / 16);
+        let current = start;
+        
+        const updateCounter = () => {
+            current += increment;
+            if (current < target) {
+                element.textContent = Math.floor(current).toLocaleString();
+                requestAnimationFrame(updateCounter);
+            } else {
+                element.textContent = target.toLocaleString();
+            }
+        };
+        
+        updateCounter();
+    }
+    
+    // Initialize all counters when they come into view
+    const observerOptions = {
+        threshold: 0.5,
+        rootMargin: '0px'
+    };
+    
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                const counter = entry.target;
+                const target = parseInt(counter.getAttribute('data-target'));
+                animateCounter(counter, target);
+                observer.unobserve(counter);
+            }
+        });
+    }, observerOptions);
+    
+    document.querySelectorAll('.counter-number').forEach(counter => {
+        observer.observe(counter);
+    });
+    
+    // Countdown Timer for Live Test
+    function startCountdown() {
+        let timeLeft = 2 * 3600 + 15 * 60 + 30;
+        const countdownElement = document.getElementById('countdown');
+        const challengeTimer = document.getElementById('challenge-timer');
+        
+        const timer = setInterval(() => {
+            if (timeLeft <= 0) {
+                clearInterval(timer);
+                if (countdownElement) countdownElement.innerHTML = "00:00:00";
+                if (challengeTimer) challengeTimer.innerHTML = "00:00";
+                return;
+            }
+            
+            const hours = Math.floor(timeLeft / 3600);
+            const minutes = Math.floor((timeLeft % 3600) / 60);
+            const seconds = timeLeft % 60;
+            
+            if (countdownElement) {
+                countdownElement.innerHTML = `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+            }
+            
+            if (challengeTimer && minutes < 15) {
+                challengeTimer.innerHTML = `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+            }
+            
+            timeLeft--;
+        }, 1000);
+    }
+    
+    // Create particle background
+    function createParticles() {
+        const particlesContainer = document.getElementById('particles');
+        if (!particlesContainer) return;
+        
+        for (let i = 0; i < 50; i++) {
+            const particle = document.createElement('div');
+            particle.classList.add('particle');
+            const size = Math.random() * 5 + 2;
+            particle.style.width = `${size}px`;
+            particle.style.height = `${size}px`;
+            particle.style.left = `${Math.random() * 100}%`;
+            particle.style.animationDuration = `${Math.random() * 10 + 5}s`;
+            particle.style.animationDelay = `${Math.random() * 5}s`;
+            particlesContainer.appendChild(particle);
+        }
+    }
+    
+    // Initialize everything when page loads
+    document.addEventListener('DOMContentLoaded', () => {
+        startCountdown();
+        createParticles();
+        
+        // Add scroll reveal animation
+        const revealElements = document.querySelectorAll('.premium-card, .testimonial-card');
+        const revealObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, { threshold: 0.1 });
+        
+        revealElements.forEach(el => {
+            el.style.opacity = '0';
+            el.style.transform = 'translateY(30px)';
+            el.style.transition = 'all 0.6s ease-out';
+            revealObserver.observe(el);
+        });
+    });
+    
+    // Progress ring animation
+    const circle = document.querySelector('.progress-ring-circle');
+    if (circle) {
+        const radius = circle.r.baseVal.value;
+        const circumference = radius * 2 * Math.PI;
+        circle.style.strokeDasharray = `${circumference} ${circumference}`;
+        circle.style.strokeDashoffset = circumference;
+        const offset = circumference - (75 / 100) * circumference;
+        circle.style.strokeDashoffset = offset;
+    }
+</script>
+{% endblock %}

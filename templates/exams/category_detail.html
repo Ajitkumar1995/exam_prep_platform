@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ category.name }} Exams - GovtExamWala{% endblock %}
+
+{% block content %}
+<div class="bg-gradient-to-r from-cyan-600 to-blue-600 text-white py-12">
+    <div class="container mx-auto px-4 text-center">
+        <i class="fas {{ category.icon }} text-6xl mb-4"></i>
+        <h1 class="text-4xl lg:text-5xl font-bold mb-3">{{ category.name }}</h1>
+        <p class="text-xl opacity-90 max-w-2xl mx-auto">{{ category.description }}</p>
+    </div>
+</div>
+
+<div class="container mx-auto px-4 py-12">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {% for exam in exams %}
+        <div class="premium-card bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition">
+            <div class="p-6">
+                <div class="flex items-start gap-4 mb-4">
+                    {% if exam.logo %}
+                        <img src="{{ exam.logo.url }}" alt="{{ exam.name }}" class="w-16 h-16 rounded-xl">
+                    {% else %}
+                        <div class="w-16 h-16 bg-gradient-to-br from-cyan-500 to-blue-600 rounded-xl flex items-center justify-center">
+                            <i class="fas fa-graduation-cap text-2xl text-white"></i>
+                        </div>
+                    {% endif %}
+                    <div class="flex-1">
+                        <h3 class="font-bold text-xl mb-1">{{ exam.name }}</h3>
+                        <p class="text-sm text-gray-500">{{ exam.short_name }}</p>
+                    </div>
+                </div>
+                <p class="text-gray-600 dark:text-gray-400 mb-4 line-clamp-2">{{ exam.description|striptags|truncatechars:100 }}</p>
+                <div class="flex flex-wrap gap-2 mb-4">
+                    <span class="text-xs bg-blue-100 text-blue-600 px-2 py-1 rounded">{{ exam.total_questions }}+ Questions</span>
+                    <span class="text-xs bg-green-100 text-green-600 px-2 py-1 rounded">{{ exam.duration_minutes }} mins</span>
+                </div>
+                <a href="{% url 'exams:detail' exam.slug %}" class="block text-center bg-gradient-to-r from-cyan-600 to-blue-600 text-white py-2 rounded-lg font-semibold hover:shadow-lg transition">
+                    View Details →
+                </a>
+            </div>
+        </div>
+        {% empty %}
+        <div class="col-span-3 text-center py-12">
+            <i class="fas fa-folder-open text-6xl text-gray-400 mb-4"></i>
+            <p class="text-xl text-gray-500">No exams available in this category yet.</p>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

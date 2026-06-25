@@ -1,0 +1,68 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Checkout - PayTM{% endblock %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-8">
+    <div class="max-w-4xl mx-auto">
+        <h1 class="text-3xl font-bold mb-8">Checkout with PayTM</h1>
+        
+        <div class="grid md:grid-cols-2 gap-8">
+            <!-- Order Summary -->
+            <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6">
+                <h2 class="text-xl font-bold mb-4">Order Summary</h2>
+                
+                {% for item in items %}
+                <div class="flex justify-between py-3 border-b dark:border-gray-700">
+                    <div>
+                        <p class="font-semibold">{{ item.get_item_name }}</p>
+                        <p class="text-sm text-gray-500">{{ item.item_type|title }}</p>
+                    </div>
+                    <p class="font-semibold">₹{{ item.get_price }}</p>
+                </div>
+                {% endfor %}
+                
+                <div class="flex justify-between mt-4 pt-4 border-t dark:border-gray-700">
+                    <p class="font-bold text-lg">Total</p>
+                    <p class="font-bold text-lg text-orange-600">₹{{ total_amount }}</p>
+                </div>
+            </div>
+            
+            <!-- PayTM Payment -->
+            <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6">
+                <div class="text-center mb-6">
+                    <img src="{% static 'images/paytm-logo.png' %}" alt="PayTM" class="h-12 mx-auto mb-3">
+                    <h2 class="text-xl font-bold">Pay with PayTM</h2>
+                    <p class="text-gray-500 text-sm">Secure & Instant Payment</p>
+                </div>
+                
+                <form method="POST" id="paytm-form">
+                    {% csrf_token %}
+                    
+                    <div class="mb-4">
+                        <label class="block text-sm font-medium mb-2">Payment Options</label>
+                        <div class="space-y-2">
+                            <label class="flex items-center p-3 border rounded-lg cursor-pointer">
+                                <input type="radio" name="payment_method" value="paytm" checked class="mr-3">
+                                <span>PayTM Wallet / UPI / Cards / Net Banking</span>
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <button type="submit" class="w-full bg-orange-600 hover:bg-orange-700 text-white font-bold py-3 px-4 rounded-lg transition">
+                        Pay ₹{{ total_amount }} via PayTM
+                    </button>
+                </form>
+                
+                <div class="mt-4 text-center">
+                    <img src="{% static 'images/payment-methods.png' %}" alt="Payment Methods" class="h-8 mx-auto">
+                    <p class="text-xs text-gray-500 mt-2">
+                        🔒 100% Secure Payments by PayTM
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,122 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ mock_test.name }} - GovtExamWala{% endblock %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-8">
+    <div class="max-w-4xl mx-auto">
+        <!-- Test Header -->
+        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden">
+            <div class="bg-gradient-to-r from-purple-600 to-indigo-600 px-6 py-6">
+                <h1 class="text-3xl font-bold text-white">{{ mock_test.name }}</h1>
+                <p class="text-purple-100 mt-2">{{ mock_test.exam.name }}</p>
+            </div>
+            
+            <div class="p-6">
+                <!-- Test Info Grid -->
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+                    <div class="text-center p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
+                        <i class="fas fa-clock text-purple-600 text-2xl mb-2"></i>
+                        <p class="text-2xl font-bold">{{ mock_test.duration_minutes }}</p>
+                        <p class="text-sm text-gray-500">Minutes</p>
+                    </div>
+                    <div class="text-center p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
+                        <i class="fas fa-question-circle text-purple-600 text-2xl mb-2"></i>
+                        <p class="text-2xl font-bold">{{ mock_test.total_questions }}</p>
+                        <p class="text-sm text-gray-500">Questions</p>
+                    </div>
+                    <div class="text-center p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
+                        <i class="fas fa-star text-purple-600 text-2xl mb-2"></i>
+                        <p class="text-2xl font-bold">{{ mock_test.total_marks }}</p>
+                        <p class="text-sm text-gray-500">Total Marks</p>
+                    </div>
+                    <div class="text-center p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
+                        <i class="fas fa-chart-line text-purple-600 text-2xl mb-2"></i>
+                        <p class="text-2xl font-bold">{{ average_score|floatformat:1 }}%</p>
+                        <p class="text-sm text-gray-500">Avg Score</p>
+                    </div>
+                </div>
+                
+                <!-- Description -->
+                <div class="mb-6">
+                    <h2 class="text-xl font-bold mb-2">Description</h2>
+                    <p class="text-gray-600 dark:text-gray-400">{{ mock_test.description }}</p>
+                </div>
+                
+                <!-- Instructions -->
+                <div class="mb-6">
+                    <h2 class="text-xl font-bold mb-2">Instructions</h2>
+                    <div class="bg-yellow-50 dark:bg-yellow-900/20 border-l-4 border-yellow-500 p-4 rounded">
+                        <ul class="list-disc list-inside space-y-1 text-gray-700 dark:text-gray-300">
+                            <li>Total duration: {{ mock_test.duration_minutes }} minutes</li>
+                            <li>Total questions: {{ mock_test.total_questions }}</li>
+                            <li>Each question carries {{ mock_test.marks_per_question }} marks</li>
+                            {% if mock_test.negative_marking %}
+                            <li>Negative marking: {{ mock_test.negative_mark_value }} marks per wrong answer</li>
+                            {% else %}
+                            <li>No negative marking</li>
+                            {% endif %}
+                            <li>Questions can be navigated using the question palette</li>
+                            <li>Mark questions for review to revisit later</li>
+                            <li>Test will auto-submit when time expires</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                {% if previous_attempt %}
+                <div class="mb-6 p-4 bg-green-50 dark:bg-green-900/20 rounded-lg">
+                    <h3 class="font-bold text-green-700 dark:text-green-300">Previous Attempt</h3>
+                    <p>Score: {{ previous_attempt.score }}/{{ mock_test.total_marks }} ({{ previous_attempt.percentage|floatformat:1 }}%)</p>
+                    <p>Date: {{ previous_attempt.created_at|date:"F j, Y" }}</p>
+                </div>
+                {% endif %}
+
+                <!-- Test Actions - USING EXISTING CART SYSTEM -->
+                <div class="mt-6">
+                    {% if user.is_authenticated %}
+                        {% if has_purchased %}
+                            <!-- User already purchased - Show Start Test -->
+                            <a href="{% url 'mocktests:start' slug=mock_test.slug %}" 
+                               class="bg-green-500 text-white px-8 py-3 rounded-lg font-semibold hover:bg-green-600 transition shadow-md inline-flex items-center">
+                                <i class="fas fa-play mr-2"></i> Start Test
+                            </a>
+                        {% elif mock_test.is_paid and mock_test.price > 0 %}
+                            <!-- Paid Test - Add to Cart -->
+                            <div class="flex flex-wrap gap-4">
+                                <a href="{% url 'payments:add_to_cart' 'mock_test' mock_test.id %}" 
+                                   class="bg-yellow-500 text-white px-8 py-3 rounded-lg font-semibold hover:bg-yellow-600 transition shadow-md inline-flex items-center">
+                                    <i class="fas fa-shopping-cart mr-2"></i> Add to Cart (₹{{ mock_test.price }})
+                                </a>
+                                <a href="{% url 'payments:payment_page' 'mock_test' mock_test.id %}" 
+                                   class="bg-green-500 text-white px-8 py-3 rounded-lg font-semibold hover:bg-green-600 transition shadow-md inline-flex items-center">
+                                    <i class="fas fa-bolt mr-2"></i> Buy Now (₹{{ mock_test.price }})
+                                </a>
+                            </div>
+                        {% else %}
+                            <!-- Free Test -->
+                            <a href="{% url 'mocktests:start' slug=mock_test.slug %}" 
+                               class="bg-green-500 text-white px-8 py-3 rounded-lg font-semibold hover:bg-green-600 transition shadow-md inline-flex items-center">
+                                <i class="fas fa-play mr-2"></i> Start Free Test
+                            </a>
+                        {% endif %}
+                    {% else %}
+                        <!-- User not logged in -->
+                        {% if mock_test.is_paid and mock_test.price > 0 %}
+                            <a href="{% url 'accounts:login_signup' %}?next={{ request.path }}" 
+                               class="bg-green-500 text-white px-8 py-3 rounded-lg font-semibold hover:bg-green-600 transition shadow-md inline-flex items-center">
+                                <i class="fas fa-lock mr-2"></i> Login to Purchase (₹{{ mock_test.price }})
+                            </a>
+                        {% else %}
+                            <a href="{% url 'mocktests:start' slug=mock_test.slug %}" 
+                               class="bg-green-500 text-white px-8 py-3 rounded-lg font-semibold hover:bg-green-600 transition shadow-md inline-flex items-center">
+                                <i class="fas fa-play mr-2"></i> Start Free Test
+                            </a>
+                        {% endif %}
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

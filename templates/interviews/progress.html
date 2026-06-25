@@ -1,0 +1,153 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}My Interview Progress | GovtExamWala{% endblock %}
+
+{% block content %}
+<div class="bg-gradient-to-r from-purple-600 to-indigo-600 text-white py-12">
+    <div class="container mx-auto px-4 text-center">
+        <i class="fas fa-chart-line text-5xl mb-4"></i>
+        <h1 class="text-4xl font-bold mb-2">My Interview Progress</h1>
+        <p class="text-xl opacity-90">Track your interview preparation journey</p>
+    </div>
+</div>
+
+<div class="container mx-auto px-4 py-8">
+    <!-- Stats Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 text-center">
+            <i class="fas fa-check-circle text-3xl text-green-600 mb-3"></i>
+            <div class="text-3xl font-bold">{{ total_attempted }}</div>
+            <div class="text-gray-500">Questions Practiced</div>
+        </div>
+        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 text-center">
+            <i class="fas fa-star text-3xl text-yellow-600 mb-3"></i>
+            <div class="text-3xl font-bold">{{ average_score|floatformat:1 }}%</div>
+            <div class="text-gray-500">Average Score</div>
+        </div>
+        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 text-center">
+            <i class="fas fa-trophy text-3xl text-purple-600 mb-3"></i>
+            <div class="text-3xl font-bold">
+                {% if average_score >= 85 %}Excellent
+                {% elif average_score >= 70 %}Good
+                {% elif average_score >= 50 %}Average
+                {% else %}Needs Practice{% endif %}
+            </div>
+            <div class="text-gray-500">Performance Level</div>
+        </div>
+    </div>
+    
+    <!-- Category Breakdown -->
+    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 mb-8">
+        <h2 class="text-xl font-bold mb-4 flex items-center gap-2">
+            <i class="fas fa-chart-pie text-purple-600"></i> Performance by Category
+        </h2>
+        <div class="space-y-4">
+            {% for category, stats in category_breakdown.items %}
+            <div>
+                <div class="flex justify-between mb-1">
+                    <span class="font-medium">{{ category }}</span>
+                    <span>{{ stats.count }} questions | Avg: {{ stats.avg_score|floatformat:1 }}%</span>
+                </div>
+                <div class="w-full bg-gray-200 rounded-full h-2">
+                    <div class="bg-purple-600 h-2 rounded-full" style="width: {{ stats.avg_score }}%"></div>
+                </div>
+            </div>
+            {% empty %}
+            <p class="text-gray-500 text-center">No data available yet. Start practicing!</p>
+            {% endfor %}
+        </div>
+    </div>
+    
+    <!-- Difficulty Breakdown -->
+    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 mb-8">
+        <h2 class="text-xl font-bold mb-4 flex items-center gap-2">
+            <i class="fas fa-chart-line text-purple-600"></i> Performance by Difficulty
+        </h2>
+        <div class="space-y-4">
+            {% for difficulty, stats in difficulty_breakdown.items %}
+            <div>
+                <div class="flex justify-between mb-1">
+                    <span class="font-medium capitalize">{{ difficulty }}</span>
+                    <span>{{ stats.count }} questions | Avg: {{ stats.avg_score|floatformat:1 }}%</span>
+                </div>
+                <div class="w-full bg-gray-200 rounded-full h-2">
+                    <div class="h-2 rounded-full 
+                        {% if difficulty == 'beginner' %}bg-green-500
+                        {% elif difficulty == 'intermediate' %}bg-yellow-500
+                        {% elif difficulty == 'advanced' %}bg-orange-500
+                        {% else %}bg-red-500{% endif %}" 
+                        style="width: {{ stats.avg_score }}%"></div>
+                </div>
+            </div>
+            {% empty %}
+            <p class="text-gray-500 text-center">No data available yet. Start practicing!</p>
+            {% endfor %}
+        </div>
+    </div>
+    
+    <!-- Practice History -->
+    <h2 class="text-2xl font-bold mb-4">Practice History</h2>
+    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden">
+        <div class="overflow-x-auto">
+            <table class="w-full">
+                <thead class="bg-gray-50 dark:bg-gray-700">
+                    <tr>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Question</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Category</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Score</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Date</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Action</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y dark:divide-gray-700">
+                    {% for p in progress %}
+                    <tr class="hover:bg-gray-50 dark:hover:bg-gray-700 transition">
+                        <td class="px-6 py-4 text-sm">{{ p.question.question_text|truncatechars:60 }}</td>
+                        <td class="px-6 py-4 text-sm">{{ p.question.category.name }}</td>
+                        <td class="px-6 py-4">
+                            <span class="px-2 py-1 rounded-full text-xs font-semibold 
+                                {% if p.score >= 85 %}bg-green-100 text-green-800
+                                {% elif p.score >= 70 %}bg-blue-100 text-blue-800
+                                {% elif p.score >= 50 %}bg-yellow-100 text-yellow-800
+                                {% else %}bg-red-100 text-red-800{% endif %}">
+                                {{ p.score|floatformat:0 }}%
+                            </span>
+                        </td>
+                        <td class="px-6 py-4 text-sm text-gray-500">{{ p.attempted_at|date:"M d, Y" }}</td>
+                        <td class="px-6 py-4">
+                            <a href="{% url 'interviews:practice' p.question.id %}" class="text-purple-600 hover:text-purple-700">
+                                Practice Again
+                            </a>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="5" class="px-6 py-8 text-center text-gray-500">
+                            No practice history yet. <a href="{% url 'interviews:questions' %}" class="text-purple-600">Start practicing now!</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    
+    <!-- Pagination -->
+    {% if progress.has_other_pages %}
+    <div class="flex justify-center mt-8">
+        <div class="flex gap-2">
+            {% if progress.has_previous %}
+            <a href="?page={{ progress.previous_page_number }}" class="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300">Previous</a>
+            {% endif %}
+            
+            <span class="px-4 py-2 bg-purple-600 text-white rounded">{{ progress.number }}</span>
+            
+            {% if progress.has_next %}
+            <a href="?page={{ progress.next_page_number }}" class="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300">Next</a>
+            {% endif %}
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

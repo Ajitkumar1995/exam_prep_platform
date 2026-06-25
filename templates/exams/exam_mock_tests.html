@@ -1,0 +1,238 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ exam.name }} Mock Tests - Practice Online{% endblock %}
+
+{% block content %}
+<div class="bg-gradient-to-r from-blue-600 to-indigo-600 text-white py-12">
+    <div class="container mx-auto px-4">
+        <div class="flex items-center space-x-4">
+            {% if exam.logo %}
+            <img src="{{ exam.logo.url }}" alt="{{ exam.name }}" class="h-16 w-16 object-contain bg-white rounded-lg p-2">
+            {% else %}
+            <i class="fas fa-tasks text-5xl"></i>
+            {% endif %}
+            <div>
+                <h1 class="text-4xl md:text-5xl font-bold mb-2">{{ exam.name }} Mock Tests</h1>
+                <p class="text-xl opacity-90">Practice with real exam simulation and improve your score</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container mx-auto px-4 py-8">
+    <!-- Stats Summary -->
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
+        <div class="bg-white rounded-lg shadow-md p-4 text-center hover:shadow-lg transition">
+            <div class="text-3xl font-bold text-blue-600">{{ mock_tests.count }}</div>
+            <div class="text-gray-600">Total Tests</div>
+        </div>
+        <div class="bg-white rounded-lg shadow-md p-4 text-center hover:shadow-lg transition">
+            <div class="text-3xl font-bold text-green-600">{{ total_questions|default:"0" }}</div>
+            <div class="text-gray-600">Total Questions</div>
+        </div>
+        <div class="bg-white rounded-lg shadow-md p-4 text-center hover:shadow-lg transition">
+            <div class="text-3xl font-bold text-purple-600">{{ exam.duration_minutes }}</div>
+            <div class="text-gray-600">Minutes/Test</div>
+        </div>
+        <div class="bg-white rounded-lg shadow-md p-4 text-center hover:shadow-lg transition">
+            <div class="text-3xl font-bold text-orange-600">{{ avg_rating|default:"4.5" }}</div>
+            <div class="text-gray-600">⭐ Rating</div>
+        </div>
+    </div>
+
+    <!-- Search and Filter -->
+    <div class="bg-white rounded-lg shadow-md p-4 mb-6">
+        <div class="flex flex-wrap gap-4">
+            <div class="flex-1">
+                <input type="text" id="searchTest" placeholder="Search mock tests..." 
+                       class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+            </div>
+            <div>
+                <select id="filterType" class="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <option value="all">All Tests</option>
+                    <option value="free">Free Tests</option>
+                    <option value="premium">Premium Tests</option>
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mock Tests List -->
+    <div class="space-y-4" id="mockTestsList">
+        {% for mock_test in mock_tests %}
+        <div class="mock-test-item bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl transition-all" 
+             data-type="{% if not mock_test.is_paid %}free{% else %}premium{% endif %}">
+            <div class="p-6">
+                <div class="flex flex-wrap justify-between items-start">
+                    <div class="flex-1">
+                        <div class="flex items-center mb-2 flex-wrap gap-2">
+                            <h3 class="text-xl font-bold text-gray-800">{{ mock_test.name }}</h3>
+                            {% if not mock_test.is_paid %}
+                            <span class="bg-green-100 text-green-800 text-xs px-2 py-1 rounded-full">
+                                <i class="fas fa-gift mr-1"></i> Free
+                            </span>
+                            {% else %}
+                            <span class="bg-yellow-100 text-yellow-800 text-xs px-2 py-1 rounded-full">
+                                <i class="fas fa-crown mr-1"></i> Premium
+                            </span>
+                            {% endif %}
+                            {% if mock_test.is_featured %}
+                            <span class="bg-red-100 text-red-800 text-xs px-2 py-1 rounded-full">
+                                <i class="fas fa-fire mr-1"></i> Featured
+                            </span>
+                            {% endif %}
+                        </div>
+                        
+                        <p class="text-gray-600 mb-3">{{ mock_test.description|default:"Full length mock test to assess your preparation" }}</p>
+                        
+                        <div class="flex flex-wrap gap-4 text-sm text-gray-500">
+                            <span><i class="far fa-clock mr-1"></i> Duration: {{ mock_test.duration_minutes }} minutes</span>
+                            <span><i class="fas fa-question-circle mr-1"></i> Questions: {{ mock_test.total_questions }}</span>
+                            <span><i class="fas fa-chart-line mr-1"></i> Total Marks: {{ mock_test.total_marks }}</span>
+                            <span><i class="fas fa-users mr-1"></i> Attempts: {{ mock_test.attempts.count|default:"0" }}</span>
+                        </div>
+                        
+                        <div class="flex items-center mt-3">
+                            <div class="flex text-yellow-400">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star-half-alt"></i>
+                            </div>
+                            <span class="text-sm text-gray-500 ml-2">({{ mock_test.rating_count|default:"128" }} ratings)</span>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-4 md:mt-0 text-right">
+                        {% if mock_test.is_paid %}
+                        <div class="text-right mb-2">
+                            <span class="text-2xl font-bold text-blue-600">₹{{ mock_test.price|default:"99" }}</span>
+                            <span class="text-sm text-gray-500 line-through ml-1">₹{{ mock_test.original_price|default:"199" }}</span>
+                        </div>
+                        {% endif %}
+                        
+                        <a href="{% url 'mocktests:take_mock_test' mock_test.id %}" 
+                           class="inline-block bg-gradient-to-r from-green-500 to-green-600 text-white px-6 py-2 rounded-lg hover:from-green-600 hover:to-green-700 transition shadow-md">
+                            {% if not mock_test.is_paid %}
+                            <i class="fas fa-play mr-2"></i> Start Free Test
+                            {% else %}
+                            <i class="fas fa-shopping-cart mr-2"></i> Buy Test
+                            {% endif %}
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="bg-gray-50 px-6 py-3 border-t">
+                <div class="flex flex-wrap justify-between text-sm">
+                    <div class="flex items-center">
+                        <i class="fas fa-chart-line text-blue-500 mr-2"></i>
+                        <span>Negative Marking: {{ exam.negative_marking|yesno:"Yes,No" }}</span>
+                    </div>
+                    <div class="flex items-center">
+                        <i class="fas fa-language text-green-500 mr-2"></i>
+                        <span>Available in English & Hindi</span>
+                    </div>
+                    <div class="flex items-center">
+                        <i class="fas fa-shield-alt text-purple-500 mr-2"></i>
+                        <span>Real Exam Simulation</span>
+                    </div>
+                    <div class="flex items-center">
+                        <i class="fas fa-chart-line text-orange-500 mr-2"></i>
+                        <span>Detailed Analytics</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div class="bg-white rounded-lg shadow-md p-12 text-center">
+            <i class="fas fa-tasks text-6xl text-gray-300 mb-4"></i>
+            <h3 class="text-xl font-bold text-gray-600 mb-2">No Mock Tests Available Yet</h3>
+            <p class="text-gray-500">Mock tests for {{ exam.name }} will be added soon. Stay tuned!</p>
+            <a href="{% url 'exams:detail' exam.slug %}" class="inline-block mt-4 bg-blue-500 text-white px-6 py-2 rounded-lg hover:bg-blue-600">
+                Back to Exam Details
+            </a>
+        </div>
+        {% endfor %}
+    </div>
+
+    <!-- Tips Section -->
+    <div class="mt-12 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg p-8">
+        <h3 class="text-2xl font-bold text-gray-800 mb-4 flex items-center">
+            <i class="fas fa-lightbulb text-yellow-500 mr-2"></i>
+            Tips for Mock Test Success
+        </h3>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div class="flex items-start space-x-3">
+                <i class="fas fa-clock text-blue-500 text-xl mt-1"></i>
+                <div>
+                    <h4 class="font-bold">Time Management</h4>
+                    <p class="text-sm text-gray-600">Allocate time wisely to attempt maximum questions</p>
+                </div>
+            </div>
+            <div class="flex items-start space-x-3">
+                <i class="fas fa-chart-line text-green-500 text-xl mt-1"></i>
+                <div>
+                    <h4 class="font-bold">Analyze Performance</h4>
+                    <p class="text-sm text-gray-600">Review mistakes and work on weak areas</p>
+                </div>
+            </div>
+            <div class="flex items-start space-x-3">
+                <i class="fas fa-redo-alt text-purple-500 text-xl mt-1"></i>
+                <div>
+                    <h4 class="font-bold">Regular Practice</h4>
+                    <p class="text-sm text-gray-600">Take at least 2-3 tests weekly for improvement</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Back to Exam Button -->
+    <div class="mt-6 text-center">
+        <a href="{% url 'exams:detail' exam.slug %}" class="text-blue-500 hover:text-blue-600">
+            <i class="fas fa-arrow-left mr-2"></i> Back to {{ exam.name }} Details
+        </a>
+    </div>
+</div>
+
+<script>
+// Search and filter functionality
+const searchInput = document.getElementById('searchTest');
+const filterSelect = document.getElementById('filterType');
+
+function filterTests() {
+    const searchTerm = searchInput?.value.toLowerCase() || '';
+    const filterValue = filterSelect?.value || 'all';
+    
+    const testItems = document.querySelectorAll('.mock-test-item');
+    
+    testItems.forEach(item => {
+        const title = item.querySelector('h3')?.innerText.toLowerCase() || '';
+        const testType = item.getAttribute('data-type');
+        
+        let matchesSearch = title.includes(searchTerm);
+        let matchesFilter = filterValue === 'all' || testType === filterValue;
+        
+        if (matchesSearch && matchesFilter) {
+            item.style.display = 'block';
+        } else {
+            item.style.display = 'none';
+        }
+    });
+}
+
+if (searchInput) searchInput.addEventListener('input', filterTests);
+if (filterSelect) filterSelect.addEventListener('change', filterTests);
+</script>
+
+<style>
+.mock-test-item {
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.mock-test-item:hover {
+    transform: translateY(-2px);
+}
+</style>
+{% endblock %}

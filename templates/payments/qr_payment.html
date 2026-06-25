@@ -1,0 +1,103 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}QR Code Payment - GovtExamWala{% endblock %}
+
+{% block content %}
+<div class="bg-gradient-to-r from-purple-600 to-indigo-600 text-white py-8">
+    <div class="container mx-auto px-4">
+        <h1 class="text-3xl font-bold">Scan & Pay</h1>
+        <p class="text-lg opacity-90">Pay ₹{{ transaction.amount }} using any UPI app</p>
+    </div>
+</div>
+
+<div class="container mx-auto px-4 py-8">
+    <div class="max-w-md mx-auto">
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 text-center">
+            <div class="mb-6">
+                <div class="w-64 h-64 mx-auto border rounded-lg p-4 bg-white">
+                    {% if transaction.qr_code_base64 %}
+                        <img src="data:image/png;base64,{{ transaction.qr_code_base64 }}" alt="QR Code" class="w-full h-full object-contain">
+                    {% elif transaction.qr_code_url %}
+                        <img src="{{ transaction.qr_code_url }}" alt="QR Code" class="w-full h-full object-contain">
+                    {% else %}
+                        <div class="flex items-center justify-center h-full bg-gray-100">
+                            <i class="fas fa-qrcode text-6xl text-gray-400"></i>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+            
+            <div class="mb-4">
+                <p class="text-gray-600">Scan QR code with any UPI app</p>
+                <p class="text-sm text-gray-500 mt-1">Google Pay, PhonePe, Paytm, Amazon Pay, etc.</p>
+            </div>
+            
+            <div class="p-3 bg-gray-50 dark:bg-gray-700 rounded-lg mb-4">
+                <p class="text-sm">Order ID: <span class="font-mono">{{ transaction.order_id|slice:":8" }}...</span></p>
+                <p class="text-lg font-bold text-purple-600 mt-1">₹{{ transaction.amount }}</p>
+            </div>
+            
+            <div id="payment-status" class="hidden">
+                <div class="p-3 rounded-lg mb-4" id="status-message"></div>
+            </div>
+            
+            <button onclick="checkStatus()" class="w-full bg-purple-600 text-white py-2 rounded-lg hover:bg-purple-700 transition">
+                <i class="fas fa-sync-alt mr-2"></i> Check Payment Status
+            </button>
+            
+            <div class="mt-4">
+                <a href="{% url 'payments:payment_page' transaction.item_type transaction.exam.id %}" class="text-sm text-gray-500 hover:text-purple-600">
+                    ← Back to payment options
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+let checkInterval;
+
+function checkStatus() {
+    const statusDiv = document.getElementById('payment-status');
+    const statusMessage = document.getElementById('status-message');
+    
+    statusDiv.classList.remove('hidden');
+    statusMessage.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Checking payment status...';
+    statusMessage.className = 'p-3 rounded-lg mb-4 bg-blue-100 text-blue-800';
+    
+    fetch("{% url 'payments:check_status' transaction.id %}")
+        .then(response => response.json())
+        .then(data => {
+            if (data.is_success) {
+                statusMessage.innerHTML = '<i class="fas fa-check-circle mr-2"></i> Payment successful! Redirecting...';
+                statusMessage.className = 'p-3 rounded-lg mb-4 bg-green-100 text-green-800';
+                setTimeout(() => {
+                    window.location.href = "{% url 'payments:my_purchases' %}";
+                }, 2000);
+            } else if (data.status === 'processing') {
+                statusMessage.innerHTML = '<i class="fas fa-clock mr-2"></i> Payment is being processed. Please wait...';
+                statusMessage.className = 'p-3 rounded-lg mb-4 bg-yellow-100 text-yellow-800';
+                
+                // Check again after 5 seconds
+                setTimeout(checkStatus, 5000);
+            } else if (data.status === 'failed') {
+                statusMessage.innerHTML = '<i class="fas fa-times-circle mr-2"></i> Payment failed. Please try again.';
+                statusMessage.className = 'p-3 rounded-lg mb-4 bg-red-100 text-red-800';
+            }
+        })
+        .catch(error => {
+            statusMessage.innerHTML = '<i class="fas fa-exclamation-triangle mr-2"></i> Error checking status. Please try again.';
+            statusMessage.className = 'p-3 rounded-lg mb-4 bg-red-100 text-red-800';
+        });
+}
+
+// Auto-check every 10 seconds
+checkInterval = setInterval(checkStatus, 10000);
+
+// Stop checking after 10 minutes
+setTimeout(() => {
+    clearInterval(checkInterval);
+}, 600000);
+</script>
+{% endblock %}

@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Pay for {{ item_name }}{% endblock %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-8">
+    <div class="max-w-2xl mx-auto">
+        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden">
+            <div class="p-6">
+                <h1 class="text-2xl font-bold mb-4">Complete Payment</h1>
+                
+                <!-- Order Summary -->
+                <div class="border-b pb-4 mb-4">
+                    <p class="text-gray-600 dark:text-gray-400">Item:</p>
+                    <p class="font-semibold text-lg">{{ item_name }}</p>
+                    <p class="text-gray-600 dark:text-gray-400 mt-2">Amount:</p>
+                    <p class="font-bold text-2xl text-blue-600">₹{{ price }}</p>
+                </div>
+                
+                <!-- Payment Method Selection -->
+                <form method="POST" action="{% url 'payments:initiate_payment' transaction.id %}" id="payment-form">
+                    {% csrf_token %}
+                    
+                    <h2 class="font-semibold text-lg mb-3">Select Payment Method</h2>
+                    
+                    <div class="space-y-3 mb-6">
+                        {% if phonepe_enabled %}
+                        <label class="flex items-center p-4 border rounded-lg cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700">
+                            <input type="radio" name="payment_method" value="phonepe" checked class="mr-3">
+                            <img src="{% static 'images/phonepe-logo.png' %}" alt="PhonePe" class="h-8" onerror="this.src='https://static.phonepe.com/images/logo.png'">
+                            <span class="ml-3">PhonePe (UPI, Cards, Net Banking)</span>
+                        </label>
+                        {% endif %}
+                        
+                        {% if paytm_enabled %}
+                        <label class="flex items-center p-4 border rounded-lg cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700">
+                            <input type="radio" name="payment_method" value="paytm" class="mr-3">
+                            <img src="{% static 'images/paytm-logo.png' %}" alt="PayTM" class="h-8" onerror="this.src='https://paytm.com/logo.png'">
+                            <span class="ml-3">PayTM (Wallet, UPI, Cards)</span>
+                        </label>
+                        {% endif %}
+                    </div>
+                    
+                    <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-lg transition">
+                        Pay ₹{{ price }} Now
+                    </button>
+                </form>
+                
+                <div class="mt-4 text-center text-sm text-gray-500">
+                    <p>🔒 Secure payment powered by 
+                        {% if phonepe_enabled %}PhonePe{% endif %}
+                        {% if phonepe_enabled and paytm_enabled %} & {% endif %}
+                        {% if paytm_enabled %}PayTM{% endif %}
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,268 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Practice - {{ question.question_text|truncatechars:50 }} | GovtExamWala{% endblock %}
+
+{% block extra_css %}
+<style>
+    .timer-container {
+        font-family: 'Courier New', monospace;
+        font-size: 1.5rem;
+        font-weight: bold;
+    }
+    .timer-warning {
+        color: #ef4444;
+        animation: pulse 1s infinite;
+    }
+    @keyframes pulse {
+        0%, 100% { opacity: 1; }
+        50% { opacity: 0.5; }
+    }
+    .feedback-card {
+        transition: all 0.3s ease;
+    }
+    .strength-item {
+        background: linear-gradient(135deg, #d1fae5, #a7f3d0);
+    }
+    .improvement-item {
+        background: linear-gradient(135deg, #fee2e2, #fecaca);
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-8">
+    <div class="max-w-4xl mx-auto">
+        <!-- Question Header -->
+        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden mb-6">
+            <div class="bg-gradient-to-r from-purple-600 to-indigo-600 px-6 py-4">
+                <div class="flex justify-between items-center">
+                    <div>
+                        <span class="text-sm bg-white/20 rounded-full px-3 py-1">{{ question.get_question_type_display }}</span>
+                        <span class="text-sm bg-white/20 rounded-full px-3 py-1 ml-2">{{ question.get_difficulty_display }}</span>
+                    </div>
+                    <div class="timer-container">
+                        <i class="fas fa-clock mr-2"></i>
+                        <span id="timer">00:00</span>
+                    </div>
+                </div>
+                <h1 class="text-2xl font-bold mt-3">{{ question.question_text }}</h1>
+            </div>
+        </div>
+        
+        <!-- Answer Area -->
+        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 mb-6">
+            <h3 class="text-lg font-bold mb-3">Your Answer</h3>
+            <textarea id="userAnswer" rows="10" class="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 dark:bg-gray-700 dark:border-gray-600" placeholder="Type your answer here...{% if user_progress and user_progress.user_answer %}{{ user_progress.user_answer }}{% endif %}"></textarea>
+            <div class="flex justify-between mt-4">
+                <div class="text-sm text-gray-500">
+                    <span id="wordCount">0</span> words
+                </div>
+                <button id="submitAnswer" class="bg-purple-600 text-white px-6 py-2 rounded-lg font-semibold hover:bg-purple-700 transition">
+                    Submit Answer
+                </button>
+            </div>
+        </div>
+        
+        <!-- Feedback Section (Hidden initially) -->
+        <div id="feedbackSection" class="hidden">
+            <!-- Score Card -->
+            <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 mb-6">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <h3 class="text-lg font-bold mb-2">Your Score</h3>
+                        <div class="text-5xl font-bold" id="score">0</div>
+                        <div class="text-sm text-gray-500">out of 100</div>
+                    </div>
+                    <div id="ratingBadge" class="px-4 py-2 rounded-full text-white font-semibold"></div>
+                </div>
+                <div class="mt-4">
+                    <div class="w-full bg-gray-200 rounded-full h-3">
+                        <div id="scoreBar" class="bg-gradient-to-r from-purple-600 to-indigo-600 h-3 rounded-full" style="width: 0%"></div>
+                    </div>
+                </div>
+                <p id="feedbackText" class="mt-4 text-gray-700 dark:text-gray-300"></p>
+            </div>
+            
+            <!-- Strengths & Improvements -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6">
+                    <h3 class="text-lg font-bold mb-3 text-green-600">Strengths</h3>
+                    <ul id="strengthsList" class="space-y-2"></ul>
+                </div>
+                <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6">
+                    <h3 class="text-lg font-bold mb-3 text-red-600">Areas for Improvement</h3>
+                    <ul id="improvementsList" class="space-y-2"></ul>
+                </div>
+            </div>
+            
+            <!-- Sample Answer -->
+            <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 mb-6">
+                <h3 class="text-lg font-bold mb-3 flex items-center gap-2">
+                    <i class="fas fa-lightbulb text-yellow-600"></i> Sample Answer
+                </h3>
+                <div id="sampleAnswer" class="prose max-w-none text-gray-700 dark:text-gray-300"></div>
+            </div>
+            
+            <!-- Tips -->
+            {% if question.tips %}
+            <div class="bg-blue-50 dark:bg-blue-900/20 rounded-xl p-6 mb-6">
+                <h3 class="text-lg font-bold mb-3 flex items-center gap-2">
+                    <i class="fas fa-info-circle text-blue-600"></i> Tips for Answering
+                </h3>
+                <p class="text-gray-700 dark:text-gray-300">{{ question.tips|linebreaks }}</p>
+            </div>
+            {% endif %}
+            
+            <!-- Navigation Buttons -->
+            <div class="flex justify-between gap-4">
+                {% if prev_question %}
+                <a href="{% url 'interviews:practice' prev_question.id %}" class="bg-gray-600 text-white px-6 py-2 rounded-lg font-semibold hover:bg-gray-700 transition">
+                    ← Previous Question
+                </a>
+                {% else %}
+                <div></div>
+                {% endif %}
+                
+                <div class="flex gap-3">
+                    <a href="{% url 'interviews:questions' %}" class="border-2 border-purple-600 text-purple-600 px-6 py-2 rounded-lg font-semibold hover:bg-purple-600 hover:text-white transition">
+                        Back to Questions
+                    </a>
+                    {% if next_question %}
+                    <a href="{% url 'interviews:practice' next_question.id %}" class="bg-purple-600 text-white px-6 py-2 rounded-lg font-semibold hover:bg-purple-700 transition">
+                        Next Question →
+                    </a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    let timerInterval;
+    let timeLeft = {{ question.time_limit }};
+    let isSubmitted = false;
+    
+    // Timer
+    function updateTimer() {
+        const minutes = Math.floor(timeLeft / 60);
+        const seconds = timeLeft % 60;
+        document.getElementById('timer').innerHTML = `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+        
+        if (timeLeft <= 30) {
+            document.getElementById('timer').classList.add('timer-warning');
+        }
+        
+        if (timeLeft <= 0 && !isSubmitted) {
+            clearInterval(timerInterval);
+            document.getElementById('submitAnswer').click();
+        }
+        timeLeft--;
+    }
+    
+    timerInterval = setInterval(updateTimer, 1000);
+    
+    // Word count
+    const answerTextarea = document.getElementById('userAnswer');
+    answerTextarea.addEventListener('input', function() {
+        const words = this.value.trim().split(/\s+/).filter(w => w.length > 0);
+        document.getElementById('wordCount').innerHTML = words.length;
+    });
+    
+    // Submit answer
+    document.getElementById('submitAnswer').addEventListener('click', async function() {
+        if (isSubmitted) return;
+        isSubmitted = true;
+        clearInterval(timerInterval);
+        
+        const answer = answerTextarea.value;
+        const timeSpent = {{ question.time_limit }} - timeLeft - 1;
+        
+        this.disabled = true;
+        this.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Evaluating...';
+        
+        try {
+            const response = await fetch('{% url "interviews:submit_answer" %}', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': '{{ csrf_token }}'
+                },
+                body: JSON.stringify({
+                    question_id: {{ question.id }},
+                    answer: answer,
+                    time_taken: timeSpent
+                })
+            });
+            
+            const data = await response.json();
+            
+            // Show feedback section
+            document.getElementById('feedbackSection').classList.remove('hidden');
+            
+            // Update score
+            document.getElementById('score').innerHTML = data.score;
+            document.getElementById('scoreBar').style.width = data.score + '%';
+            document.getElementById('feedbackText').innerHTML = data.feedback;
+            
+            // Update rating badge
+            const ratingBadge = document.getElementById('ratingBadge');
+            if (data.score >= 85) {
+                ratingBadge.innerHTML = 'Excellent!';
+                ratingBadge.classList.add('bg-green-600');
+            } else if (data.score >= 70) {
+                ratingBadge.innerHTML = 'Good Job!';
+                ratingBadge.classList.add('bg-blue-600');
+            } else if (data.score >= 50) {
+                ratingBadge.innerHTML = 'Good Attempt';
+                ratingBadge.classList.add('bg-yellow-600');
+            } else {
+                ratingBadge.innerHTML = 'Needs Practice';
+                ratingBadge.classList.add('bg-red-600');
+            }
+            
+            // Update strengths
+            const strengthsList = document.getElementById('strengthsList');
+            strengthsList.innerHTML = '';
+            if (data.strengths && data.strengths.length > 0) {
+                data.strengths.forEach(s => {
+                    strengthsList.innerHTML += `<li class="flex items-center gap-2 text-green-700 dark:text-green-300"><i class="fas fa-check-circle"></i> ${s}</li>`;
+                });
+            } else {
+                strengthsList.innerHTML = '<li class="text-gray-500">No strengths identified yet. Keep practicing!</li>';
+            }
+            
+            // Update improvements
+            const improvementsList = document.getElementById('improvementsList');
+            improvementsList.innerHTML = '';
+            if (data.improvements && data.improvements.length > 0) {
+                data.improvements.forEach(i => {
+                    improvementsList.innerHTML += `<li class="flex items-center gap-2 text-red-700 dark:text-red-300"><i class="fas fa-arrow-right"></i> ${i}</li>`;
+                });
+            } else {
+                improvementsList.innerHTML = '<li class="text-gray-500">Great answer! Keep up the good work!</li>';
+            }
+            
+            // Update sample answer
+            document.getElementById('sampleAnswer').innerHTML = data.sample_answer;
+            
+            // Scroll to feedback
+            document.getElementById('feedbackSection').scrollIntoView({ behavior: 'smooth' });
+            
+        } catch (error) {
+            console.error('Error:', error);
+            alert('Failed to submit answer. Please try again.');
+        }
+        
+        this.disabled = false;
+        this.innerHTML = 'Submit Answer';
+    });
+    
+    // Load previous answer if exists
+    {% if user_progress and user_progress.user_answer %}
+    answerTextarea.value = `{{ user_progress.user_answer|escapejs }}`;
+    answerTextarea.dispatchEvent(new Event('input'));
+    {% endif %}
+</script>
+{% endblock %}

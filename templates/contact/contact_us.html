@@ -1,0 +1,88 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Contact Us - GovtExamWala{% endblock %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-12">
+    <div class="max-w-2xl mx-auto bg-white dark:bg-gray-800 rounded-lg shadow-md p-8">
+        <div class="text-center mb-8">
+            <div class="w-20 h-20 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <i class="fas fa-envelope text-4xl text-purple-600"></i>
+            </div>
+            <h1 class="text-3xl font-bold text-gray-800 dark:text-white mb-2">Contact Us</h1>
+            <p class="text-gray-600 dark:text-gray-400">Have questions? We'd love to hear from you.</p>
+        </div>
+        
+        <div class="space-y-6">
+            <!-- Email Section -->
+            <div class="border-b pb-4">
+                <label class="block text-gray-700 dark:text-gray-300 font-semibold mb-2">Email Address</label>
+                <div class="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
+                    <span class="text-gray-800 dark:text-white">support@govtexamwala.com</span>
+                    <button id="copyEmailBtn" class="text-purple-600 hover:text-purple-700 transition">
+                        <i id="copyIcon" class="fas fa-copy"></i>
+                        <span id="copyText" class="ml-1">Copy</span>
+                    </button>
+                </div>
+                <div id="copySuccess" class="hidden mt-2 text-green-600 text-sm">
+                    <i class="fas fa-check-circle"></i> Copied to clipboard!
+                </div>
+            </div>
+            
+            <!-- Phone Section (Optional) -->
+            <div class="border-b pb-4">
+                <label class="block text-gray-700 dark:text-gray-300 font-semibold mb-2">Phone Number</label>
+                <div class="p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
+                    <span class="text-gray-800 dark:text-white">+91-XXXXXXXXXX</span>
+                </div>
+            </div>
+            
+            <!-- Office Hours -->
+            <div class="border-b pb-4">
+                <label class="block text-gray-700 dark:text-gray-300 font-semibold mb-2">Office Hours</label>
+                <div class="p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
+                    <span class="text-gray-800 dark:text-white">Monday - Friday: 10:00 AM - 6:00 PM</span>
+                </div>
+            </div>
+            
+            <!-- Back to Home Button -->
+            <div class="text-center pt-4">
+                <a href="/" class="inline-block bg-purple-600 text-white px-6 py-2 rounded-lg hover:bg-purple-700 transition">
+                    Back to Home
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.getElementById('copyEmailBtn').addEventListener('click', function() {
+    const email = 'support@govtexamwala.com';
+    
+    // Copy to clipboard
+    navigator.clipboard.writeText(email).then(function() {
+        // Change icon to checkmark
+        const icon = document.getElementById('copyIcon');
+        const text = document.getElementById('copyText');
+        const successMsg = document.getElementById('copySuccess');
+        
+        // Change button to show success
+        icon.classList.remove('fa-copy');
+        icon.classList.add('fa-check');
+        text.textContent = 'Copied!';
+        
+        // Show success message
+        successMsg.classList.remove('hidden');
+        
+        // Reset after 2 seconds
+        setTimeout(function() {
+            icon.classList.remove('fa-check');
+            icon.classList.add('fa-copy');
+            text.textContent = 'Copy';
+            successMsg.classList.add('hidden');
+        }, 2000);
+    });
+});
+</script>
+{% endblock %}

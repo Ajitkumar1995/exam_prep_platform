@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Verify OTP - GovtExamWala{% endblock %}
+
+{% block content %}
+<div class="min-h-screen bg-gradient-to-br from-purple-600 via-blue-600 to-indigo-700 py-12 px-4">
+    <div class="max-w-md mx-auto">
+        <div class="bg-white rounded-2xl shadow-2xl p-8 text-center">
+            <div class="mb-6">
+                <div class="w-20 h-20 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <i class="fas fa-envelope text-4xl text-purple-600"></i>
+                </div>
+                <h2 class="text-2xl font-bold text-gray-800">
+                    {% if purpose == 'signup' %}Verify Your Email{% else %}Login Verification{% endif %}
+                </h2>
+                <p class="text-gray-600 mt-2">We've sent a verification code to</p>
+                <p class="text-purple-600 font-semibold">{{ email }}</p>
+            </div>
+            
+            <!-- <form method="post"> -->
+            <form method="post" action="{% url 'accounts:verify_otp_from_email' %}{% if request.GET.next %}?next={{ request.GET.next }}{% endif %}">
+                {% csrf_token %}
+                <div class="mb-6">
+                    <input type="text" name="otp" placeholder="Enter 6-digit code" required
+                           class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 text-center text-2xl tracking-widest"
+                           maxlength="6" autocomplete="off">
+                </div>
+                <button type="submit" class="w-full bg-gradient-to-r from-purple-600 to-indigo-600 text-white py-3 rounded-lg font-semibold hover:from-purple-700 hover:to-indigo-700 transition">
+                    {% if purpose == 'signup' %}Verify & Create Account{% else %}Verify & Login{% endif %}
+                </button>
+            </form>
+            
+            <div class="mt-6">
+                <p class="text-gray-600">Didn't receive the code?</p>
+                <a href="?resend=1" class="text-purple-600 font-semibold hover:text-purple-700">Resend OTP</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,755 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <meta name="description" content="India's leading exam preparation platform for SSC, Banking, Railway, UPSC and more. Practice with mock tests, study material, and live classes.">
+    <title>{% block title %}GovtExamWala - India's #1 Exam Preparation Platform{% endblock %}</title>
+    
+    <!-- Tailwind CSS + DaisyUI -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@3.9.4/dist/full.css" rel="stylesheet" type="text/css" />
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    
+    <!-- AOS Animation -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    
+    <style>
+        * {
+            transition: all 0.3s ease;
+        }
+        
+        body {
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+        }
+        
+        .gradient-bg {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        
+        .gradient-text {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        
+        .card-hover {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .card-hover:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.02);
+        }
+        
+        .skeleton {
+            animation: pulse 1.5s ease-in-out infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+        
+        .exam-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        
+        .dark .exam-card {
+            background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+        }
+        
+        .timer {
+            font-family: 'Courier New', monospace;
+            font-size: 2rem;
+            font-weight: bold;
+        }
+        
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: #888;
+            border-radius: 4px;
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: #555;
+        }
+        
+        /* Notification Badge Animation */
+        @keyframes bellRing {
+            0% { transform: rotate(0deg); }
+            25% { transform: rotate(15deg); }
+            50% { transform: rotate(-15deg); }
+            75% { transform: rotate(5deg); }
+            100% { transform: rotate(0deg); }
+        }
+        
+        .bell-ring {
+            animation: bellRing 0.5s ease-in-out;
+        }
+        
+        /* Notification Badge on Menu Item */
+        .notification-badge {
+            position: absolute;
+            top: -8px;
+            right: -12px;
+            background-color: #ef4444;
+            color: white;
+            font-size: 10px;
+            font-weight: bold;
+            padding: 2px 6px;
+            border-radius: 9999px;
+            min-width: 18px;
+            text-align: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+        
+        .relative-nav-item {
+            position: relative;
+        }
+        
+        /* Loading Spinner */
+        .loading-spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 2px solid rgba(255,255,255,0.3);
+            border-radius: 50%;
+            border-top-color: #fff;
+            animation: spin 0.8s ease-in-out infinite;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        /* Mobile Menu Styles */
+        .mobile-menu {
+            position: fixed;
+            top: 0;
+            right: -100%;
+            width: 80%;
+            max-width: 320px;
+            height: 100%;
+            background: white;
+            z-index: 1000;
+            transition: right 0.3s ease;
+            box-shadow: -2px 0 10px rgba(0,0,0,0.1);
+        }
+        
+        .dark .mobile-menu {
+            background: #1f2937;
+        }
+        
+        .mobile-menu.open {
+            right: 0;
+        }
+        
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 999;
+            display: none;
+        }
+        
+        .overlay.show {
+            display: block;
+        }
+        
+        /* Toast Notifications */
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 9999;
+            animation: slideIn 0.3s ease;
+        }
+        
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+        
+        /* Dropdown styling */
+        .dropdown-content {
+            min-width: 200px;
+            animation: fadeIn 0.2s ease-out;
+        }
+        
+        .dropdown-content li a {
+            transition: all 0.2s ease;
+            padding: 10px 16px;
+        }
+        
+        .dropdown-content li a:hover {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        
+        .dropdown-content li a:hover i {
+            color: white !important;
+        }
+        
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .menu-title {
+            font-size: 0.7rem;
+            letter-spacing: 0.5px;
+            font-weight: 600;
+            color: #6b7280;
+        }
+        
+        /* Avatar styles */
+        .avatar {
+            cursor: pointer;
+        }
+        
+        .avatar img, .avatar div {
+            transition: transform 0.2s ease;
+        }
+        
+        .avatar:hover img, .avatar:hover div {
+            transform: scale(1.05);
+        }
+    </style>
+    
+    {% block extra_css %}{% endblock %}
+</head>
+<body class="bg-gray-50 dark:bg-gray-900">
+    <!-- Mobile Overlay -->
+    <div class="overlay" id="mobileOverlay"></div>
+    
+    <!-- Mobile Menu -->
+    <div class="mobile-menu" id="mobileMenu">
+        <div class="p-4 border-b dark:border-gray-700 flex justify-between items-center">
+            <span class="text-xl font-bold gradient-text">Menu</span>
+            <button onclick="closeMobileMenu()" class="text-gray-600 dark:text-gray-400">
+                <i class="fas fa-times text-2xl"></i>
+            </button>
+        </div>
+        <div class="p-4">
+            <div class="space-y-4">
+
+                <a href="{% url 'exams:list' %}" class="flex items-center space-x-3 text-gray-700 dark:text-gray-300 hover:text-purple-600 py-2">
+                    <i class="fas fa-book w-5"></i>
+                    <span>Exams</span>
+                </a>
+
+                <a href="{% url 'mocktests:list' %}" class="flex items-center space-x-3 text-gray-700 dark:text-gray-300 hover:text-purple-600 py-2">
+                    <i class="fas fa-tasks w-5"></i>
+                    <span>Mock Tests</span>
+                </a>
+
+                {% if user.is_authenticated %}
+
+                <a href="{% url 'analytics:dashboard' %}" class="flex items-center space-x-3 text-gray-700 dark:text-gray-300 hover:text-purple-600 py-2">
+                    <i class="fas fa-chart-line w-5"></i>
+                    <span>Analytics</span>
+                </a>
+                
+                <a href="{% url 'interviews:home' %}" class="flex items-center space-x-3 text-gray-700 dark:text-gray-300 hover:text-purple-600 py-2">
+                    <i class="fas fa-comments w-5"></i>
+                    <span>Interview Prep</span>
+                </a>
+                <a href="{% url 'study_materials:home' %}" class="flex items-center space-x-3 text-gray-700 dark:text-gray-300 hover:text-purple-600 py-2">
+                    <i class="fas fa-graduation-cap w-5"></i>
+                    <span>Study Material</span>
+                </a>
+                
+                <a href="{% url 'notifications:list' %}" class="flex items-center space-x-3 text-gray-700 dark:text-gray-300 hover:text-purple-600 py-2 relative">
+                    <i class="fas fa-bell w-5"></i>
+                    <span>Notifications</span>
+                    <span id="mobileNotificationBadge" class="notification-badge hidden">0</span>
+                </a>
+                {% endif %}
+                
+                {% if user.is_authenticated %}
+                <hr class="my-2 border-gray-200 dark:border-gray-700">
+                <div class="bg-gradient-to-r from-purple-50 to-pink-50 dark:from-gray-700 dark:to-gray-600 rounded-lg p-3">
+                    <p class="text-sm text-gray-600 dark:text-gray-300 mb-2">Logged in as</p>
+                    <p class="font-semibold text-gray-800 dark:text-white">{{ user.email }}</p>
+                </div>
+                <a href="{% url 'accounts:profile' %}" class="flex items-center space-x-3 text-gray-700 dark:text-gray-300 hover:text-purple-600 py-2">
+                    <i class="fas fa-user w-5"></i>
+                    <span>Profile</span>
+                </a>
+                <a href="{% url 'payments:view_cart' %}" class="flex items-center space-x-3 text-gray-700 dark:text-gray-300 hover:text-purple-600 py-2">
+                    <i class="fas fa-shopping-cart w-5"></i>
+                    <span>Cart</span>
+                    {% if user.cart and user.cart.items.count > 0 %}
+                    <span class="ml-auto bg-red-500 text-white text-xs rounded-full px-2 py-0.5">{{ user.cart.items.count }}</span>
+                    {% endif %}
+                </a>
+                <!-- <a href="{% url 'analytics:dashboard' %}" class="flex items-center space-x-3 text-gray-700 dark:text-gray-300 hover:text-purple-600 py-2">
+                    <i class="fas fa-tachometer-alt w-5"></i>
+                    <span>Dashboard</span> -->
+                </a>
+                <a href="{% url 'payments:my_orders' %}" class="flex items-center space-x-3 text-gray-700 dark:text-gray-300 hover:text-purple-600 py-2">
+                    <i class="fas fa-receipt w-5"></i>
+                    <span>My Orders</span>
+                </a>
+                <!-- REPLACED: Subscription with My Purchases -->
+                <a href="{% url 'payments:my_purchases' %}" class="flex items-center space-x-3 text-gray-700 dark:text-gray-300 hover:text-purple-600 py-2">
+                    <i class="fas fa-shopping-bag w-5"></i>
+                    <span>My Purchases</span>
+                </a>
+                <hr class="my-2 border-gray-200 dark:border-gray-700">
+                <a href="{% url 'accounts:logout' %}" class="flex items-center space-x-3 text-red-600 hover:text-red-700 py-2">
+                    <i class="fas fa-sign-out-alt w-5"></i>
+                    <span>Logout</span>
+                </a>
+                {% else %}
+                <hr class="my-2 border-gray-200 dark:border-gray-700">
+                <div class="bg-gradient-to-r from-blue-50 to-purple-50 dark:from-gray-700 dark:to-gray-600 rounded-lg p-3">
+                    <p class="text-sm text-gray-600 dark:text-gray-300 mb-2">Access all features</p>
+                    <a href="{% url 'accounts:login_signup' %}" class="block w-full bg-gradient-to-r from-purple-600 to-indigo-600 text-white text-center py-2 rounded-lg mb-2 hover:from-purple-700 hover:to-indigo-700 transition">
+                        Login / Sign Up
+                    </a>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    
+    <!-- Navigation -->
+    <nav class="bg-white dark:bg-gray-800 shadow-lg sticky top-0 z-50">
+        <div class="container mx-auto px-4">
+            <div class="flex justify-between items-center py-3 md:py-4">
+                <!-- Logo -->
+                <div class="flex items-center space-x-2">
+                    <a href="/" class="text-2xl font-bold gradient-text">
+                        <i class="fas fa-graduation-cap"></i> GovtExamWala
+                    </a>
+                </div>
+                
+                <!-- Desktop Navigation -->
+                <div class="hidden md:flex items-center space-x-6">
+
+                    <a href="{% url 'exams:list' %}" class="text-gray-700 dark:text-gray-300 hover:text-purple-600 transition font-medium">
+                        Exams
+                    </a>
+                    
+                    <a href="{% url 'mocktests:list' %}" class="text-gray-700 dark:text-gray-300 hover:text-purple-600 transition font-medium">
+                        Mock Tests
+                    </a>
+                    
+                    {% if user.is_authenticated %}
+
+                    <a href="{% url 'analytics:dashboard' %}" class="text-gray-700 dark:text-gray-300 hover:text-purple-600 transition font-medium">
+                        Analytics
+                    </a>
+                    
+                    <a href="{% url 'interviews:home' %}" class="text-gray-700 dark:text-gray-300 hover:text-purple-600 transition font-medium">
+                        Interview Prep
+                    </a>
+                    <a href="{% url 'study_materials:home' %}" class="text-gray-700 dark:text-gray-300 hover:text-purple-600 transition font-medium">
+                        Study Material
+                    </a>
+
+                    <!-- Notifications Menu Item -->
+                    <a href="{% url 'notifications:list' %}" class="relative-nav-item text-gray-700 dark:text-gray-300 hover:text-purple-600 transition flex items-center gap-1 font-medium">
+                        <i class="fas fa-bell"></i>
+                        <span>Notifications</span>
+                        <span id="notificationBadge" class="notification-badge hidden">0</span>
+                    </a>
+                    {% endif %}
+                </div>
+
+                <!-- Right Section -->
+                <div class="flex items-center space-x-3">
+                    <!-- Theme Toggle -->
+                    <!-- <button onclick="toggleTheme()" class="btn btn-ghost btn-circle">
+                        <i class="fas fa-sun hidden dark:inline-block text-yellow-400"></i>
+                        <i class="fas fa-moon inline-block dark:hidden text-gray-600"></i>
+                    </button> -->
+                    <!-- Add this in the desktop navigation section, near notifications -->
+                    {% if user.is_authenticated %}
+                    <a href="{% url 'payments:view_cart' %}" class="relative-nav-item text-gray-700 dark:text-gray-300 hover:text-purple-600 transition flex items-center gap-1 font-medium">
+                        <i class="fas fa-shopping-cart"></i>
+                        <span>Cart</span>
+                    {% endif %}
+                        {% if user.is_authenticated and user.cart.items.count > 0 %}
+                        <span class="absolute -top-2 -right-3 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
+                            {{ user.cart.items.count }}
+                        </span>
+                        {% endif %}
+                    </a>
+                    {% if user.is_authenticated %}
+                        <!-- User Dropdown for Logged In Users -->
+                        <div class="dropdown dropdown-end">
+                            <div tabindex="0" role="button" class="btn btn-ghost btn-circle avatar">
+                                <div class="w-10 rounded-full">
+                                    {% if user.profile_pic %}
+                                        <img src="{{ user.profile_pic.url }}" alt="{{ user.username }}" class="rounded-full object-cover w-10 h-10">
+                                    {% else %}
+                                        <div class="bg-gradient-to-r from-purple-600 to-pink-600 text-white flex items-center justify-center w-full h-full rounded-full font-bold text-lg">
+                                            {{ user.username|first|upper }}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <ul tabindex="0" class="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-white dark:bg-gray-800 rounded-box w-56">
+                                <li class="menu-title px-2 pt-2 pb-1">
+                                    <span>{{ user.email }}</span>
+                                </li>
+                                <li><a href="{% url 'accounts:profile' %}"><i class="fas fa-user mr-2"></i> Profile</a></li>
+                                <!-- <li><a href="{% url 'analytics:dashboard' %}"><i class="fas fa-chart-line mr-2"></i> Dashboard</a></li> -->
+                                <!-- <li><a href="{% url 'analytics:dashboard' %}"><i class="fas fa-chart-bar mr-2"></i> Analytics</a></li> -->
+                                <li>
+                                    <a href="{% url 'payments:view_cart' %}"><i class="fas fa-shopping-cart mr-2"></i> Cart
+                                    {% if user.cart and user.cart.items.count > 0 %}
+                                    <span class="bg-red-500 text-white text-xs rounded-full px-2 py-0.5 ml-2">{{ user.cart.items.count }}</span>
+                                    {% endif %}
+                                    </a>
+                                </li>
+                                <li><a href="{% url 'payments:my_orders' %}"><i class="fas fa-receipt mr-2"></i> My Orders</a></li>
+                                <!-- REPLACED: Subscription with My Purchases -->
+                                <li><a href="{% url 'payments:my_purchases' %}"><i class="fas fa-shopping-bag mr-2"></i> My Purchases</a></li>
+                                <li><hr class="my-1"></li>
+                                <li><a href="{% url 'accounts:logout' %}"><i class="fas fa-sign-out-alt mr-2"></i> Logout</a></li>
+                            </ul>
+                        </div>
+                    {% else %}
+                        <!-- Single Login/Signup Button for Non-Logged In Users -->
+                        <a href="{% url 'accounts:login_signup' %}" class="btn btn-primary">
+                            <i class="fas fa-user-circle mr-2"></i>
+                            Login / Signup
+                        </a>
+                    {% endif %}
+                    
+                    <!-- Mobile Menu Button -->
+                    <button onclick="openMobileMenu()" class="md:hidden btn btn-ghost btn-circle">
+                        <i class="fas fa-bars text-xl"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+    
+    <!-- Main Content -->
+    <main class="min-h-screen">
+        {% block content %}{% endblock %}
+    </main>
+    
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-white py-12 mt-20">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                <div>
+                    <h3 class="text-xl font-bold mb-4 gradient-text">GovtExamWala</h3>
+                    <p class="text-gray-400">India's leading exam preparation platform for government competitive exams. Join 10 Lakh+ successful students.</p>
+                    <div class="flex space-x-4 mt-4">
+                        <a href="#" class="text-gray-400 hover:text-white text-2xl transition"><i class="fab fa-facebook"></i></a>
+                        <a href="#" class="text-gray-400 hover:text-white text-2xl transition"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="text-gray-400 hover:text-white text-2xl transition"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="text-gray-400 hover:text-white text-2xl transition"><i class="fab fa-youtube"></i></a>
+                        <a href="#" class="text-gray-400 hover:text-white text-2xl transition"><i class="fab fa-telegram"></i></a>
+                    </div>
+                </div>
+                
+                <div>
+                    <h4 class="font-bold mb-4 text-lg">Quick Links</h4>
+                    <ul class="space-y-2">
+                        <li><a href="{% url 'exams:list' %}" class="text-gray-400 hover:text-white transition">Exams</a></li>
+                        <li><a href="{% url 'mocktests:list' %}" class="text-gray-400 hover:text-white transition">Mock Tests</a></li>
+                        <li><a href="{% url 'analytics:dashboard' %}" class="text-gray-400 hover:text-white transition">Analytics</a></li>
+                        <li><a href="{% url 'notifications:list' %}" class="text-gray-400 hover:text-white transition">Notifications</a></li>
+                        <li><a href="{% url 'interviews:home' %}" class="text-gray-400 hover:text-white transition">Interview Prep</a></li>
+                        <li><a href="{% url 'study_materials:home' %}"  class="text-gray-400 hover:text-white transition">Study Materials</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h4 class="font-bold mb-4 text-lg">Support</h4>
+                    <ul class="space-y-2">
+                        <li><a href="{% url 'about' %}" class="text-gray-400 hover:text-white">About Us</a></li>
+                        <li><a href="{% url 'contact:contact_us' %}" class="text-gray-400 hover:text-white transition">Contact Us</a></li>
+                        <li><a href="{% url 'faq' %}" class="text-gray-400 hover:text-white transition">FAQs</a></li>
+                        <!-- <li><a href="#" class="text-gray-400 hover:text-white transition">Privacy Policy</a></li>
+                         <li><a href="{% url 'privacy_policy' %}" class="text-gray-400 hover:text-white transition">Privacy Policy</a></li> -->
+                    </ul>
+                </div>
+                
+                <div>
+                    <h4 class="font-bold mb-4 text-lg">Download App</h4>
+                    <p class="text-gray-400 mb-3">Get the app for better experience</p>
+                    <div class="flex space-x-3">
+                        <a href="#" class="bg-gray-800 hover:bg-gray-700 px-4 py-2 rounded-lg flex items-center space-x-2 transition">
+                            <i class="fab fa-google-play text-2xl"></i>
+                            <div>
+                                <p class="text-xs">GET IT ON</p>
+                                <p class="text-sm font-bold">Google Play</p>
+                            </div>
+                        </a>
+                        <a href="#" class="bg-gray-800 hover:bg-gray-700 px-4 py-2 rounded-lg flex items-center space-x-2 transition">
+                            <i class="fab fa-apple text-2xl"></i>
+                            <div>
+                                <p class="text-xs">Download on the</p>
+                                <p class="text-sm font-bold">App Store</p>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="border-t border-gray-800 mt-8 pt-8 text-center text-gray-400">
+                <p>&copy; 2026 GovtExamWala. All rights reserved. | Made with <i class="fas fa-heart text-red-500"></i> for India's aspirants</p>
+            </div>
+        </div>
+    </footer>
+    
+    <!-- Toast Container -->
+    <div id="toastContainer" class="toast"></div>
+    
+    <script>
+        // Initialize AOS
+        AOS.init({
+            duration: 1000,
+            once: true,
+            offset: 100
+        });
+        
+        // AJAX Setup
+        $.ajaxSetup({
+            headers: {
+                'X-CSRFToken': '{{ csrf_token }}'
+            }
+        });
+        
+        // Theme Toggle
+        function toggleTheme() {
+            const html = document.documentElement;
+            const currentTheme = html.getAttribute('data-theme');
+            const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+            html.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+            
+            // Also toggle dark class on body for Tailwind
+            document.body.classList.toggle('dark');
+        }
+        
+        // Load saved theme
+        const savedTheme = localStorage.getItem('theme');
+        if (savedTheme) {
+            document.documentElement.setAttribute('data-theme', savedTheme);
+            if (savedTheme === 'dark') {
+                document.body.classList.add('dark');
+            }
+        }
+        
+        // Mobile Menu Functions
+        function openMobileMenu() {
+            document.getElementById('mobileMenu').classList.add('open');
+            document.getElementById('mobileOverlay').classList.add('show');
+            document.body.style.overflow = 'hidden';
+        }
+        
+        function closeMobileMenu() {
+            document.getElementById('mobileMenu').classList.remove('open');
+            document.getElementById('mobileOverlay').classList.remove('show');
+            document.body.style.overflow = '';
+        }
+        
+        // Close mobile menu on escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeMobileMenu();
+            }
+        });
+        
+        document.getElementById('mobileOverlay').addEventListener('click', closeMobileMenu);
+        
+        // Notification Functions
+        function updateNotificationBadge() {
+            fetch('/notifications/api/navbar/')
+                .then(response => response.json())
+                .then(data => {
+                    const badge = document.getElementById('notificationBadge');
+                    const mobileBadge = document.getElementById('mobileNotificationBadge');
+                    
+                    if (data.unread_count > 0) {
+                        const count = data.unread_count > 99 ? '99+' : data.unread_count;
+                        if (badge) {
+                            badge.textContent = count;
+                            badge.classList.remove('hidden');
+                        }
+                        if (mobileBadge) {
+                            mobileBadge.textContent = count;
+                            mobileBadge.classList.remove('hidden');
+                        }
+                        
+                        // Add bell ring animation
+                        const bellIcon = document.querySelector('.fa-bell');
+                        if (bellIcon) {
+                            bellIcon.classList.add('bell-ring');
+                            setTimeout(() => {
+                                bellIcon.classList.remove('bell-ring');
+                            }, 500);
+                        }
+                    } else {
+                        if (badge) badge.classList.add('hidden');
+                        if (mobileBadge) mobileBadge.classList.add('hidden');
+                    }
+                })
+                .catch(error => console.error('Error fetching notification count:', error));
+        }
+        
+        // Toast notification function
+        function showToast(message, type = 'success') {
+            const toastContainer = document.getElementById('toastContainer');
+            const colors = {
+                success: 'bg-green-500',
+                error: 'bg-red-500',
+                warning: 'bg-yellow-500',
+                info: 'bg-blue-500'
+            };
+            
+            const toast = document.createElement('div');
+            toast.className = `${colors[type]} text-white px-6 py-3 rounded-lg shadow-lg mb-3 flex items-center space-x-2 animate-slide-in`;
+            toast.innerHTML = `
+                <i class="fas ${type === 'success' ? 'fa-check-circle' : type === 'error' ? 'fa-exclamation-circle' : 'fa-info-circle'}"></i>
+                <span>${message}</span>
+            `;
+            
+            toastContainer.appendChild(toast);
+            
+            setTimeout(() => {
+                toast.remove();
+            }, 3000);
+        }
+        
+        // Check for messages in URL (Django messages)
+        {% if messages %}
+            {% for message in messages %}
+                showToast("{{ message }}", "{{ message.tags }}");
+            {% endfor %}
+        {% endif %}
+        
+        // Update badge every 30 seconds if user is logged in
+        {% if user.is_authenticated %}
+        updateNotificationBadge();
+        setInterval(updateNotificationBadge, 30000);
+        {% endif %}
+        
+        // Smooth scroll for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            });
+        });
+        
+        // Add loading state to buttons
+        document.querySelectorAll('form').forEach(form => {
+            form.addEventListener('submit', function() {
+                const submitBtn = this.querySelector('button[type="submit"]');
+                if (submitBtn && !submitBtn.disabled) {
+                    const originalText = submitBtn.innerHTML;
+                    submitBtn.disabled = true;
+                    submitBtn.innerHTML = '<span class="loading-spinner"></span> Loading...';
+                    
+                    // Store original text to restore if needed (optional)
+                    submitBtn.setAttribute('data-original-text', originalText);
+                }
+            });
+        });
+        
+        // Prevent multiple form submissions
+        let isSubmitting = false;
+        document.querySelectorAll('form').forEach(form => {
+            form.addEventListener('submit', function(e) {
+                if (isSubmitting) {
+                    e.preventDefault();
+                    return false;
+                }
+                isSubmitting = true;
+                setTimeout(() => { isSubmitting = false; }, 3000);
+            });
+        });
+        
+        // Logout confirmation
+        const logoutLinks = document.querySelectorAll('a[href*="logout"]');
+        logoutLinks.forEach(link => {
+            link.addEventListener('click', function(e) {
+                if (!confirm('Are you sure you want to logout?')) {
+                    e.preventDefault();
+                }
+            });
+        });
+    </script>
+    
+    <style>
+        @keyframes slide-in {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+        .animate-slide-in {
+            animation: slide-in 0.3s ease-out;
+        }
+        
+        /* Mobile menu scroll */
+        .mobile-menu {
+            overflow-y: auto;
+        }
+        
+        /* Better focus states */
+        button:focus, a:focus, input:focus, textarea:focus {
+            outline: none;
+            ring: 2px solid #667eea;
+        }
+    </style>
+    
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

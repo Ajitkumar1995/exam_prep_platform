@@ -1,0 +1,93 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Current Affairs - GovtExamWala{% endblock %}
+
+{% block content %}
+<div class="bg-gradient-to-r from-purple-600 to-indigo-600 text-white py-12">
+    <div class="container mx-auto px-4 text-center">
+        <i class="fas fa-newspaper text-5xl mb-4"></i>
+        <h1 class="text-4xl font-bold mb-2">Current Affairs</h1>
+        <p class="text-xl opacity-90">Stay updated with latest news and events</p>
+    </div>
+</div>
+
+<div class="container mx-auto px-4 py-8">
+    <!-- Search & Filter -->
+    <div class="flex flex-wrap gap-4 mb-8">
+        <div class="flex-1">
+            <input type="text" id="searchInput" placeholder="Search current affairs..." value="{{ search_query }}" class="w-full px-4 py-3 border rounded-xl dark:bg-gray-800">
+        </div>
+        <select id="categoryFilter" class="px-4 py-3 border rounded-xl dark:bg-gray-800">
+            <option value="">All Categories</option>
+            <option value="national" {% if selected_category == 'national' %}selected{% endif %}>National</option>
+            <option value="international" {% if selected_category == 'international' %}selected{% endif %}>International</option>
+            <option value="economy" {% if selected_category == 'economy' %}selected{% endif %}>Economy</option>
+            <option value="science" {% if selected_category == 'science' %}selected{% endif %}>Science & Tech</option>
+            <option value="sports" {% if selected_category == 'sports' %}selected{% endif %}>Sports</option>
+        </select>
+    </div>
+    
+    <!-- Current Affairs List -->
+    <div class="space-y-4">
+        {% for affair in affairs %}
+        <a href="{% url 'study_materials:current_affair_detail' affair.slug %}" class="bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition block">
+            <div class="p-5">
+                <div class="flex flex-wrap gap-3 mb-2">
+                    <span class="text-xs bg-purple-100 text-purple-600 px-2 py-1 rounded">{{ affair.get_category_display }}</span>
+                    <span class="text-xs text-gray-500">{{ affair.date|date:"F d, Y" }}</span>
+                </div>
+                <h3 class="text-xl font-bold mb-2">{{ affair.title }}</h3>
+                <p class="text-gray-600 dark:text-gray-400">{{ affair.summary|truncatechars:150 }}</p>
+                <div class="flex justify-between items-center mt-3 text-sm text-gray-500">
+                    <span><i class="fas fa-eye mr-1"></i> {{ affair.views }} views</span>
+                    {% if affair.source %}
+                    <span>Source: {{ affair.source }}</span>
+                    {% endif %}
+                </div>
+            </div>
+        </a>
+        {% empty %}
+        <div class="text-center py-12">
+            <i class="fas fa-folder-open text-6xl text-gray-400 mb-4"></i>
+            <p class="text-xl text-gray-500">No current affairs found</p>
+        </div>
+        {% endfor %}
+    </div>
+    
+    <!-- Pagination -->
+    {% if affairs.has_other_pages %}
+    <div class="flex justify-center mt-8">
+        <div class="flex gap-2">
+            {% if affairs.has_previous %}
+            <a href="?page={{ affairs.previous_page_number }}" class="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300">Previous</a>
+            {% endif %}
+            <span class="px-4 py-2 bg-purple-600 text-white rounded">{{ affairs.number }}</span>
+            {% if affairs.has_next %}
+            <a href="?page={{ affairs.next_page_number }}" class="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300">Next</a>
+            {% endif %}
+        </div>
+    </div>
+    {% endif %}
+</div>
+
+<script>
+    const categoryFilter = document.getElementById('categoryFilter');
+    const searchInput = document.getElementById('searchInput');
+    
+    function applyFilters() {
+        const params = new URLSearchParams();
+        if (categoryFilter.value) params.set('category', categoryFilter.value);
+        if (searchInput.value) params.set('q', searchInput.value);
+        window.location.href = `?${params.toString()}`;
+    }
+    
+    categoryFilter.addEventListener('change', applyFilters);
+    
+    let searchTimeout;
+    searchInput.addEventListener('input', function() {
+        clearTimeout(searchTimeout);
+        searchTimeout = setTimeout(applyFilters, 500);
+    });
+</script>
+{% endblock %}

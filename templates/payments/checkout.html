@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Checkout - ExamPrep{% endblock %}
+
+{% block content %}
+<div class="bg-gradient-to-r from-purple-600 to-indigo-600 text-white py-8">
+    <div class="container mx-auto px-4">
+        <h1 class="text-3xl font-bold mb-2">Checkout</h1>
+        <p class="text-lg opacity-90">Review your order before payment</p>
+    </div>
+</div>
+
+<div class="container mx-auto px-4 py-8">
+    <div class="max-w-3xl mx-auto">
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md">
+            <div class="p-6 border-b">
+                <h2 class="text-xl font-bold">Order Summary</h2>
+            </div>
+            
+            <div class="divide-y">
+                {% for item in items %}
+                <div class="p-6">
+                    <div class="flex justify-between items-center">
+                        <div>
+                            <h3 class="font-semibold">{{ item.get_item_name }}</h3>
+                            <p class="text-sm text-gray-500">
+                                {% if item.item_type == 'exam' %}Course{% else %}Mock Test{% endif %}
+                            </p>
+                        </div>
+                        <p class="text-lg font-bold text-purple-600">₹{{ item.get_price }}</p>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            
+            <div class="bg-gray-50 dark:bg-gray-700 p-6">
+                <div class="flex justify-between items-center mb-4">
+                    <span class="text-lg font-bold">Total Amount</span>
+                    <span class="text-2xl font-bold text-purple-600">₹{{ total_amount }}</span>
+                </div>
+                
+                <form method="post" action="{% url 'payments:place_order' %}">
+                    {% csrf_token %}
+                    <button type="submit" class="w-full bg-purple-600 text-white py-3 rounded-lg font-semibold hover:bg-purple-700 transition">
+                        Place Order & Pay →
+                    </button>
+                </form>
+            </div>
+        </div>
+        
+        <div class="mt-4 text-center">
+            <a href="{% url 'payments:view_cart' %}" class="text-purple-600 hover:underline">← Back to Cart</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

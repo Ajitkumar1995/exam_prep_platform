@@ -1,0 +1,128 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Notification Preferences - GovtExamWala{% endblock %}
+
+{% block content %}
+<div class="bg-gradient-to-r from-purple-600 to-indigo-600 text-white py-12">
+    <div class="container mx-auto px-4 text-center">
+        <i class="fas fa-sliders-h text-5xl mb-4"></i>
+        <h1 class="text-4xl font-bold mb-2">Notification Preferences</h1>
+        <p class="text-xl opacity-90">Choose how you want to receive updates</p>
+    </div>
+</div>
+
+<div class="container mx-auto px-4 py-8">
+    <div class="max-w-3xl mx-auto">
+        <form method="POST" class="bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden">
+            {% csrf_token %}
+            
+            <!-- Email Preferences -->
+            <div class="p-6 border-b dark:border-gray-700">
+                <h2 class="text-xl font-bold mb-4 flex items-center gap-2">
+                    <i class="fas fa-envelope text-purple-600"></i> Email Notifications
+                </h2>
+                <div class="space-y-3">
+                    <label class="flex items-center justify-between cursor-pointer">
+                        <span>Exam Reminders</span>
+                        <input type="checkbox" name="email_exam_reminders" {% if preferences.email_exam_reminders %}checked{% endif %} class="toggle-checkbox">
+                    </label>
+                    <label class="flex items-center justify-between cursor-pointer">
+                        <span>Result Updates</span>
+                        <input type="checkbox" name="email_result_updates" {% if preferences.email_result_updates %}checked{% endif %} class="toggle-checkbox">
+                    </label>
+                    <label class="flex items-center justify-between cursor-pointer">
+                        <span>Mock Test Alerts</span>
+                        <input type="checkbox" name="email_mock_test_alerts" {% if preferences.email_mock_test_alerts %}checked{% endif %} class="toggle-checkbox">
+                    </label>
+                    <label class="flex items-center justify-between cursor-pointer">
+                        <span>Payment Updates</span>
+                        <input type="checkbox" name="email_payment_updates" {% if preferences.email_payment_updates %}checked{% endif %} class="toggle-checkbox">
+                    </label>
+                    <label class="flex items-center justify-between cursor-pointer">
+                        <span>Newsletter</span>
+                        <input type="checkbox" name="email_newsletter" {% if preferences.email_newsletter %}checked{% endif %} class="toggle-checkbox">
+                    </label>
+                    <label class="flex items-center justify-between cursor-pointer">
+                        <span>Promotions & Offers</span>
+                        <input type="checkbox" name="email_promotions" {% if preferences.email_promotions %}checked{% endif %} class="toggle-checkbox">
+                    </label>
+                </div>
+            </div>
+            
+            <!-- SMS Preferences -->
+            <div class="p-6 border-b dark:border-gray-700">
+                <h2 class="text-xl font-bold mb-4 flex items-center gap-2">
+                    <i class="fas fa-phone text-purple-600"></i> SMS Notifications
+                </h2>
+                <div class="space-y-3">
+                    <label class="flex items-center justify-between cursor-pointer">
+                        <span>Exam Reminders</span>
+                        <input type="checkbox" name="sms_exam_reminders" {% if preferences.sms_exam_reminders %}checked{% endif %} class="toggle-checkbox">
+                    </label>
+                    <label class="flex items-center justify-between cursor-pointer">
+                        <span>Result Updates</span>
+                        <input type="checkbox" name="sms_result_updates" {% if preferences.sms_result_updates %}checked{% endif %} class="toggle-checkbox">
+                    </label>
+                    <label class="flex items-center justify-between cursor-pointer">
+                        <span>Mock Test Alerts</span>
+                        <input type="checkbox" name="sms_mock_test_alerts" {% if preferences.sms_mock_test_alerts %}checked{% endif %} class="toggle-checkbox">
+                    </label>
+                    <label class="flex items-center justify-between cursor-pointer">
+                        <span>Payment Updates</span>
+                        <input type="checkbox" name="sms_payment_updates" {% if preferences.sms_payment_updates %}checked{% endif %} class="toggle-checkbox">
+                    </label>
+                </div>
+            </div>
+            
+            <!-- In-App Preferences -->
+            <div class="p-6">
+                <h2 class="text-xl font-bold mb-4 flex items-center gap-2">
+                    <i class="fas fa-bell text-purple-600"></i> In-App Notifications
+                </h2>
+                <label class="flex items-center justify-between cursor-pointer">
+                    <span>Enable in-app notifications</span>
+                    <input type="checkbox" name="in_app_notifications" {% if preferences.in_app_notifications %}checked{% endif %} class="toggle-checkbox">
+                </label>
+            </div>
+            
+            <!-- Submit -->
+            <div class="p-6 bg-gray-50 dark:bg-gray-700 flex justify-end">
+                <button type="submit" class="bg-purple-600 text-white px-6 py-2 rounded-lg hover:bg-purple-700 transition">
+                    Save Preferences
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<style>
+    .toggle-checkbox {
+        width: 40px;
+        height: 20px;
+        appearance: none;
+        background: #cbd5e1;
+        border-radius: 20px;
+        position: relative;
+        cursor: pointer;
+        transition: all 0.3s;
+    }
+    .toggle-checkbox:checked {
+        background: #8b5cf6;
+    }
+    .toggle-checkbox::before {
+        content: '';
+        position: absolute;
+        width: 16px;
+        height: 16px;
+        background: white;
+        border-radius: 50%;
+        top: 2px;
+        left: 2px;
+        transition: transform 0.3s;
+    }
+    .toggle-checkbox:checked::before {
+        transform: translateX(20px);
+    }
+</style>
+{% endblock %}

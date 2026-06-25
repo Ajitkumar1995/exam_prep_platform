@@ -1,0 +1,174 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ exam.name }} Online Coaching - Best Preparation Course{% endblock %}
+
+{% block content %}
+<div class="bg-gradient-to-r from-green-600 to-teal-600 text-white py-12">
+    <div class="container mx-auto px-4 text-center">
+        <h1 class="text-4xl md:text-5xl font-bold mb-4">{{ exam.name }} Online Coaching</h1>
+        <p class="text-xl opacity-90">Complete Preparation Course with Expert Guidance</p>
+    </div>
+</div>
+
+<div class="container mx-auto px-4 py-8">
+    <div class="flex flex-wrap -mx-4">
+        <!-- Main Content -->
+        <div class="w-full lg:w-2/3 px-4">
+            <!-- Course Features -->
+            <div class="bg-white rounded-lg shadow-md p-6 mb-6">
+                <h2 class="text-2xl font-bold text-gray-800 mb-4">What You'll Get</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="flex items-start space-x-3">
+                        <i class="fas fa-video text-blue-500 text-xl mt-1"></i>
+                        <div>
+                            <h3 class="font-semibold">{{ video_lectures_count }}+ Video Lectures</h3>
+                            <p class="text-sm text-gray-600">Complete syllabus coverage</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start space-x-3">
+                        <i class="fas fa-tasks text-green-500 text-xl mt-1"></i>
+                        <div>
+                            <h3 class="font-semibold">{{ total_mock_tests }}+ Mock Tests</h3>
+                            <p class="text-sm text-gray-600">Real exam simulation</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start space-x-3">
+                        <i class="fas fa-chart-line text-purple-500 text-xl mt-1"></i>
+                        <div>
+                            <h3 class="font-semibold">Performance Analytics</h3>
+                            <p class="text-sm text-gray-600">Track your progress</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start space-x-3">
+                        <i class="fas fa-comments text-yellow-500 text-xl mt-1"></i>
+                        <div>
+                            <h3 class="font-semibold">Doubt Clearing Sessions</h3>
+                            <p class="text-sm text-gray-600">Live interaction with experts</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start space-x-3">
+                        <i class="fas fa-download text-indigo-500 text-xl mt-1"></i>
+                        <div>
+                            <h3 class="font-semibold">Downloadable Resources</h3>
+                            <p class="text-sm text-gray-600">Study notes and PDFs</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start space-x-3">
+                        <i class="fas fa-certificate text-orange-500 text-xl mt-1"></i>
+                        <div>
+                            <h3 class="font-semibold">Certificate of Completion</h3>
+                            <p class="text-sm text-gray-600">Boost your resume</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Course Curriculum -->
+            <div class="bg-white rounded-lg shadow-md p-6 mb-6">
+                <h2 class="text-2xl font-bold text-gray-800 mb-4">Course Curriculum</h2>
+                {% if course_modules %}
+                <div class="space-y-3">
+                    {% for module in course_modules %}
+                    <div class="border rounded-lg">
+                        <button class="curriculum-toggle w-full text-left p-4 font-semibold flex justify-between items-center hover:bg-gray-50">
+                            {{ module.subject.name }}
+                            <span class="text-sm text-gray-500">{{ module.materials|length }} lessons</span>
+                            <i class="fas fa-chevron-down text-gray-500"></i>
+                        </button>
+                        <div class="curriculum-content hidden p-4 pt-0 border-t">
+                            <ul class="space-y-2 text-gray-600">
+                                {% for material in module.materials %}
+                                <li class="flex items-center">
+                                    <i class="fas fa-play-circle text-green-500 mr-2"></i>
+                                    {{ material.title }}
+                                </li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% else %}
+                <p class="text-gray-500">Course curriculum will be updated soon.</p>
+                {% endif %}
+            </div>
+
+            <!-- Benefits Section -->
+            <div class="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg p-6">
+                <h3 class="text-xl font-bold text-gray-800 mb-4">Why Choose Our Coaching?</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="flex items-start space-x-2">
+                        <i class="fas fa-check-circle text-green-500 mt-1"></i>
+                        <span>Expert faculty with years of experience</span>
+                    </div>
+                    <div class="flex items-start space-x-2">
+                        <i class="fas fa-check-circle text-green-500 mt-1"></i>
+                        <span>Live doubt clearing sessions</span>
+                    </div>
+                    <div class="flex items-start space-x-2">
+                        <i class="fas fa-check-circle text-green-500 mt-1"></i>
+                        <span>Recorded lectures for revision</span>
+                    </div>
+                    <div class="flex items-start space-x-2">
+                        <i class="fas fa-check-circle text-green-500 mt-1"></i>
+                        <span>Weekly tests and performance analysis</span>
+                    </div>
+                    <div class="flex items-start space-x-2">
+                        <i class="fas fa-check-circle text-green-500 mt-1"></i>
+                        <span>Personalized study plans</span>
+                    </div>
+                    <div class="flex items-start space-x-2">
+                        <i class="fas fa-check-circle text-green-500 mt-1"></i>
+                        <span>Mobile app access</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sidebar - Pricing -->
+        <div class="w-full lg:w-1/3 px-4">
+            <div class="bg-white rounded-lg shadow-md p-6 sticky top-20">
+                <div class="text-center mb-4">
+                    <h3 class="text-2xl font-bold text-gray-800">Course Price</h3>
+                    <div class="text-4xl font-bold text-blue-600 mt-2">₹{{ course_price }}</div>
+                    {% if original_price %}
+                    <p class="text-gray-500 line-through">₹{{ original_price }}</p>
+                    <p class="text-green-600 mt-1">Save {{ discount_percentage }}% - Limited Time Offer</p>
+                    {% endif %}
+                </div>
+                
+                <ul class="space-y-2 mb-6">
+                    <li class="flex items-center"><i class="fas fa-check-circle text-green-500 mr-2"></i> Lifetime Access</li>
+                    <li class="flex items-center"><i class="fas fa-check-circle text-green-500 mr-2"></i> Downloadable Resources</li>
+                    <li class="flex items-center"><i class="fas fa-check-circle text-green-500 mr-2"></i> Certificate of Completion</li>
+                    <li class="flex items-center"><i class="fas fa-check-circle text-green-500 mr-2"></i> 24/7 Support</li>
+                    <li class="flex items-center"><i class="fas fa-check-circle text-green-500 mr-2"></i> Mobile Access</li>
+                    <li class="flex items-center"><i class="fas fa-check-circle text-green-500 mr-2"></i> Weekly Live Sessions</li>
+                </ul>
+                
+                <a href="{% url 'exams:enroll_now' exam.slug %}" 
+                   class="block text-center bg-gradient-to-r from-blue-500 to-blue-600 text-white py-3 rounded-lg font-semibold hover:from-blue-600 hover:to-blue-700 transition">
+                    Enroll Now
+                </a>
+                
+                <p class="text-xs text-gray-500 text-center mt-4">30-day money-back guarantee</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.querySelectorAll('.curriculum-toggle').forEach(button => {
+    button.addEventListener('click', () => {
+        const content = button.nextElementSibling;
+        const icon = button.querySelector('i:last-child');
+        content.classList.toggle('hidden');
+        if (icon) {
+            icon.classList.toggle('fa-chevron-down');
+            icon.classList.toggle('fa-chevron-up');
+        }
+    });
+});
+</script>
+{% endblock %}
