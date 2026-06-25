@@ -1,0 +1,6785 @@
+{
+  "django_admin_log": {
+    "app": "admin",
+    "model": "LogEntry",
+    "table": "django_admin_log",
+    "fields": [
+      {
+        "name": "action_time",
+        "type": "DateTimeField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "user",
+        "type": "ForeignKey",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null,
+        "related_to": "accounts.User"
+      },
+      {
+        "name": "content_type",
+        "type": "ForeignKey",
+        "null": true,
+        "blank": true,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null,
+        "related_to": "contenttypes.ContentType"
+      },
+      {
+        "name": "object_id",
+        "type": "TextField",
+        "null": true,
+        "blank": true,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "object_repr",
+        "type": "CharField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": 200
+      },
+      {
+        "name": "action_flag",
+        "type": "PositiveSmallIntegerField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "change_message",
+        "type": "TextField",
+        "null": false,
+        "blank": true,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      }
+    ]
+  },
+  "auth_permission": {
+    "app": "auth",
+    "model": "Permission",
+    "table": "auth_permission",
+    "fields": [
+      {
+        "name": "name",
+        "type": "CharField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": 255
+      },
+      {
+        "name": "content_type",
+        "type": "ForeignKey",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null,
+        "related_to": "contenttypes.ContentType"
+      },
+      {
+        "name": "codename",
+        "type": "CharField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": 100
+      }
+    ]
+  },
+  "auth_group": {
+    "app": "auth",
+    "model": "Group",
+    "table": "auth_group",
+    "fields": [
+      {
+        "name": "name",
+        "type": "CharField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": true,
+        "db_column": null,
+        "max_length": 150
+      },
+      {
+        "name": "permissions",
+        "type": "ManyToManyField",
+        "null": false,
+        "blank": true,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null,
+        "related_to": "auth.Permission",
+        "through_table": "auth_group_permissions"
+      }
+    ]
+  },
+  "django_content_type": {
+    "app": "contenttypes",
+    "model": "ContentType",
+    "table": "django_content_type",
+    "fields": [
+      {
+        "name": "app_label",
+        "type": "CharField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": 100
+      },
+      {
+        "name": "model",
+        "type": "CharField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": 100
+      }
+    ]
+  },
+  "django_session": {
+    "app": "sessions",
+    "model": "Session",
+    "table": "django_session",
+    "fields": [
+      {
+        "name": "session_key",
+        "type": "CharField",
+        "null": false,
+        "blank": false,
+        "primary_key": true,
+        "unique": true,
+        "db_column": null,
+        "max_length": 40
+      },
+      {
+        "name": "session_data",
+        "type": "TextField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "expire_date",
+        "type": "DateTimeField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      }
+    ]
+  },
+  "django_celery_beat_solarschedule": {
+    "app": "django_celery_beat",
+    "model": "SolarSchedule",
+    "table": "django_celery_beat_solarschedule",
+    "fields": [
+      {
+        "name": "event",
+        "type": "CharField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": 24
+      },
+      {
+        "name": "latitude",
+        "type": "DecimalField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "longitude",
+        "type": "DecimalField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      }
+    ]
+  },
+  "django_celery_beat_intervalschedule": {
+    "app": "django_celery_beat",
+    "model": "IntervalSchedule",
+    "table": "django_celery_beat_intervalschedule",
+    "fields": [
+      {
+        "name": "every",
+        "type": "IntegerField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "period",
+        "type": "CharField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": 24
+      }
+    ]
+  },
+  "django_celery_beat_clockedschedule": {
+    "app": "django_celery_beat",
+    "model": "ClockedSchedule",
+    "table": "django_celery_beat_clockedschedule",
+    "fields": [
+      {
+        "name": "clocked_time",
+        "type": "DateTimeField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      }
+    ]
+  },
+  "django_celery_beat_crontabschedule": {
+    "app": "django_celery_beat",
+    "model": "CrontabSchedule",
+    "table": "django_celery_beat_crontabschedule",
+    "fields": [
+      {
+        "name": "minute",
+        "type": "CharField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": 240
+      },
+      {
+        "name": "hour",
+        "type": "CharField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": 96
+      },
+      {
+        "name": "day_of_week",
+        "type": "CharField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": 64
+      },
+      {
+        "name": "day_of_month",
+        "type": "CharField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": 124
+      },
+      {
+        "name": "month_of_year",
+        "type": "CharField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": 64
+      },
+      {
+        "name": "timezone",
+        "type": "TimeZoneField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": 63
+      }
+    ]
+  },
+  "django_celery_beat_periodictasks": {
+    "app": "django_celery_beat",
+    "model": "PeriodicTasks",
+    "table": "django_celery_beat_periodictasks",
+    "fields": [
+      {
+        "name": "ident",
+        "type": "SmallIntegerField",
+        "null": false,
+        "blank": false,
+        "primary_key": true,
+        "unique": true,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "last_update",
+        "type": "DateTimeField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      }
+    ]
+  },
+  "django_celery_beat_periodictask": {
+    "app": "django_celery_beat",
+    "model": "PeriodicTask",
+    "table": "django_celery_beat_periodictask",
+    "fields": [
+      {
+        "name": "name",
+        "type": "CharField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": true,
+        "db_column": null,
+        "max_length": 200
+      },
+      {
+        "name": "task",
+        "type": "CharField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": 200
+      },
+      {
+        "name": "interval",
+        "type": "ForeignKey",
+        "null": true,
+        "blank": true,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null,
+        "related_to": "django_celery_beat.IntervalSchedule"
+      },
+      {
+        "name": "crontab",
+        "type": "ForeignKey",
+        "null": true,
+        "blank": true,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null,
+        "related_to": "django_celery_beat.CrontabSchedule"
+      },
+      {
+        "name": "solar",
+        "type": "ForeignKey",
+        "null": true,
+        "blank": true,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null,
+        "related_to": "django_celery_beat.SolarSchedule"
+      },
+      {
+        "name": "clocked",
+        "type": "ForeignKey",
+        "null": true,
+        "blank": true,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null,
+        "related_to": "django_celery_beat.ClockedSchedule"
+      },
+      {
+        "name": "args",
+        "type": "TextField",
+        "null": false,
+        "blank": true,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "kwargs",
+        "type": "TextField",
+        "null": false,
+        "blank": true,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "queue",
+        "type": "CharField",
+        "null": true,
+        "blank": true,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": 200
+      },
+      {
+        "name": "exchange",
+        "type": "CharField",
+        "null": true,
+        "blank": true,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": 200
+      },
+      {
+        "name": "routing_key",
+        "type": "CharField",
+        "null": true,
+        "blank": true,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": 200
+      },
+      {
+        "name": "headers",
+        "type": "TextField",
+        "null": false,
+        "blank": true,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "priority",
+        "type": "PositiveIntegerField",
+        "null": true,
+        "blank": true,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "expires",
+        "type": "DateTimeField",
+        "null": true,
+        "blank": true,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "expire_seconds",
+        "type": "PositiveIntegerField",
+        "null": true,
+        "blank": true,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "one_off",
+        "type": "BooleanField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "start_time",
+        "type": "DateTimeField",
+        "null": true,
+        "blank": true,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "enabled",
+        "type": "BooleanField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "last_run_at",
+        "type": "DateTimeField",
+        "null": true,
+        "blank": true,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "total_run_count",
+        "type": "PositiveIntegerField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "date_changed",
+        "type": "DateTimeField",
+        "null": false,
+        "blank": true,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "description",
+        "type": "TextField",
+        "null": false,
+        "blank": true,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      }
+    ]
+  },
+  "account_emailaddress": {
+    "app": "account",
+    "model": "EmailAddress",
+    "table": "account_emailaddress",
+    "fields": [
+      {
+        "name": "user",
+        "type": "ForeignKey",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null,
+        "related_to": "accounts.User"
+      },
+      {
+        "name": "email",
+        "type": "EmailField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": 254
+      },
+      {
+        "name": "verified",
+        "type": "BooleanField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "primary",
+        "type": "BooleanField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      }
+    ]
+  },
+  "account_emailconfirmation": {
+    "app": "account",
+    "model": "EmailConfirmation",
+    "table": "account_emailconfirmation",
+    "fields": [
+      {
+        "name": "email_address",
+        "type": "ForeignKey",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null,
+        "related_to": "account.EmailAddress"
+      },
+      {
+        "name": "created",
+        "type": "DateTimeField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "sent",
+        "type": "DateTimeField",
+        "null": true,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "key",
+        "type": "CharField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": true,
+        "db_column": null,
+        "max_length": 64
+      }
+    ]
+  },
+  "socialaccount_socialapp": {
+    "app": "socialaccount",
+    "model": "SocialApp",
+    "table": "socialaccount_socialapp",
+    "fields": [
+      {
+        "name": "provider",
+        "type": "CharField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": 30
+      },
+      {
+        "name": "provider_id",
+        "type": "CharField",
+        "null": false,
+        "blank": true,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": 200
+      },
+      {
+        "name": "name",
+        "type": "CharField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": 40
+      },
+      {
+        "name": "client_id",
+        "type": "CharField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": 191
+      },
+      {
+        "name": "secret",
+        "type": "CharField",
+        "null": false,
+        "blank": true,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": 191
+      },
+      {
+        "name": "key",
+        "type": "CharField",
+        "null": false,
+        "blank": true,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": 191
+      },
+      {
+        "name": "settings",
+        "type": "JSONField",
+        "null": false,
+        "blank": true,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      }
+    ]
+  },
+  "socialaccount_socialaccount": {
+    "app": "socialaccount",
+    "model": "SocialAccount",
+    "table": "socialaccount_socialaccount",
+    "fields": [
+      {
+        "name": "user",
+        "type": "ForeignKey",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null,
+        "related_to": "accounts.User"
+      },
+      {
+        "name": "provider",
+        "type": "CharField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": 200
+      },
+      {
+        "name": "uid",
+        "type": "CharField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": 191
+      },
+      {
+        "name": "last_login",
+        "type": "DateTimeField",
+        "null": false,
+        "blank": true,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "date_joined",
+        "type": "DateTimeField",
+        "null": false,
+        "blank": true,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "extra_data",
+        "type": "JSONField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      }
+    ]
+  },
+  "socialaccount_socialtoken": {
+    "app": "socialaccount",
+    "model": "SocialToken",
+    "table": "socialaccount_socialtoken",
+    "fields": [
+      {
+        "name": "app",
+        "type": "ForeignKey",
+        "null": true,
+        "blank": true,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null,
+        "related_to": "socialaccount.SocialApp"
+      },
+      {
+        "name": "account",
+        "type": "ForeignKey",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null,
+        "related_to": "socialaccount.SocialAccount"
+      },
+      {
+        "name": "token",
+        "type": "TextField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "token_secret",
+        "type": "TextField",
+        "null": false,
+        "blank": true,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "expires_at",
+        "type": "DateTimeField",
+        "null": true,
+        "blank": true,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      }
+    ]
+  },
+  "accounts_user": {
+    "app": "accounts",
+    "model": "User",
+    "table": "accounts_user",
+    "fields": [
+      {
+        "name": "password",
+        "type": "CharField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": 128
+      },
+      {
+        "name": "last_login",
+        "type": "DateTimeField",
+        "null": true,
+        "blank": true,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "is_superuser",
+        "type": "BooleanField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "username",
+        "type": "CharField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": true,
+        "db_column": null,
+        "max_length": 150
+      },
+      {
+        "name": "first_name",
+        "type": "CharField",
+        "null": false,
+        "blank": true,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": 150
+      },
+      {
+        "name": "last_name",
+        "type": "CharField",
+        "null": false,
+        "blank": true,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": 150
+      },
+      {
+        "name": "is_staff",
+        "type": "BooleanField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "is_active",
+        "type": "BooleanField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "date_joined",
+        "type": "DateTimeField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "email",
+        "type": "EmailField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": true,
+        "db_column": null,
+        "max_length": 254
+      },
+      {
+        "name": "profile_pic",
+        "type": "ImageField",
+        "null": true,
+        "blank": true,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": 100
+      },
+      {
+        "name": "is_verified",
+        "type": "BooleanField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "created_at",
+        "type": "DateTimeField",
+        "null": false,
+        "blank": true,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "updated_at",
+        "type": "DateTimeField",
+        "null": false,
+        "blank": true,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "groups",
+        "type": "ManyToManyField",
+        "null": false,
+        "blank": true,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null,
+        "related_to": "auth.Group",
+        "through_table": "accounts_user_groups"
+      },
+      {
+        "name": "user_permissions",
+        "type": "ManyToManyField",
+        "null": false,
+        "blank": true,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null,
+        "related_to": "auth.Permission",
+        "through_table": "accounts_user_user_permissions"
+      }
+    ]
+  },
+  "accounts_otp": {
+    "app": "accounts",
+    "model": "OTP",
+    "table": "accounts_otp",
+    "fields": [
+      {
+        "name": "user",
+        "type": "ForeignKey",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null,
+        "related_to": "accounts.User"
+      },
+      {
+        "name": "otp",
+        "type": "CharField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": 6
+      },
+      {
+        "name": "otp_type",
+        "type": "CharField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": 20
+      },
+      {
+        "name": "is_used",
+        "type": "BooleanField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "created_at",
+        "type": "DateTimeField",
+        "null": false,
+        "blank": true,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "expires_at",
+        "type": "DateTimeField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      }
+    ]
+  },
+  "exams_livetestcard": {
+    "app": "exams",
+    "model": "LiveTestCard",
+    "table": "exams_livetestcard",
+    "fields": [
+      {
+        "name": "exam",
+        "type": "ForeignKey",
+        "null": true,
+        "blank": true,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null,
+        "related_to": "exams.Exam"
+      },
+      {
+        "name": "title",
+        "type": "CharField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": 200
+      },
+      {
+        "name": "subtitle",
+        "type": "CharField",
+        "null": false,
+        "blank": true,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": 200
+      },
+      {
+        "name": "badge_text",
+        "type": "CharField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": 50
+      },
+      {
+        "name": "badge_color",
+        "type": "CharField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": 20
+      },
+      {
+        "name": "total_participants",
+        "type": "IntegerField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "enrolled_percentage",
+        "type": "IntegerField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "has_timer",
+        "type": "BooleanField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "timer_hours",
+        "type": "IntegerField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "timer_minutes",
+        "type": "IntegerField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "timer_seconds",
+        "type": "IntegerField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "button_text",
+        "type": "CharField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": 100
+      },
+      {
+        "name": "button_url",
+        "type": "URLField",
+        "null": false,
+        "blank": true,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": 200
+      },
+      {
+        "name": "order",
+        "type": "IntegerField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "is_active",
+        "type": "BooleanField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "is_featured",
+        "type": "BooleanField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "start_date",
+        "type": "DateTimeField",
+        "null": true,
+        "blank": true,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "end_date",
+        "type": "DateTimeField",
+        "null": true,
+        "blank": true,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "created_at",
+        "type": "DateTimeField",
+        "null": false,
+        "blank": true,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "updated_at",
+        "type": "DateTimeField",
+        "null": false,
+        "blank": true,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      }
+    ]
+  },
+  "exams_examcategory": {
+    "app": "exams",
+    "model": "ExamCategory",
+    "table": "exams_examcategory",
+    "fields": [
+      {
+        "name": "name",
+        "type": "CharField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": 100
+      },
+      {
+        "name": "slug",
+        "type": "SlugField",
+        "null": false,
+        "blank": true,
+        "primary_key": false,
+        "unique": true,
+        "db_column": null,
+        "max_length": 50
+      },
+      {
+        "name": "icon",
+        "type": "CharField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": 50
+      },
+      {
+        "name": "description",
+        "type": "TextField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "order",
+        "type": "IntegerField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "is_active",
+        "type": "BooleanField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "created_at",
+        "type": "DateTimeField",
+        "null": false,
+        "blank": true,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "updated_at",
+        "type": "DateTimeField",
+        "null": false,
+        "blank": true,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      }
+    ]
+  },
+  "exams_exam": {
+    "app": "exams",
+    "model": "Exam",
+    "table": "exams_exam",
+    "fields": [
+      {
+        "name": "category",
+        "type": "ForeignKey",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null,
+        "related_to": "exams.ExamCategory"
+      },
+      {
+        "name": "name",
+        "type": "CharField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": 200
+      },
+      {
+        "name": "slug",
+        "type": "SlugField",
+        "null": false,
+        "blank": true,
+        "primary_key": false,
+        "unique": true,
+        "db_column": null,
+        "max_length": 50
+      },
+      {
+        "name": "short_name",
+        "type": "CharField",
+        "null": false,
+        "blank": true,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": 50
+      },
+      {
+        "name": "exam_level",
+        "type": "CharField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": 20
+      },
+      {
+        "name": "description",
+        "type": "RichTextField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "eligibility",
+        "type": "RichTextField",
+        "null": false,
+        "blank": true,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "exam_pattern",
+        "type": "RichTextField",
+        "null": false,
+        "blank": true,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "syllabus",
+        "type": "RichTextField",
+        "null": false,
+        "blank": true,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "important_dates",
+        "type": "TextField",
+        "null": false,
+        "blank": true,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "official_website",
+        "type": "URLField",
+        "null": false,
+        "blank": true,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": 200
+      },
+      {
+        "name": "logo",
+        "type": "ImageField",
+        "null": true,
+        "blank": true,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": 100
+      },
+      {
+        "name": "duration_minutes",
+        "type": "IntegerField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "total_marks",
+        "type": "IntegerField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "total_questions",
+        "type": "IntegerField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "negative_marking",
+        "type": "BooleanField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "is_active",
+        "type": "BooleanField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "order",
+        "type": "IntegerField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "created_at",
+        "type": "DateTimeField",
+        "null": false,
+        "blank": true,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "updated_at",
+        "type": "DateTimeField",
+        "null": false,
+        "blank": true,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "is_paid",
+        "type": "BooleanField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "price",
+        "type": "DecimalField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "discount_price",
+        "type": "DecimalField",
+        "null": true,
+        "blank": true,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      }
+    ]
+  },
+  "exams_subject": {
+    "app": "exams",
+    "model": "Subject",
+    "table": "exams_subject",
+    "fields": [
+      {
+        "name": "exam",
+        "type": "ForeignKey",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null,
+        "related_to": "exams.Exam"
+      },
+      {
+        "name": "name",
+        "type": "CharField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": 100
+      },
+      {
+        "name": "code",
+        "type": "CharField",
+        "null": false,
+        "blank": true,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": 20
+      },
+      {
+        "name": "description",
+        "type": "TextField",
+        "null": false,
+        "blank": true,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "weightage",
+        "type": "FloatField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "total_questions",
+        "type": "IntegerField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "total_marks",
+        "type": "IntegerField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "order",
+        "type": "IntegerField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "is_active",
+        "type": "BooleanField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "created_at",
+        "type": "DateTimeField",
+        "null": false,
+        "blank": true,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      }
+    ]
+  },
+  "exams_topic": {
+    "app": "exams",
+    "model": "Topic",
+    "table": "exams_topic",
+    "fields": [
+      {
+        "name": "subject",
+        "type": "ForeignKey",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null,
+        "related_to": "exams.Subject"
+      },
+      {
+        "name": "name",
+        "type": "CharField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": 100
+      },
+      {
+        "name": "description",
+        "type": "TextField",
+        "null": false,
+        "blank": true,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "difficulty_level",
+        "type": "CharField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": 20
+      },
+      {
+        "name": "weightage",
+        "type": "FloatField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "total_questions",
+        "type": "IntegerField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "order",
+        "type": "IntegerField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "is_active",
+        "type": "BooleanField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "created_at",
+        "type": "DateTimeField",
+        "null": false,
+        "blank": true,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      }
+    ]
+  },
+  "exams_question": {
+    "app": "exams",
+    "model": "Question",
+    "table": "exams_question",
+    "fields": [
+      {
+        "name": "exam",
+        "type": "ForeignKey",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null,
+        "related_to": "exams.Exam"
+      },
+      {
+        "name": "subject",
+        "type": "ForeignKey",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null,
+        "related_to": "exams.Subject"
+      },
+      {
+        "name": "topic",
+        "type": "ForeignKey",
+        "null": true,
+        "blank": true,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null,
+        "related_to": "exams.Topic"
+      },
+      {
+        "name": "question_type",
+        "type": "CharField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": 20
+      },
+      {
+        "name": "question_text",
+        "type": "RichTextField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "question_text_hindi",
+        "type": "RichTextField",
+        "null": true,
+        "blank": true,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "difficulty",
+        "type": "CharField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": 10
+      },
+      {
+        "name": "marks",
+        "type": "FloatField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "negative_marks",
+        "type": "FloatField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "estimated_time",
+        "type": "IntegerField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "explanation",
+        "type": "RichTextField",
+        "null": false,
+        "blank": true,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "explanation_hindi",
+        "type": "RichTextField",
+        "null": false,
+        "blank": true,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "image",
+        "type": "ImageField",
+        "null": true,
+        "blank": true,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": 100
+      },
+      {
+        "name": "tags",
+        "type": "CharField",
+        "null": false,
+        "blank": true,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": 500
+      },
+      {
+        "name": "is_active",
+        "type": "BooleanField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "created_at",
+        "type": "DateTimeField",
+        "null": false,
+        "blank": true,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "updated_at",
+        "type": "DateTimeField",
+        "null": false,
+        "blank": true,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      }
+    ]
+  },
+  "exams_option": {
+    "app": "exams",
+    "model": "Option",
+    "table": "exams_option",
+    "fields": [
+      {
+        "name": "question",
+        "type": "ForeignKey",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null,
+        "related_to": "exams.Question"
+      },
+      {
+        "name": "option_text",
+        "type": "TextField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "option_text_hindi",
+        "type": "TextField",
+        "null": true,
+        "blank": true,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "is_correct",
+        "type": "BooleanField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "order",
+        "type": "IntegerField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      }
+    ]
+  },
+  "exams_examannouncement": {
+    "app": "exams",
+    "model": "ExamAnnouncement",
+    "table": "exams_examannouncement",
+    "fields": [
+      {
+        "name": "exam",
+        "type": "ForeignKey",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null,
+        "related_to": "exams.Exam"
+      },
+      {
+        "name": "title",
+        "type": "CharField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": 200
+      },
+      {
+        "name": "content",
+        "type": "RichTextField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "announcement_date",
+        "type": "DateTimeField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "is_important",
+        "type": "BooleanField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "is_active",
+        "type": "BooleanField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "created_at",
+        "type": "DateTimeField",
+        "null": false,
+        "blank": true,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      }
+    ]
+  },
+  "exams_examfaq": {
+    "app": "exams",
+    "model": "ExamFaq",
+    "table": "exams_examfaq",
+    "fields": [
+      {
+        "name": "exam",
+        "type": "ForeignKey",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null,
+        "related_to": "exams.Exam"
+      },
+      {
+        "name": "question",
+        "type": "CharField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": 300
+      },
+      {
+        "name": "answer",
+        "type": "RichTextField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "order",
+        "type": "IntegerField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "is_active",
+        "type": "BooleanField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      }
+    ]
+  },
+  "exams_studymaterial": {
+    "app": "exams",
+    "model": "StudyMaterial",
+    "table": "exams_studymaterial",
+    "fields": [
+      {
+        "name": "exam",
+        "type": "ForeignKey",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null,
+        "related_to": "exams.Exam"
+      },
+      {
+        "name": "subject",
+        "type": "ForeignKey",
+        "null": true,
+        "blank": true,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null,
+        "related_to": "exams.Subject"
+      },
+      {
+        "name": "title",
+        "type": "CharField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": 200
+      },
+      {
+        "name": "material_type",
+        "type": "CharField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": 20
+      },
+      {
+        "name": "description",
+        "type": "RichTextField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "file",
+        "type": "FileField",
+        "null": true,
+        "blank": true,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": 100
+      },
+      {
+        "name": "video_url",
+        "type": "URLField",
+        "null": false,
+        "blank": true,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": 200
+      },
+      {
+        "name": "thumbnail",
+        "type": "ImageField",
+        "null": true,
+        "blank": true,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": 100
+      },
+      {
+        "name": "duration",
+        "type": "CharField",
+        "null": false,
+        "blank": true,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": 50
+      },
+      {
+        "name": "downloads",
+        "type": "IntegerField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "views",
+        "type": "IntegerField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "is_free",
+        "type": "BooleanField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "is_active",
+        "type": "BooleanField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "created_at",
+        "type": "DateTimeField",
+        "null": false,
+        "blank": true,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      }
+    ]
+  },
+  "exams_dailychallenge": {
+    "app": "exams",
+    "model": "DailyChallenge",
+    "table": "exams_dailychallenge",
+    "fields": [
+      {
+        "name": "title",
+        "type": "CharField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": 200
+      },
+      {
+        "name": "slug",
+        "type": "SlugField",
+        "null": false,
+        "blank": true,
+        "primary_key": false,
+        "unique": true,
+        "db_column": null,
+        "max_length": 50
+      },
+      {
+        "name": "description",
+        "type": "TextField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "challenge_type",
+        "type": "CharField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": 20
+      },
+      {
+        "name": "difficulty",
+        "type": "CharField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": 20
+      },
+      {
+        "name": "total_questions",
+        "type": "IntegerField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "duration_minutes",
+        "type": "IntegerField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "xp_reward",
+        "type": "IntegerField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "coin_reward",
+        "type": "IntegerField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "test_url",
+        "type": "URLField",
+        "null": false,
+        "blank": true,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": 200
+      },
+      {
+        "name": "mock_test",
+        "type": "ForeignKey",
+        "null": true,
+        "blank": true,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null,
+        "related_to": "mocktests.MockTest"
+      },
+      {
+        "name": "challenge_date",
+        "type": "DateField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "is_active",
+        "type": "BooleanField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "is_featured",
+        "type": "BooleanField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "total_participants",
+        "type": "IntegerField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "total_completed",
+        "type": "IntegerField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "created_at",
+        "type": "DateTimeField",
+        "null": false,
+        "blank": true,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "updated_at",
+        "type": "DateTimeField",
+        "null": false,
+        "blank": true,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      }
+    ]
+  },
+  "exams_challengeparticipant": {
+    "app": "exams",
+    "model": "ChallengeParticipant",
+    "table": "exams_challengeparticipant",
+    "fields": [
+      {
+        "name": "challenge",
+        "type": "ForeignKey",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null,
+        "related_to": "exams.DailyChallenge"
+      },
+      {
+        "name": "user",
+        "type": "ForeignKey",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null,
+        "related_to": "accounts.User"
+      },
+      {
+        "name": "score",
+        "type": "FloatField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "percentage",
+        "type": "FloatField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "time_taken",
+        "type": "IntegerField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "is_completed",
+        "type": "BooleanField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "completed_at",
+        "type": "DateTimeField",
+        "null": true,
+        "blank": true,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "xp_earned",
+        "type": "IntegerField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "coins_earned",
+        "type": "IntegerField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      }
+    ]
+  },
+  "exams_leaderboardentry": {
+    "app": "exams",
+    "model": "LeaderboardEntry",
+    "table": "exams_leaderboardentry",
+    "fields": [
+      {
+        "name": "user",
+        "type": "ForeignKey",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null,
+        "related_to": "accounts.User"
+      },
+      {
+        "name": "exam",
+        "type": "ForeignKey",
+        "null": true,
+        "blank": true,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null,
+        "related_to": "exams.Exam"
+      },
+      {
+        "name": "challenge",
+        "type": "ForeignKey",
+        "null": true,
+        "blank": true,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null,
+        "related_to": "exams.DailyChallenge"
+      },
+      {
+        "name": "period",
+        "type": "CharField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": 20
+      },
+      {
+        "name": "score",
+        "type": "FloatField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "rank",
+        "type": "IntegerField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "accuracy",
+        "type": "FloatField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "total_tests",
+        "type": "IntegerField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "date",
+        "type": "DateField",
+        "null": false,
+        "blank": true,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      }
+    ]
+  },
+  "mocktests_mocktest": {
+    "app": "mocktests",
+    "model": "MockTest",
+    "table": "mocktests_mocktest",
+    "fields": [
+      {
+        "name": "exam",
+        "type": "ForeignKey",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null,
+        "related_to": "exams.Exam"
+      },
+      {
+        "name": "subject",
+        "type": "ForeignKey",
+        "null": true,
+        "blank": true,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null,
+        "related_to": "exams.Subject"
+      },
+      {
+        "name": "topic",
+        "type": "ForeignKey",
+        "null": true,
+        "blank": true,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null,
+        "related_to": "exams.Topic"
+      },
+      {
+        "name": "name",
+        "type": "CharField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": 200
+      },
+      {
+        "name": "slug",
+        "type": "SlugField",
+        "null": false,
+        "blank": true,
+        "primary_key": false,
+        "unique": true,
+        "db_column": null,
+        "max_length": 50
+      },
+      {
+        "name": "test_type",
+        "type": "CharField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": 20
+      },
+      {
+        "name": "description",
+        "type": "TextField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "instructions",
+        "type": "TextField",
+        "null": false,
+        "blank": true,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "duration_minutes",
+        "type": "IntegerField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "total_questions",
+        "type": "IntegerField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "total_marks",
+        "type": "IntegerField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "passing_marks",
+        "type": "IntegerField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "negative_marking",
+        "type": "BooleanField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "negative_mark_value",
+        "type": "FloatField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "marks_per_question",
+        "type": "FloatField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "is_paid",
+        "type": "BooleanField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "price",
+        "type": "DecimalField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "shuffle_questions",
+        "type": "BooleanField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "shuffle_options",
+        "type": "BooleanField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "attempts_allowed",
+        "type": "IntegerField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "is_active",
+        "type": "BooleanField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "order",
+        "type": "IntegerField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "created_at",
+        "type": "DateTimeField",
+        "null": false,
+        "blank": true,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      }
+    ]
+  },
+  "mocktests_mocktestquestion": {
+    "app": "mocktests",
+    "model": "MockTestQuestion",
+    "table": "mocktests_mocktestquestion",
+    "fields": [
+      {
+        "name": "mock_test",
+        "type": "ForeignKey",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null,
+        "related_to": "mocktests.MockTest"
+      },
+      {
+        "name": "question",
+        "type": "ForeignKey",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null,
+        "related_to": "exams.Question"
+      },
+      {
+        "name": "marks",
+        "type": "FloatField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "order",
+        "type": "IntegerField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      }
+    ]
+  },
+  "mocktests_testattempt": {
+    "app": "mocktests",
+    "model": "TestAttempt",
+    "table": "mocktests_testattempt",
+    "fields": [
+      {
+        "name": "user",
+        "type": "ForeignKey",
+        "null": true,
+        "blank": true,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null,
+        "related_to": "accounts.User"
+      },
+      {
+        "name": "session_id",
+        "type": "CharField",
+        "null": true,
+        "blank": true,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": 100
+      },
+      {
+        "name": "mock_test",
+        "type": "ForeignKey",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null,
+        "related_to": "mocktests.MockTest"
+      },
+      {
+        "name": "status",
+        "type": "CharField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": 20
+      },
+      {
+        "name": "start_time",
+        "type": "DateTimeField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "end_time",
+        "type": "DateTimeField",
+        "null": true,
+        "blank": true,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "score",
+        "type": "FloatField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "percentage",
+        "type": "FloatField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "rank",
+        "type": "IntegerField",
+        "null": true,
+        "blank": true,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "percentile",
+        "type": "FloatField",
+        "null": true,
+        "blank": true,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "correct_answers",
+        "type": "IntegerField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "wrong_answers",
+        "type": "IntegerField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "skipped_answers",
+        "type": "IntegerField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "not_answered_count",
+        "type": "IntegerField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "total_time_taken",
+        "type": "IntegerField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "created_at",
+        "type": "DateTimeField",
+        "null": false,
+        "blank": true,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      }
+    ]
+  },
+  "mocktests_testanswer": {
+    "app": "mocktests",
+    "model": "TestAnswer",
+    "table": "mocktests_testanswer",
+    "fields": [
+      {
+        "name": "attempt",
+        "type": "ForeignKey",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null,
+        "related_to": "mocktests.TestAttempt"
+      },
+      {
+        "name": "question",
+        "type": "ForeignKey",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null,
+        "related_to": "exams.Question"
+      },
+      {
+        "name": "selected_option",
+        "type": "CharField",
+        "null": true,
+        "blank": true,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": 10
+      },
+      {
+        "name": "is_correct",
+        "type": "BooleanField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "is_skipped",
+        "type": "BooleanField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "is_marked_for_review",
+        "type": "BooleanField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "marks_obtained",
+        "type": "FloatField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "time_taken",
+        "type": "IntegerField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "answered_at",
+        "type": "DateTimeField",
+        "null": false,
+        "blank": true,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      }
+    ]
+  },
+  "analytics_userperformance": {
+    "app": "analytics",
+    "model": "UserPerformance",
+    "table": "analytics_userperformance",
+    "fields": [
+      {
+        "name": "user",
+        "type": "OneToOneField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": true,
+        "db_column": null,
+        "max_length": null,
+        "related_to": "accounts.User"
+      },
+      {
+        "name": "total_tests_taken",
+        "type": "IntegerField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "total_questions_attempted",
+        "type": "IntegerField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "total_correct_answers",
+        "type": "IntegerField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "total_wrong_answers",
+        "type": "IntegerField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "total_skipped_answers",
+        "type": "IntegerField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "overall_accuracy",
+        "type": "FloatField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "average_score",
+        "type": "FloatField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "total_time_spent",
+        "type": "IntegerField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "rank",
+        "type": "IntegerField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "percentile",
+        "type": "FloatField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "last_updated",
+        "type": "DateTimeField",
+        "null": false,
+        "blank": true,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "current_streak",
+        "type": "IntegerField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "longest_streak",
+        "type": "IntegerField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "last_activity_date",
+        "type": "DateField",
+        "null": true,
+        "blank": true,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "total_xp",
+        "type": "IntegerField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "level",
+        "type": "IntegerField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "coins",
+        "type": "IntegerField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "badges",
+        "type": "JSONField",
+        "null": false,
+        "blank": true,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      }
+    ]
+  },
+  "analytics_examperformance": {
+    "app": "analytics",
+    "model": "ExamPerformance",
+    "table": "analytics_examperformance",
+    "fields": [
+      {
+        "name": "user",
+        "type": "ForeignKey",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null,
+        "related_to": "accounts.User"
+      },
+      {
+        "name": "exam",
+        "type": "ForeignKey",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null,
+        "related_to": "exams.Exam"
+      },
+      {
+        "name": "total_attempts",
+        "type": "IntegerField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "total_correct",
+        "type": "IntegerField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "total_wrong",
+        "type": "IntegerField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "total_skipped",
+        "type": "IntegerField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "accuracy",
+        "type": "FloatField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "average_score",
+        "type": "FloatField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "best_score",
+        "type": "FloatField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "last_attempt_date",
+        "type": "DateTimeField",
+        "null": true,
+        "blank": true,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "last_updated",
+        "type": "DateTimeField",
+        "null": false,
+        "blank": true,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      }
+    ]
+  },
+  "analytics_subjectperformance": {
+    "app": "analytics",
+    "model": "SubjectPerformance",
+    "table": "analytics_subjectperformance",
+    "fields": [
+      {
+        "name": "user",
+        "type": "ForeignKey",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null,
+        "related_to": "accounts.User"
+      },
+      {
+        "name": "subject",
+        "type": "ForeignKey",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null,
+        "related_to": "exams.Subject"
+      },
+      {
+        "name": "total_questions",
+        "type": "IntegerField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "correct_answers",
+        "type": "IntegerField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "wrong_answers",
+        "type": "IntegerField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "accuracy",
+        "type": "FloatField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "average_time",
+        "type": "FloatField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "last_updated",
+        "type": "DateTimeField",
+        "null": false,
+        "blank": true,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      }
+    ]
+  },
+  "analytics_topicperformance": {
+    "app": "analytics",
+    "model": "TopicPerformance",
+    "table": "analytics_topicperformance",
+    "fields": [
+      {
+        "name": "user",
+        "type": "ForeignKey",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null,
+        "related_to": "accounts.User"
+      },
+      {
+        "name": "topic",
+        "type": "ForeignKey",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null,
+        "related_to": "exams.Topic"
+      },
+      {
+        "name": "total_questions",
+        "type": "IntegerField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "correct_answers",
+        "type": "IntegerField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "wrong_answers",
+        "type": "IntegerField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "accuracy",
+        "type": "FloatField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "average_time",
+        "type": "FloatField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "is_weak",
+        "type": "BooleanField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "is_strong",
+        "type": "BooleanField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "last_updated",
+        "type": "DateTimeField",
+        "null": false,
+        "blank": true,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      }
+    ]
+  },
+  "analytics_dailyactivity": {
+    "app": "analytics",
+    "model": "DailyActivity",
+    "table": "analytics_dailyactivity",
+    "fields": [
+      {
+        "name": "user",
+        "type": "ForeignKey",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null,
+        "related_to": "accounts.User"
+      },
+      {
+        "name": "date",
+        "type": "DateField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "tests_taken",
+        "type": "IntegerField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "questions_attempted",
+        "type": "IntegerField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "correct_answers",
+        "type": "IntegerField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "wrong_answers",
+        "type": "IntegerField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "time_spent",
+        "type": "IntegerField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "streak",
+        "type": "IntegerField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      }
+    ]
+  },
+  "interviews_interviewcategory": {
+    "app": "interviews",
+    "model": "InterviewCategory",
+    "table": "interviews_interviewcategory",
+    "fields": [
+      {
+        "name": "name",
+        "type": "CharField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": 100
+      },
+      {
+        "name": "slug",
+        "type": "SlugField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": true,
+        "db_column": null,
+        "max_length": 50
+      },
+      {
+        "name": "description",
+        "type": "TextField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "icon",
+        "type": "CharField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": 50
+      },
+      {
+        "name": "order",
+        "type": "IntegerField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "is_active",
+        "type": "BooleanField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "created_at",
+        "type": "DateTimeField",
+        "null": false,
+        "blank": true,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      }
+    ]
+  },
+  "interviews_interviewquestion": {
+    "app": "interviews",
+    "model": "InterviewQuestion",
+    "table": "interviews_interviewquestion",
+    "fields": [
+      {
+        "name": "category",
+        "type": "ForeignKey",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null,
+        "related_to": "interviews.InterviewCategory"
+      },
+      {
+        "name": "question_type",
+        "type": "CharField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": 20
+      },
+      {
+        "name": "question_text",
+        "type": "TextField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "difficulty",
+        "type": "CharField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": 20
+      },
+      {
+        "name": "sample_answer",
+        "type": "RichTextField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "keywords",
+        "type": "CharField",
+        "null": false,
+        "blank": true,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": 500
+      },
+      {
+        "name": "tips",
+        "type": "TextField",
+        "null": false,
+        "blank": true,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "time_limit",
+        "type": "IntegerField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "is_active",
+        "type": "BooleanField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "created_at",
+        "type": "DateTimeField",
+        "null": false,
+        "blank": true,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      }
+    ]
+  },
+  "interviews_userinterviewprogress": {
+    "app": "interviews",
+    "model": "UserInterviewProgress",
+    "table": "interviews_userinterviewprogress",
+    "fields": [
+      {
+        "name": "user",
+        "type": "ForeignKey",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null,
+        "related_to": "accounts.User"
+      },
+      {
+        "name": "question",
+        "type": "ForeignKey",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null,
+        "related_to": "interviews.InterviewQuestion"
+      },
+      {
+        "name": "user_answer",
+        "type": "TextField",
+        "null": false,
+        "blank": true,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "score",
+        "type": "FloatField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "feedback",
+        "type": "TextField",
+        "null": false,
+        "blank": true,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "is_completed",
+        "type": "BooleanField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "attempted_at",
+        "type": "DateTimeField",
+        "null": false,
+        "blank": true,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "updated_at",
+        "type": "DateTimeField",
+        "null": false,
+        "blank": true,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      }
+    ]
+  },
+  "payments_cart": {
+    "app": "payments",
+    "model": "Cart",
+    "table": "payments_cart",
+    "fields": [
+      {
+        "name": "user",
+        "type": "OneToOneField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": true,
+        "db_column": null,
+        "max_length": null,
+        "related_to": "accounts.User"
+      },
+      {
+        "name": "created_at",
+        "type": "DateTimeField",
+        "null": false,
+        "blank": true,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "updated_at",
+        "type": "DateTimeField",
+        "null": false,
+        "blank": true,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      }
+    ]
+  },
+  "payments_cartitem": {
+    "app": "payments",
+    "model": "CartItem",
+    "table": "payments_cartitem",
+    "fields": [
+      {
+        "name": "cart",
+        "type": "ForeignKey",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null,
+        "related_to": "payments.Cart"
+      },
+      {
+        "name": "item_type",
+        "type": "CharField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": 20
+      },
+      {
+        "name": "exam",
+        "type": "ForeignKey",
+        "null": true,
+        "blank": true,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null,
+        "related_to": "exams.Exam"
+      },
+      {
+        "name": "mock_test",
+        "type": "ForeignKey",
+        "null": true,
+        "blank": true,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null,
+        "related_to": "mocktests.MockTest"
+      },
+      {
+        "name": "quantity",
+        "type": "IntegerField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "added_at",
+        "type": "DateTimeField",
+        "null": false,
+        "blank": true,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      }
+    ]
+  },
+  "payments_order": {
+    "app": "payments",
+    "model": "Order",
+    "table": "payments_order",
+    "fields": [
+      {
+        "name": "order_id",
+        "type": "CharField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": true,
+        "db_column": null,
+        "max_length": 100
+      },
+      {
+        "name": "user",
+        "type": "ForeignKey",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null,
+        "related_to": "accounts.User"
+      },
+      {
+        "name": "total_amount",
+        "type": "DecimalField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "discount_amount",
+        "type": "DecimalField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "final_amount",
+        "type": "DecimalField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "status",
+        "type": "CharField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": 20
+      },
+      {
+        "name": "razorpay_order_id",
+        "type": "CharField",
+        "null": true,
+        "blank": true,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": 100
+      },
+      {
+        "name": "razorpay_payment_id",
+        "type": "CharField",
+        "null": true,
+        "blank": true,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": 100
+      },
+      {
+        "name": "razorpay_signature",
+        "type": "CharField",
+        "null": true,
+        "blank": true,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": 200
+      },
+      {
+        "name": "created_at",
+        "type": "DateTimeField",
+        "null": false,
+        "blank": true,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "updated_at",
+        "type": "DateTimeField",
+        "null": false,
+        "blank": true,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "paid_at",
+        "type": "DateTimeField",
+        "null": true,
+        "blank": true,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      }
+    ]
+  },
+  "payments_orderitem": {
+    "app": "payments",
+    "model": "OrderItem",
+    "table": "payments_orderitem",
+    "fields": [
+      {
+        "name": "order",
+        "type": "ForeignKey",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null,
+        "related_to": "payments.Order"
+      },
+      {
+        "name": "item_type",
+        "type": "CharField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": 20
+      },
+      {
+        "name": "exam",
+        "type": "ForeignKey",
+        "null": true,
+        "blank": true,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null,
+        "related_to": "exams.Exam"
+      },
+      {
+        "name": "mock_test",
+        "type": "ForeignKey",
+        "null": true,
+        "blank": true,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null,
+        "related_to": "mocktests.MockTest"
+      },
+      {
+        "name": "price",
+        "type": "DecimalField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "quantity",
+        "type": "IntegerField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      }
+    ]
+  },
+  "payments_unlockedexam": {
+    "app": "payments",
+    "model": "UnlockedExam",
+    "table": "payments_unlockedexam",
+    "fields": [
+      {
+        "name": "user",
+        "type": "ForeignKey",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null,
+        "related_to": "accounts.User"
+      },
+      {
+        "name": "exam",
+        "type": "ForeignKey",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null,
+        "related_to": "exams.Exam"
+      },
+      {
+        "name": "unlocked_at",
+        "type": "DateTimeField",
+        "null": false,
+        "blank": true,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      }
+    ]
+  },
+  "payments_unlockedmocktest": {
+    "app": "payments",
+    "model": "UnlockedMockTest",
+    "table": "payments_unlockedmocktest",
+    "fields": [
+      {
+        "name": "user",
+        "type": "ForeignKey",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null,
+        "related_to": "accounts.User"
+      },
+      {
+        "name": "mock_test",
+        "type": "ForeignKey",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null,
+        "related_to": "mocktests.MockTest"
+      },
+      {
+        "name": "unlocked_at",
+        "type": "DateTimeField",
+        "null": false,
+        "blank": true,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      }
+    ]
+  },
+  "payments_paymenttransaction": {
+    "app": "payments",
+    "model": "PaymentTransaction",
+    "table": "payments_paymenttransaction",
+    "fields": [
+      {
+        "name": "order_id",
+        "type": "CharField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": true,
+        "db_column": null,
+        "max_length": 100
+      },
+      {
+        "name": "merchant_transaction_id",
+        "type": "CharField",
+        "null": true,
+        "blank": true,
+        "primary_key": false,
+        "unique": true,
+        "db_column": null,
+        "max_length": 100
+      },
+      {
+        "name": "user",
+        "type": "ForeignKey",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null,
+        "related_to": "accounts.User"
+      },
+      {
+        "name": "item_type",
+        "type": "CharField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": 20
+      },
+      {
+        "name": "exam",
+        "type": "ForeignKey",
+        "null": true,
+        "blank": true,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null,
+        "related_to": "exams.Exam"
+      },
+      {
+        "name": "mock_test",
+        "type": "ForeignKey",
+        "null": true,
+        "blank": true,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null,
+        "related_to": "mocktests.MockTest"
+      },
+      {
+        "name": "amount",
+        "type": "DecimalField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "phonepe_merchant_id",
+        "type": "CharField",
+        "null": true,
+        "blank": true,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": 50
+      },
+      {
+        "name": "phonepe_transaction_id",
+        "type": "CharField",
+        "null": true,
+        "blank": true,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": 100
+      },
+      {
+        "name": "phonepe_payment_id",
+        "type": "CharField",
+        "null": true,
+        "blank": true,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": 100
+      },
+      {
+        "name": "qr_code_url",
+        "type": "URLField",
+        "null": true,
+        "blank": true,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": 200
+      },
+      {
+        "name": "qr_code_base64",
+        "type": "TextField",
+        "null": true,
+        "blank": true,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "status",
+        "type": "CharField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": 20
+      },
+      {
+        "name": "webhook_received",
+        "type": "BooleanField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "webhook_verified",
+        "type": "BooleanField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "created_at",
+        "type": "DateTimeField",
+        "null": false,
+        "blank": true,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "updated_at",
+        "type": "DateTimeField",
+        "null": false,
+        "blank": true,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "paid_at",
+        "type": "DateTimeField",
+        "null": true,
+        "blank": true,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "admin_notes",
+        "type": "TextField",
+        "null": false,
+        "blank": true,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      }
+    ]
+  },
+  "notifications_notification": {
+    "app": "notifications",
+    "model": "Notification",
+    "table": "notifications_notification",
+    "fields": [
+      {
+        "name": "title",
+        "type": "CharField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": 200
+      },
+      {
+        "name": "slug",
+        "type": "SlugField",
+        "null": false,
+        "blank": true,
+        "primary_key": false,
+        "unique": true,
+        "db_column": null,
+        "max_length": 50
+      },
+      {
+        "name": "message",
+        "type": "RichTextField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "priority",
+        "type": "CharField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": 20
+      },
+      {
+        "name": "display_location",
+        "type": "CharField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": 20
+      },
+      {
+        "name": "show_bell_icon",
+        "type": "BooleanField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "show_on_homepage",
+        "type": "BooleanField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "show_as_popup",
+        "type": "BooleanField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "action_url",
+        "type": "URLField",
+        "null": false,
+        "blank": true,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": 200
+      },
+      {
+        "name": "button_text",
+        "type": "CharField",
+        "null": false,
+        "blank": true,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": 50
+      },
+      {
+        "name": "image",
+        "type": "ImageField",
+        "null": true,
+        "blank": true,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": 100
+      },
+      {
+        "name": "start_date",
+        "type": "DateTimeField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "end_date",
+        "type": "DateTimeField",
+        "null": true,
+        "blank": true,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "is_active",
+        "type": "BooleanField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "order",
+        "type": "IntegerField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "views",
+        "type": "IntegerField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "clicks",
+        "type": "IntegerField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "created_at",
+        "type": "DateTimeField",
+        "null": false,
+        "blank": true,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "updated_at",
+        "type": "DateTimeField",
+        "null": false,
+        "blank": true,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      }
+    ]
+  },
+  "notifications_announcement": {
+    "app": "notifications",
+    "model": "Announcement",
+    "table": "notifications_announcement",
+    "fields": [
+      {
+        "name": "title",
+        "type": "CharField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": 200
+      },
+      {
+        "name": "slug",
+        "type": "SlugField",
+        "null": false,
+        "blank": true,
+        "primary_key": false,
+        "unique": true,
+        "db_column": null,
+        "max_length": 50
+      },
+      {
+        "name": "content",
+        "type": "RichTextField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "summary",
+        "type": "CharField",
+        "null": false,
+        "blank": true,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": 300
+      },
+      {
+        "name": "announcement_type",
+        "type": "CharField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": 20
+      },
+      {
+        "name": "bg_color",
+        "type": "CharField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": 20
+      },
+      {
+        "name": "text_color",
+        "type": "CharField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": 20
+      },
+      {
+        "name": "start_date",
+        "type": "DateTimeField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "end_date",
+        "type": "DateTimeField",
+        "null": true,
+        "blank": true,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "is_active",
+        "type": "BooleanField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "is_urgent",
+        "type": "BooleanField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "is_sticky",
+        "type": "BooleanField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "order",
+        "type": "IntegerField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "created_at",
+        "type": "DateTimeField",
+        "null": false,
+        "blank": true,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      }
+    ]
+  },
+  "notifications_notificationview": {
+    "app": "notifications",
+    "model": "NotificationView",
+    "table": "notifications_notificationview",
+    "fields": [
+      {
+        "name": "notification",
+        "type": "ForeignKey",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null,
+        "related_to": "notifications.Notification"
+      },
+      {
+        "name": "session_key",
+        "type": "CharField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": 40
+      },
+      {
+        "name": "ip_address",
+        "type": "GenericIPAddressField",
+        "null": true,
+        "blank": true,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": 39
+      },
+      {
+        "name": "viewed_at",
+        "type": "DateTimeField",
+        "null": false,
+        "blank": true,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      }
+    ]
+  },
+  "notifications_notificationclick": {
+    "app": "notifications",
+    "model": "NotificationClick",
+    "table": "notifications_notificationclick",
+    "fields": [
+      {
+        "name": "notification",
+        "type": "ForeignKey",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null,
+        "related_to": "notifications.Notification"
+      },
+      {
+        "name": "session_key",
+        "type": "CharField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": 40
+      },
+      {
+        "name": "ip_address",
+        "type": "GenericIPAddressField",
+        "null": true,
+        "blank": true,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": 39
+      },
+      {
+        "name": "clicked_at",
+        "type": "DateTimeField",
+        "null": false,
+        "blank": true,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      }
+    ]
+  },
+  "study_materials_coursecategory": {
+    "app": "study_materials",
+    "model": "CourseCategory",
+    "table": "study_materials_coursecategory",
+    "fields": [
+      {
+        "name": "name",
+        "type": "CharField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": 100
+      },
+      {
+        "name": "slug",
+        "type": "SlugField",
+        "null": false,
+        "blank": true,
+        "primary_key": false,
+        "unique": true,
+        "db_column": null,
+        "max_length": 50
+      },
+      {
+        "name": "icon",
+        "type": "CharField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": 50
+      },
+      {
+        "name": "description",
+        "type": "TextField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "order",
+        "type": "IntegerField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "is_active",
+        "type": "BooleanField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "created_at",
+        "type": "DateTimeField",
+        "null": false,
+        "blank": true,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      }
+    ]
+  },
+  "study_materials_course": {
+    "app": "study_materials",
+    "model": "Course",
+    "table": "study_materials_course",
+    "fields": [
+      {
+        "name": "category",
+        "type": "ForeignKey",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null,
+        "related_to": "study_materials.CourseCategory"
+      },
+      {
+        "name": "exam",
+        "type": "ForeignKey",
+        "null": true,
+        "blank": true,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null,
+        "related_to": "exams.Exam"
+      },
+      {
+        "name": "title",
+        "type": "CharField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": 200
+      },
+      {
+        "name": "slug",
+        "type": "SlugField",
+        "null": false,
+        "blank": true,
+        "primary_key": false,
+        "unique": true,
+        "db_column": null,
+        "max_length": 50
+      },
+      {
+        "name": "subtitle",
+        "type": "CharField",
+        "null": false,
+        "blank": true,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": 300
+      },
+      {
+        "name": "description",
+        "type": "RichTextField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "objectives",
+        "type": "RichTextField",
+        "null": false,
+        "blank": true,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "requirements",
+        "type": "RichTextField",
+        "null": false,
+        "blank": true,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "difficulty",
+        "type": "CharField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": 20
+      },
+      {
+        "name": "thumbnail",
+        "type": "ImageField",
+        "null": true,
+        "blank": true,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": 100
+      },
+      {
+        "name": "promo_video",
+        "type": "URLField",
+        "null": false,
+        "blank": true,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": 200
+      },
+      {
+        "name": "is_free",
+        "type": "BooleanField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "price",
+        "type": "DecimalField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "discounted_price",
+        "type": "DecimalField",
+        "null": true,
+        "blank": true,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "total_lectures",
+        "type": "IntegerField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "total_duration",
+        "type": "IntegerField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "total_enrollments",
+        "type": "IntegerField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "rating",
+        "type": "FloatField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "is_active",
+        "type": "BooleanField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "is_featured",
+        "type": "BooleanField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "order",
+        "type": "IntegerField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "created_at",
+        "type": "DateTimeField",
+        "null": false,
+        "blank": true,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "updated_at",
+        "type": "DateTimeField",
+        "null": false,
+        "blank": true,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      }
+    ]
+  },
+  "study_materials_section": {
+    "app": "study_materials",
+    "model": "Section",
+    "table": "study_materials_section",
+    "fields": [
+      {
+        "name": "course",
+        "type": "ForeignKey",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null,
+        "related_to": "study_materials.Course"
+      },
+      {
+        "name": "title",
+        "type": "CharField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": 200
+      },
+      {
+        "name": "description",
+        "type": "TextField",
+        "null": false,
+        "blank": true,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "order",
+        "type": "IntegerField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "is_active",
+        "type": "BooleanField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "created_at",
+        "type": "DateTimeField",
+        "null": false,
+        "blank": true,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      }
+    ]
+  },
+  "study_materials_lecture": {
+    "app": "study_materials",
+    "model": "Lecture",
+    "table": "study_materials_lecture",
+    "fields": [
+      {
+        "name": "section",
+        "type": "ForeignKey",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null,
+        "related_to": "study_materials.Section"
+      },
+      {
+        "name": "title",
+        "type": "CharField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": 200
+      },
+      {
+        "name": "description",
+        "type": "RichTextField",
+        "null": false,
+        "blank": true,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "lecture_type",
+        "type": "CharField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": 20
+      },
+      {
+        "name": "video_url",
+        "type": "URLField",
+        "null": false,
+        "blank": true,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": 200
+      },
+      {
+        "name": "video_embed_code",
+        "type": "TextField",
+        "null": false,
+        "blank": true,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "document",
+        "type": "FileField",
+        "null": true,
+        "blank": true,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": 100
+      },
+      {
+        "name": "content",
+        "type": "RichTextField",
+        "null": false,
+        "blank": true,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "duration",
+        "type": "IntegerField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "order",
+        "type": "IntegerField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "is_free_preview",
+        "type": "BooleanField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "is_active",
+        "type": "BooleanField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "created_at",
+        "type": "DateTimeField",
+        "null": false,
+        "blank": true,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "updated_at",
+        "type": "DateTimeField",
+        "null": false,
+        "blank": true,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      }
+    ]
+  },
+  "study_materials_note": {
+    "app": "study_materials",
+    "model": "Note",
+    "table": "study_materials_note",
+    "fields": [
+      {
+        "name": "exam",
+        "type": "ForeignKey",
+        "null": true,
+        "blank": true,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null,
+        "related_to": "exams.Exam"
+      },
+      {
+        "name": "subject",
+        "type": "ForeignKey",
+        "null": true,
+        "blank": true,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null,
+        "related_to": "exams.Subject"
+      },
+      {
+        "name": "title",
+        "type": "CharField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": 200
+      },
+      {
+        "name": "slug",
+        "type": "SlugField",
+        "null": false,
+        "blank": true,
+        "primary_key": false,
+        "unique": true,
+        "db_column": null,
+        "max_length": 50
+      },
+      {
+        "name": "description",
+        "type": "TextField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "content",
+        "type": "RichTextField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "note_type",
+        "type": "CharField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": 20
+      },
+      {
+        "name": "pdf_file",
+        "type": "FileField",
+        "null": true,
+        "blank": true,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": 100
+      },
+      {
+        "name": "cover_image",
+        "type": "ImageField",
+        "null": true,
+        "blank": true,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": 100
+      },
+      {
+        "name": "author",
+        "type": "CharField",
+        "null": false,
+        "blank": true,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": 100
+      },
+      {
+        "name": "pages",
+        "type": "IntegerField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "file_size",
+        "type": "CharField",
+        "null": false,
+        "blank": true,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": 50
+      },
+      {
+        "name": "views",
+        "type": "IntegerField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "downloads",
+        "type": "IntegerField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "likes",
+        "type": "IntegerField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "tags",
+        "type": "CharField",
+        "null": false,
+        "blank": true,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": 500
+      },
+      {
+        "name": "is_free",
+        "type": "BooleanField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "is_active",
+        "type": "BooleanField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "is_featured",
+        "type": "BooleanField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "order",
+        "type": "IntegerField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "created_at",
+        "type": "DateTimeField",
+        "null": false,
+        "blank": true,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "updated_at",
+        "type": "DateTimeField",
+        "null": false,
+        "blank": true,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      }
+    ]
+  },
+  "study_materials_videolecture": {
+    "app": "study_materials",
+    "model": "VideoLecture",
+    "table": "study_materials_videolecture",
+    "fields": [
+      {
+        "name": "exam",
+        "type": "ForeignKey",
+        "null": true,
+        "blank": true,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null,
+        "related_to": "exams.Exam"
+      },
+      {
+        "name": "subject",
+        "type": "ForeignKey",
+        "null": true,
+        "blank": true,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null,
+        "related_to": "exams.Subject"
+      },
+      {
+        "name": "title",
+        "type": "CharField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": 200
+      },
+      {
+        "name": "slug",
+        "type": "SlugField",
+        "null": false,
+        "blank": true,
+        "primary_key": false,
+        "unique": true,
+        "db_column": null,
+        "max_length": 50
+      },
+      {
+        "name": "description",
+        "type": "RichTextField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "video_url",
+        "type": "URLField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": 200
+      },
+      {
+        "name": "thumbnail",
+        "type": "ImageField",
+        "null": true,
+        "blank": true,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": 100
+      },
+      {
+        "name": "duration",
+        "type": "CharField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": 50
+      },
+      {
+        "name": "views",
+        "type": "IntegerField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "likes",
+        "type": "IntegerField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "tags",
+        "type": "CharField",
+        "null": false,
+        "blank": true,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": 500
+      },
+      {
+        "name": "is_free",
+        "type": "BooleanField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "is_active",
+        "type": "BooleanField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "is_featured",
+        "type": "BooleanField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "order",
+        "type": "IntegerField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "created_at",
+        "type": "DateTimeField",
+        "null": false,
+        "blank": true,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "updated_at",
+        "type": "DateTimeField",
+        "null": false,
+        "blank": true,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      }
+    ]
+  },
+  "study_materials_ebook": {
+    "app": "study_materials",
+    "model": "EBook",
+    "table": "study_materials_ebook",
+    "fields": [
+      {
+        "name": "exam",
+        "type": "ForeignKey",
+        "null": true,
+        "blank": true,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null,
+        "related_to": "exams.Exam"
+      },
+      {
+        "name": "title",
+        "type": "CharField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": 200
+      },
+      {
+        "name": "slug",
+        "type": "SlugField",
+        "null": false,
+        "blank": true,
+        "primary_key": false,
+        "unique": true,
+        "db_column": null,
+        "max_length": 50
+      },
+      {
+        "name": "description",
+        "type": "RichTextField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "author",
+        "type": "CharField",
+        "null": false,
+        "blank": true,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": 200
+      },
+      {
+        "name": "publisher",
+        "type": "CharField",
+        "null": false,
+        "blank": true,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": 200
+      },
+      {
+        "name": "edition",
+        "type": "CharField",
+        "null": false,
+        "blank": true,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": 50
+      },
+      {
+        "name": "year",
+        "type": "IntegerField",
+        "null": true,
+        "blank": true,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "pages",
+        "type": "IntegerField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "cover_image",
+        "type": "ImageField",
+        "null": true,
+        "blank": true,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": 100
+      },
+      {
+        "name": "pdf_file",
+        "type": "FileField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": 100
+      },
+      {
+        "name": "is_free",
+        "type": "BooleanField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "price",
+        "type": "DecimalField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "downloads",
+        "type": "IntegerField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "views",
+        "type": "IntegerField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "tags",
+        "type": "CharField",
+        "null": false,
+        "blank": true,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": 500
+      },
+      {
+        "name": "is_active",
+        "type": "BooleanField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "is_featured",
+        "type": "BooleanField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "order",
+        "type": "IntegerField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "created_at",
+        "type": "DateTimeField",
+        "null": false,
+        "blank": true,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "updated_at",
+        "type": "DateTimeField",
+        "null": false,
+        "blank": true,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      }
+    ]
+  },
+  "study_materials_currentaffair": {
+    "app": "study_materials",
+    "model": "CurrentAffair",
+    "table": "study_materials_currentaffair",
+    "fields": [
+      {
+        "name": "title",
+        "type": "CharField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": 300
+      },
+      {
+        "name": "slug",
+        "type": "SlugField",
+        "null": false,
+        "blank": true,
+        "primary_key": false,
+        "unique": true,
+        "db_column": null,
+        "max_length": 50
+      },
+      {
+        "name": "category",
+        "type": "CharField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": 20
+      },
+      {
+        "name": "content",
+        "type": "RichTextField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "summary",
+        "type": "TextField",
+        "null": false,
+        "blank": true,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "date",
+        "type": "DateField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "source",
+        "type": "CharField",
+        "null": false,
+        "blank": true,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": 200
+      },
+      {
+        "name": "author",
+        "type": "CharField",
+        "null": false,
+        "blank": true,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": 100
+      },
+      {
+        "name": "image",
+        "type": "ImageField",
+        "null": true,
+        "blank": true,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": 100
+      },
+      {
+        "name": "tags",
+        "type": "CharField",
+        "null": false,
+        "blank": true,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": 500
+      },
+      {
+        "name": "important_for",
+        "type": "CharField",
+        "null": false,
+        "blank": true,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": 500
+      },
+      {
+        "name": "views",
+        "type": "IntegerField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "likes",
+        "type": "IntegerField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "is_active",
+        "type": "BooleanField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "is_featured",
+        "type": "BooleanField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "created_at",
+        "type": "DateTimeField",
+        "null": false,
+        "blank": true,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "updated_at",
+        "type": "DateTimeField",
+        "null": false,
+        "blank": true,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      }
+    ]
+  },
+  "study_materials_userenrollment": {
+    "app": "study_materials",
+    "model": "UserEnrollment",
+    "table": "study_materials_userenrollment",
+    "fields": [
+      {
+        "name": "user",
+        "type": "ForeignKey",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null,
+        "related_to": "accounts.User"
+      },
+      {
+        "name": "course",
+        "type": "ForeignKey",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null,
+        "related_to": "study_materials.Course"
+      },
+      {
+        "name": "enrolled_at",
+        "type": "DateTimeField",
+        "null": false,
+        "blank": true,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "progress",
+        "type": "FloatField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "is_completed",
+        "type": "BooleanField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "completed_at",
+        "type": "DateTimeField",
+        "null": true,
+        "blank": true,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      }
+    ]
+  },
+  "study_materials_userlectureprogress": {
+    "app": "study_materials",
+    "model": "UserLectureProgress",
+    "table": "study_materials_userlectureprogress",
+    "fields": [
+      {
+        "name": "user",
+        "type": "ForeignKey",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null,
+        "related_to": "accounts.User"
+      },
+      {
+        "name": "lecture",
+        "type": "ForeignKey",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null,
+        "related_to": "study_materials.Lecture"
+      },
+      {
+        "name": "is_completed",
+        "type": "BooleanField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "completed_at",
+        "type": "DateTimeField",
+        "null": true,
+        "blank": true,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "last_watched",
+        "type": "DateTimeField",
+        "null": false,
+        "blank": true,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "watch_time",
+        "type": "IntegerField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      }
+    ]
+  },
+  "study_materials_bookmark": {
+    "app": "study_materials",
+    "model": "Bookmark",
+    "table": "study_materials_bookmark",
+    "fields": [
+      {
+        "name": "user",
+        "type": "ForeignKey",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null,
+        "related_to": "accounts.User"
+      },
+      {
+        "name": "content_type",
+        "type": "CharField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": 20
+      },
+      {
+        "name": "content_id",
+        "type": "IntegerField",
+        "null": false,
+        "blank": false,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      },
+      {
+        "name": "created_at",
+        "type": "DateTimeField",
+        "null": false,
+        "blank": true,
+        "primary_key": false,
+        "unique": false,
+        "db_column": null,
+        "max_length": null
+      }
+    ]
+  }
+}

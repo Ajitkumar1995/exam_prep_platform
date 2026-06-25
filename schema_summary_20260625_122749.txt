@@ -1,0 +1,999 @@
+================================================================================
+DATABASE SCHEMA SUMMARY
+Generated: 2026-06-25 12:27:49
+================================================================================
+
+
+📦 ACCOUNT
+------------------------------------------------------------
+
+📊 EmailAddress
+   Table: account_emailaddress
+   Fields:
+      • user: ForeignKey NOT NULL    -> accounts.User
+      • email: EmailField NOT NULL   max_length=254
+      • verified: BooleanField NOT NULL   
+      • primary: BooleanField NOT NULL   
+
+
+📊 EmailConfirmation
+   Table: account_emailconfirmation
+   Fields:
+      • email_address: ForeignKey NOT NULL    -> account.EmailAddress
+      • created: DateTimeField NOT NULL   
+      • sent: DateTimeField NULL   
+      • key: CharField NOT NULL  UNIQUE max_length=64
+
+
+📦 ACCOUNTS
+------------------------------------------------------------
+
+📊 OTP
+   Table: accounts_otp
+   Fields:
+      • user: ForeignKey NOT NULL    -> accounts.User
+      • otp: CharField NOT NULL   max_length=6
+      • otp_type: CharField NOT NULL   max_length=20
+      • is_used: BooleanField NOT NULL   
+      • created_at: DateTimeField NOT NULL   
+      • expires_at: DateTimeField NOT NULL   
+
+
+📊 User
+   Table: accounts_user
+   Fields:
+      • password: CharField NOT NULL   max_length=128
+      • last_login: DateTimeField NULL   
+      • is_superuser: BooleanField NOT NULL   
+      • username: CharField NOT NULL  UNIQUE max_length=150
+      • first_name: CharField NOT NULL   max_length=150
+      • last_name: CharField NOT NULL   max_length=150
+      • is_staff: BooleanField NOT NULL   
+      • is_active: BooleanField NOT NULL   
+      • date_joined: DateTimeField NOT NULL   
+      • email: EmailField NOT NULL  UNIQUE max_length=254
+      • profile_pic: ImageField NULL   max_length=100
+      • is_verified: BooleanField NOT NULL   
+      • created_at: DateTimeField NOT NULL   
+      • updated_at: DateTimeField NOT NULL   
+      • groups: ManyToManyField NOT NULL    -> auth.Group (through: accounts_user_groups)
+      • user_permissions: ManyToManyField NOT NULL    -> auth.Permission (through: accounts_user_user_permissions)
+
+
+📦 ADMIN
+------------------------------------------------------------
+
+📊 LogEntry
+   Table: django_admin_log
+   Fields:
+      • action_time: DateTimeField NOT NULL   
+      • user: ForeignKey NOT NULL    -> accounts.User
+      • content_type: ForeignKey NULL    -> contenttypes.ContentType
+      • object_id: TextField NULL   
+      • object_repr: CharField NOT NULL   max_length=200
+      • action_flag: PositiveSmallIntegerField NOT NULL   
+      • change_message: TextField NOT NULL   
+
+
+📦 ANALYTICS
+------------------------------------------------------------
+
+📊 DailyActivity
+   Table: analytics_dailyactivity
+   Fields:
+      • user: ForeignKey NOT NULL    -> accounts.User
+      • date: DateField NOT NULL   
+      • tests_taken: IntegerField NOT NULL   
+      • questions_attempted: IntegerField NOT NULL   
+      • correct_answers: IntegerField NOT NULL   
+      • wrong_answers: IntegerField NOT NULL   
+      • time_spent: IntegerField NOT NULL   
+      • streak: IntegerField NOT NULL   
+
+
+📊 ExamPerformance
+   Table: analytics_examperformance
+   Fields:
+      • user: ForeignKey NOT NULL    -> accounts.User
+      • exam: ForeignKey NOT NULL    -> exams.Exam
+      • total_attempts: IntegerField NOT NULL   
+      • total_correct: IntegerField NOT NULL   
+      • total_wrong: IntegerField NOT NULL   
+      • total_skipped: IntegerField NOT NULL   
+      • accuracy: FloatField NOT NULL   
+      • average_score: FloatField NOT NULL   
+      • best_score: FloatField NOT NULL   
+      • last_attempt_date: DateTimeField NULL   
+      • last_updated: DateTimeField NOT NULL   
+
+
+📊 SubjectPerformance
+   Table: analytics_subjectperformance
+   Fields:
+      • user: ForeignKey NOT NULL    -> accounts.User
+      • subject: ForeignKey NOT NULL    -> exams.Subject
+      • total_questions: IntegerField NOT NULL   
+      • correct_answers: IntegerField NOT NULL   
+      • wrong_answers: IntegerField NOT NULL   
+      • accuracy: FloatField NOT NULL   
+      • average_time: FloatField NOT NULL   
+      • last_updated: DateTimeField NOT NULL   
+
+
+📊 TopicPerformance
+   Table: analytics_topicperformance
+   Fields:
+      • user: ForeignKey NOT NULL    -> accounts.User
+      • topic: ForeignKey NOT NULL    -> exams.Topic
+      • total_questions: IntegerField NOT NULL   
+      • correct_answers: IntegerField NOT NULL   
+      • wrong_answers: IntegerField NOT NULL   
+      • accuracy: FloatField NOT NULL   
+      • average_time: FloatField NOT NULL   
+      • is_weak: BooleanField NOT NULL   
+      • is_strong: BooleanField NOT NULL   
+      • last_updated: DateTimeField NOT NULL   
+
+
+📊 UserPerformance
+   Table: analytics_userperformance
+   Fields:
+      • user: OneToOneField NOT NULL  UNIQUE  -> accounts.User
+      • total_tests_taken: IntegerField NOT NULL   
+      • total_questions_attempted: IntegerField NOT NULL   
+      • total_correct_answers: IntegerField NOT NULL   
+      • total_wrong_answers: IntegerField NOT NULL   
+      • total_skipped_answers: IntegerField NOT NULL   
+      • overall_accuracy: FloatField NOT NULL   
+      • average_score: FloatField NOT NULL   
+      • total_time_spent: IntegerField NOT NULL   
+      • rank: IntegerField NOT NULL   
+      • percentile: FloatField NOT NULL   
+      • last_updated: DateTimeField NOT NULL   
+      • current_streak: IntegerField NOT NULL   
+      • longest_streak: IntegerField NOT NULL   
+      • last_activity_date: DateField NULL   
+      • total_xp: IntegerField NOT NULL   
+      • level: IntegerField NOT NULL   
+      • coins: IntegerField NOT NULL   
+      • badges: JSONField NOT NULL   
+
+
+📦 AUTH
+------------------------------------------------------------
+
+📊 Group
+   Table: auth_group
+   Fields:
+      • name: CharField NOT NULL  UNIQUE max_length=150
+      • permissions: ManyToManyField NOT NULL    -> auth.Permission (through: auth_group_permissions)
+
+
+📊 Permission
+   Table: auth_permission
+   Fields:
+      • name: CharField NOT NULL   max_length=255
+      • content_type: ForeignKey NOT NULL    -> contenttypes.ContentType
+      • codename: CharField NOT NULL   max_length=100
+
+
+📦 CONTENTTYPES
+------------------------------------------------------------
+
+📊 ContentType
+   Table: django_content_type
+   Fields:
+      • app_label: CharField NOT NULL   max_length=100
+      • model: CharField NOT NULL   max_length=100
+
+
+📦 DJANGO_CELERY_BEAT
+------------------------------------------------------------
+
+📊 ClockedSchedule
+   Table: django_celery_beat_clockedschedule
+   Fields:
+      • clocked_time: DateTimeField NOT NULL   
+
+
+📊 CrontabSchedule
+   Table: django_celery_beat_crontabschedule
+   Fields:
+      • minute: CharField NOT NULL   max_length=240
+      • hour: CharField NOT NULL   max_length=96
+      • day_of_week: CharField NOT NULL   max_length=64
+      • day_of_month: CharField NOT NULL   max_length=124
+      • month_of_year: CharField NOT NULL   max_length=64
+      • timezone: TimeZoneField NOT NULL   max_length=63
+
+
+📊 IntervalSchedule
+   Table: django_celery_beat_intervalschedule
+   Fields:
+      • every: IntegerField NOT NULL   
+      • period: CharField NOT NULL   max_length=24
+
+
+📊 PeriodicTask
+   Table: django_celery_beat_periodictask
+   Fields:
+      • name: CharField NOT NULL  UNIQUE max_length=200
+      • task: CharField NOT NULL   max_length=200
+      • interval: ForeignKey NULL    -> django_celery_beat.IntervalSchedule
+      • crontab: ForeignKey NULL    -> django_celery_beat.CrontabSchedule
+      • solar: ForeignKey NULL    -> django_celery_beat.SolarSchedule
+      • clocked: ForeignKey NULL    -> django_celery_beat.ClockedSchedule
+      • args: TextField NOT NULL   
+      • kwargs: TextField NOT NULL   
+      • queue: CharField NULL   max_length=200
+      • exchange: CharField NULL   max_length=200
+      • routing_key: CharField NULL   max_length=200
+      • headers: TextField NOT NULL   
+      • priority: PositiveIntegerField NULL   
+      • expires: DateTimeField NULL   
+      • expire_seconds: PositiveIntegerField NULL   
+      • one_off: BooleanField NOT NULL   
+      • start_time: DateTimeField NULL   
+      • enabled: BooleanField NOT NULL   
+      • last_run_at: DateTimeField NULL   
+      • total_run_count: PositiveIntegerField NOT NULL   
+      • date_changed: DateTimeField NOT NULL   
+      • description: TextField NOT NULL   
+
+
+📊 PeriodicTasks
+   Table: django_celery_beat_periodictasks
+   Fields:
+      • ident: SmallIntegerField NOT NULL PRIMARY KEY UNIQUE 
+      • last_update: DateTimeField NOT NULL   
+
+
+📊 SolarSchedule
+   Table: django_celery_beat_solarschedule
+   Fields:
+      • event: CharField NOT NULL   max_length=24
+      • latitude: DecimalField NOT NULL   
+      • longitude: DecimalField NOT NULL   
+
+
+📦 EXAMS
+------------------------------------------------------------
+
+📊 ChallengeParticipant
+   Table: exams_challengeparticipant
+   Fields:
+      • challenge: ForeignKey NOT NULL    -> exams.DailyChallenge
+      • user: ForeignKey NOT NULL    -> accounts.User
+      • score: FloatField NOT NULL   
+      • percentage: FloatField NOT NULL   
+      • time_taken: IntegerField NOT NULL   
+      • is_completed: BooleanField NOT NULL   
+      • completed_at: DateTimeField NULL   
+      • xp_earned: IntegerField NOT NULL   
+      • coins_earned: IntegerField NOT NULL   
+
+
+📊 DailyChallenge
+   Table: exams_dailychallenge
+   Fields:
+      • title: CharField NOT NULL   max_length=200
+      • slug: SlugField NOT NULL  UNIQUE max_length=50
+      • description: TextField NOT NULL   
+      • challenge_type: CharField NOT NULL   max_length=20
+      • difficulty: CharField NOT NULL   max_length=20
+      • total_questions: IntegerField NOT NULL   
+      • duration_minutes: IntegerField NOT NULL   
+      • xp_reward: IntegerField NOT NULL   
+      • coin_reward: IntegerField NOT NULL   
+      • test_url: URLField NOT NULL   max_length=200
+      • mock_test: ForeignKey NULL    -> mocktests.MockTest
+      • challenge_date: DateField NOT NULL   
+      • is_active: BooleanField NOT NULL   
+      • is_featured: BooleanField NOT NULL   
+      • total_participants: IntegerField NOT NULL   
+      • total_completed: IntegerField NOT NULL   
+      • created_at: DateTimeField NOT NULL   
+      • updated_at: DateTimeField NOT NULL   
+
+
+📊 Exam
+   Table: exams_exam
+   Fields:
+      • category: ForeignKey NOT NULL    -> exams.ExamCategory
+      • name: CharField NOT NULL   max_length=200
+      • slug: SlugField NOT NULL  UNIQUE max_length=50
+      • short_name: CharField NOT NULL   max_length=50
+      • exam_level: CharField NOT NULL   max_length=20
+      • description: RichTextField NOT NULL   
+      • eligibility: RichTextField NOT NULL   
+      • exam_pattern: RichTextField NOT NULL   
+      • syllabus: RichTextField NOT NULL   
+      • important_dates: TextField NOT NULL   
+      • official_website: URLField NOT NULL   max_length=200
+      • logo: ImageField NULL   max_length=100
+      • duration_minutes: IntegerField NOT NULL   
+      • total_marks: IntegerField NOT NULL   
+      • total_questions: IntegerField NOT NULL   
+      • negative_marking: BooleanField NOT NULL   
+      • is_active: BooleanField NOT NULL   
+      • order: IntegerField NOT NULL   
+      • created_at: DateTimeField NOT NULL   
+      • updated_at: DateTimeField NOT NULL   
+      • is_paid: BooleanField NOT NULL   
+      • price: DecimalField NOT NULL   
+      • discount_price: DecimalField NULL   
+
+
+📊 ExamAnnouncement
+   Table: exams_examannouncement
+   Fields:
+      • exam: ForeignKey NOT NULL    -> exams.Exam
+      • title: CharField NOT NULL   max_length=200
+      • content: RichTextField NOT NULL   
+      • announcement_date: DateTimeField NOT NULL   
+      • is_important: BooleanField NOT NULL   
+      • is_active: BooleanField NOT NULL   
+      • created_at: DateTimeField NOT NULL   
+
+
+📊 ExamCategory
+   Table: exams_examcategory
+   Fields:
+      • name: CharField NOT NULL   max_length=100
+      • slug: SlugField NOT NULL  UNIQUE max_length=50
+      • icon: CharField NOT NULL   max_length=50
+      • description: TextField NOT NULL   
+      • order: IntegerField NOT NULL   
+      • is_active: BooleanField NOT NULL   
+      • created_at: DateTimeField NOT NULL   
+      • updated_at: DateTimeField NOT NULL   
+
+
+📊 ExamFaq
+   Table: exams_examfaq
+   Fields:
+      • exam: ForeignKey NOT NULL    -> exams.Exam
+      • question: CharField NOT NULL   max_length=300
+      • answer: RichTextField NOT NULL   
+      • order: IntegerField NOT NULL   
+      • is_active: BooleanField NOT NULL   
+
+
+📊 LeaderboardEntry
+   Table: exams_leaderboardentry
+   Fields:
+      • user: ForeignKey NOT NULL    -> accounts.User
+      • exam: ForeignKey NULL    -> exams.Exam
+      • challenge: ForeignKey NULL    -> exams.DailyChallenge
+      • period: CharField NOT NULL   max_length=20
+      • score: FloatField NOT NULL   
+      • rank: IntegerField NOT NULL   
+      • accuracy: FloatField NOT NULL   
+      • total_tests: IntegerField NOT NULL   
+      • date: DateField NOT NULL   
+
+
+📊 LiveTestCard
+   Table: exams_livetestcard
+   Fields:
+      • exam: ForeignKey NULL    -> exams.Exam
+      • title: CharField NOT NULL   max_length=200
+      • subtitle: CharField NOT NULL   max_length=200
+      • badge_text: CharField NOT NULL   max_length=50
+      • badge_color: CharField NOT NULL   max_length=20
+      • total_participants: IntegerField NOT NULL   
+      • enrolled_percentage: IntegerField NOT NULL   
+      • has_timer: BooleanField NOT NULL   
+      • timer_hours: IntegerField NOT NULL   
+      • timer_minutes: IntegerField NOT NULL   
+      • timer_seconds: IntegerField NOT NULL   
+      • button_text: CharField NOT NULL   max_length=100
+      • button_url: URLField NOT NULL   max_length=200
+      • order: IntegerField NOT NULL   
+      • is_active: BooleanField NOT NULL   
+      • is_featured: BooleanField NOT NULL   
+      • start_date: DateTimeField NULL   
+      • end_date: DateTimeField NULL   
+      • created_at: DateTimeField NOT NULL   
+      • updated_at: DateTimeField NOT NULL   
+
+
+📊 Option
+   Table: exams_option
+   Fields:
+      • question: ForeignKey NOT NULL    -> exams.Question
+      • option_text: TextField NOT NULL   
+      • option_text_hindi: TextField NULL   
+      • is_correct: BooleanField NOT NULL   
+      • order: IntegerField NOT NULL   
+
+
+📊 Question
+   Table: exams_question
+   Fields:
+      • exam: ForeignKey NOT NULL    -> exams.Exam
+      • subject: ForeignKey NOT NULL    -> exams.Subject
+      • topic: ForeignKey NULL    -> exams.Topic
+      • question_type: CharField NOT NULL   max_length=20
+      • question_text: RichTextField NOT NULL   
+      • question_text_hindi: RichTextField NULL   
+      • difficulty: CharField NOT NULL   max_length=10
+      • marks: FloatField NOT NULL   
+      • negative_marks: FloatField NOT NULL   
+      • estimated_time: IntegerField NOT NULL   
+      • explanation: RichTextField NOT NULL   
+      • explanation_hindi: RichTextField NOT NULL   
+      • image: ImageField NULL   max_length=100
+      • tags: CharField NOT NULL   max_length=500
+      • is_active: BooleanField NOT NULL   
+      • created_at: DateTimeField NOT NULL   
+      • updated_at: DateTimeField NOT NULL   
+
+
+📊 StudyMaterial
+   Table: exams_studymaterial
+   Fields:
+      • exam: ForeignKey NOT NULL    -> exams.Exam
+      • subject: ForeignKey NULL    -> exams.Subject
+      • title: CharField NOT NULL   max_length=200
+      • material_type: CharField NOT NULL   max_length=20
+      • description: RichTextField NOT NULL   
+      • file: FileField NULL   max_length=100
+      • video_url: URLField NOT NULL   max_length=200
+      • thumbnail: ImageField NULL   max_length=100
+      • duration: CharField NOT NULL   max_length=50
+      • downloads: IntegerField NOT NULL   
+      • views: IntegerField NOT NULL   
+      • is_free: BooleanField NOT NULL   
+      • is_active: BooleanField NOT NULL   
+      • created_at: DateTimeField NOT NULL   
+
+
+📊 Subject
+   Table: exams_subject
+   Fields:
+      • exam: ForeignKey NOT NULL    -> exams.Exam
+      • name: CharField NOT NULL   max_length=100
+      • code: CharField NOT NULL   max_length=20
+      • description: TextField NOT NULL   
+      • weightage: FloatField NOT NULL   
+      • total_questions: IntegerField NOT NULL   
+      • total_marks: IntegerField NOT NULL   
+      • order: IntegerField NOT NULL   
+      • is_active: BooleanField NOT NULL   
+      • created_at: DateTimeField NOT NULL   
+
+
+📊 Topic
+   Table: exams_topic
+   Fields:
+      • subject: ForeignKey NOT NULL    -> exams.Subject
+      • name: CharField NOT NULL   max_length=100
+      • description: TextField NOT NULL   
+      • difficulty_level: CharField NOT NULL   max_length=20
+      • weightage: FloatField NOT NULL   
+      • total_questions: IntegerField NOT NULL   
+      • order: IntegerField NOT NULL   
+      • is_active: BooleanField NOT NULL   
+      • created_at: DateTimeField NOT NULL   
+
+
+📦 INTERVIEWS
+------------------------------------------------------------
+
+📊 InterviewCategory
+   Table: interviews_interviewcategory
+   Fields:
+      • name: CharField NOT NULL   max_length=100
+      • slug: SlugField NOT NULL  UNIQUE max_length=50
+      • description: TextField NOT NULL   
+      • icon: CharField NOT NULL   max_length=50
+      • order: IntegerField NOT NULL   
+      • is_active: BooleanField NOT NULL   
+      • created_at: DateTimeField NOT NULL   
+
+
+📊 InterviewQuestion
+   Table: interviews_interviewquestion
+   Fields:
+      • category: ForeignKey NOT NULL    -> interviews.InterviewCategory
+      • question_type: CharField NOT NULL   max_length=20
+      • question_text: TextField NOT NULL   
+      • difficulty: CharField NOT NULL   max_length=20
+      • sample_answer: RichTextField NOT NULL   
+      • keywords: CharField NOT NULL   max_length=500
+      • tips: TextField NOT NULL   
+      • time_limit: IntegerField NOT NULL   
+      • is_active: BooleanField NOT NULL   
+      • created_at: DateTimeField NOT NULL   
+
+
+📊 UserInterviewProgress
+   Table: interviews_userinterviewprogress
+   Fields:
+      • user: ForeignKey NOT NULL    -> accounts.User
+      • question: ForeignKey NOT NULL    -> interviews.InterviewQuestion
+      • user_answer: TextField NOT NULL   
+      • score: FloatField NOT NULL   
+      • feedback: TextField NOT NULL   
+      • is_completed: BooleanField NOT NULL   
+      • attempted_at: DateTimeField NOT NULL   
+      • updated_at: DateTimeField NOT NULL   
+
+
+📦 MOCKTESTS
+------------------------------------------------------------
+
+📊 MockTest
+   Table: mocktests_mocktest
+   Fields:
+      • exam: ForeignKey NOT NULL    -> exams.Exam
+      • subject: ForeignKey NULL    -> exams.Subject
+      • topic: ForeignKey NULL    -> exams.Topic
+      • name: CharField NOT NULL   max_length=200
+      • slug: SlugField NOT NULL  UNIQUE max_length=50
+      • test_type: CharField NOT NULL   max_length=20
+      • description: TextField NOT NULL   
+      • instructions: TextField NOT NULL   
+      • duration_minutes: IntegerField NOT NULL   
+      • total_questions: IntegerField NOT NULL   
+      • total_marks: IntegerField NOT NULL   
+      • passing_marks: IntegerField NOT NULL   
+      • negative_marking: BooleanField NOT NULL   
+      • negative_mark_value: FloatField NOT NULL   
+      • marks_per_question: FloatField NOT NULL   
+      • is_paid: BooleanField NOT NULL   
+      • price: DecimalField NOT NULL   
+      • shuffle_questions: BooleanField NOT NULL   
+      • shuffle_options: BooleanField NOT NULL   
+      • attempts_allowed: IntegerField NOT NULL   
+      • is_active: BooleanField NOT NULL   
+      • order: IntegerField NOT NULL   
+      • created_at: DateTimeField NOT NULL   
+
+
+📊 MockTestQuestion
+   Table: mocktests_mocktestquestion
+   Fields:
+      • mock_test: ForeignKey NOT NULL    -> mocktests.MockTest
+      • question: ForeignKey NOT NULL    -> exams.Question
+      • marks: FloatField NOT NULL   
+      • order: IntegerField NOT NULL   
+
+
+📊 TestAnswer
+   Table: mocktests_testanswer
+   Fields:
+      • attempt: ForeignKey NOT NULL    -> mocktests.TestAttempt
+      • question: ForeignKey NOT NULL    -> exams.Question
+      • selected_option: CharField NULL   max_length=10
+      • is_correct: BooleanField NOT NULL   
+      • is_skipped: BooleanField NOT NULL   
+      • is_marked_for_review: BooleanField NOT NULL   
+      • marks_obtained: FloatField NOT NULL   
+      • time_taken: IntegerField NOT NULL   
+      • answered_at: DateTimeField NOT NULL   
+
+
+📊 TestAttempt
+   Table: mocktests_testattempt
+   Fields:
+      • user: ForeignKey NULL    -> accounts.User
+      • session_id: CharField NULL   max_length=100
+      • mock_test: ForeignKey NOT NULL    -> mocktests.MockTest
+      • status: CharField NOT NULL   max_length=20
+      • start_time: DateTimeField NOT NULL   
+      • end_time: DateTimeField NULL   
+      • score: FloatField NOT NULL   
+      • percentage: FloatField NOT NULL   
+      • rank: IntegerField NULL   
+      • percentile: FloatField NULL   
+      • correct_answers: IntegerField NOT NULL   
+      • wrong_answers: IntegerField NOT NULL   
+      • skipped_answers: IntegerField NOT NULL   
+      • not_answered_count: IntegerField NOT NULL   
+      • total_time_taken: IntegerField NOT NULL   
+      • created_at: DateTimeField NOT NULL   
+
+
+📦 NOTIFICATIONS
+------------------------------------------------------------
+
+📊 Announcement
+   Table: notifications_announcement
+   Fields:
+      • title: CharField NOT NULL   max_length=200
+      • slug: SlugField NOT NULL  UNIQUE max_length=50
+      • content: RichTextField NOT NULL   
+      • summary: CharField NOT NULL   max_length=300
+      • announcement_type: CharField NOT NULL   max_length=20
+      • bg_color: CharField NOT NULL   max_length=20
+      • text_color: CharField NOT NULL   max_length=20
+      • start_date: DateTimeField NOT NULL   
+      • end_date: DateTimeField NULL   
+      • is_active: BooleanField NOT NULL   
+      • is_urgent: BooleanField NOT NULL   
+      • is_sticky: BooleanField NOT NULL   
+      • order: IntegerField NOT NULL   
+      • created_at: DateTimeField NOT NULL   
+
+
+📊 Notification
+   Table: notifications_notification
+   Fields:
+      • title: CharField NOT NULL   max_length=200
+      • slug: SlugField NOT NULL  UNIQUE max_length=50
+      • message: RichTextField NOT NULL   
+      • priority: CharField NOT NULL   max_length=20
+      • display_location: CharField NOT NULL   max_length=20
+      • show_bell_icon: BooleanField NOT NULL   
+      • show_on_homepage: BooleanField NOT NULL   
+      • show_as_popup: BooleanField NOT NULL   
+      • action_url: URLField NOT NULL   max_length=200
+      • button_text: CharField NOT NULL   max_length=50
+      • image: ImageField NULL   max_length=100
+      • start_date: DateTimeField NOT NULL   
+      • end_date: DateTimeField NULL   
+      • is_active: BooleanField NOT NULL   
+      • order: IntegerField NOT NULL   
+      • views: IntegerField NOT NULL   
+      • clicks: IntegerField NOT NULL   
+      • created_at: DateTimeField NOT NULL   
+      • updated_at: DateTimeField NOT NULL   
+
+
+📊 NotificationClick
+   Table: notifications_notificationclick
+   Fields:
+      • notification: ForeignKey NOT NULL    -> notifications.Notification
+      • session_key: CharField NOT NULL   max_length=40
+      • ip_address: GenericIPAddressField NULL   max_length=39
+      • clicked_at: DateTimeField NOT NULL   
+
+
+📊 NotificationView
+   Table: notifications_notificationview
+   Fields:
+      • notification: ForeignKey NOT NULL    -> notifications.Notification
+      • session_key: CharField NOT NULL   max_length=40
+      • ip_address: GenericIPAddressField NULL   max_length=39
+      • viewed_at: DateTimeField NOT NULL   
+
+
+📦 PAYMENTS
+------------------------------------------------------------
+
+📊 Cart
+   Table: payments_cart
+   Fields:
+      • user: OneToOneField NOT NULL  UNIQUE  -> accounts.User
+      • created_at: DateTimeField NOT NULL   
+      • updated_at: DateTimeField NOT NULL   
+
+
+📊 CartItem
+   Table: payments_cartitem
+   Fields:
+      • cart: ForeignKey NOT NULL    -> payments.Cart
+      • item_type: CharField NOT NULL   max_length=20
+      • exam: ForeignKey NULL    -> exams.Exam
+      • mock_test: ForeignKey NULL    -> mocktests.MockTest
+      • quantity: IntegerField NOT NULL   
+      • added_at: DateTimeField NOT NULL   
+
+
+📊 Order
+   Table: payments_order
+   Fields:
+      • order_id: CharField NOT NULL  UNIQUE max_length=100
+      • user: ForeignKey NOT NULL    -> accounts.User
+      • total_amount: DecimalField NOT NULL   
+      • discount_amount: DecimalField NOT NULL   
+      • final_amount: DecimalField NOT NULL   
+      • status: CharField NOT NULL   max_length=20
+      • razorpay_order_id: CharField NULL   max_length=100
+      • razorpay_payment_id: CharField NULL   max_length=100
+      • razorpay_signature: CharField NULL   max_length=200
+      • created_at: DateTimeField NOT NULL   
+      • updated_at: DateTimeField NOT NULL   
+      • paid_at: DateTimeField NULL   
+
+
+📊 OrderItem
+   Table: payments_orderitem
+   Fields:
+      • order: ForeignKey NOT NULL    -> payments.Order
+      • item_type: CharField NOT NULL   max_length=20
+      • exam: ForeignKey NULL    -> exams.Exam
+      • mock_test: ForeignKey NULL    -> mocktests.MockTest
+      • price: DecimalField NOT NULL   
+      • quantity: IntegerField NOT NULL   
+
+
+📊 PaymentTransaction
+   Table: payments_paymenttransaction
+   Fields:
+      • order_id: CharField NOT NULL  UNIQUE max_length=100
+      • merchant_transaction_id: CharField NULL  UNIQUE max_length=100
+      • user: ForeignKey NOT NULL    -> accounts.User
+      • item_type: CharField NOT NULL   max_length=20
+      • exam: ForeignKey NULL    -> exams.Exam
+      • mock_test: ForeignKey NULL    -> mocktests.MockTest
+      • amount: DecimalField NOT NULL   
+      • phonepe_merchant_id: CharField NULL   max_length=50
+      • phonepe_transaction_id: CharField NULL   max_length=100
+      • phonepe_payment_id: CharField NULL   max_length=100
+      • qr_code_url: URLField NULL   max_length=200
+      • qr_code_base64: TextField NULL   
+      • status: CharField NOT NULL   max_length=20
+      • webhook_received: BooleanField NOT NULL   
+      • webhook_verified: BooleanField NOT NULL   
+      • created_at: DateTimeField NOT NULL   
+      • updated_at: DateTimeField NOT NULL   
+      • paid_at: DateTimeField NULL   
+      • admin_notes: TextField NOT NULL   
+
+
+📊 UnlockedExam
+   Table: payments_unlockedexam
+   Fields:
+      • user: ForeignKey NOT NULL    -> accounts.User
+      • exam: ForeignKey NOT NULL    -> exams.Exam
+      • unlocked_at: DateTimeField NOT NULL   
+
+
+📊 UnlockedMockTest
+   Table: payments_unlockedmocktest
+   Fields:
+      • user: ForeignKey NOT NULL    -> accounts.User
+      • mock_test: ForeignKey NOT NULL    -> mocktests.MockTest
+      • unlocked_at: DateTimeField NOT NULL   
+
+
+📦 SESSIONS
+------------------------------------------------------------
+
+📊 Session
+   Table: django_session
+   Fields:
+      • session_key: CharField NOT NULL PRIMARY KEY UNIQUE max_length=40
+      • session_data: TextField NOT NULL   
+      • expire_date: DateTimeField NOT NULL   
+
+
+📦 SOCIALACCOUNT
+------------------------------------------------------------
+
+📊 SocialAccount
+   Table: socialaccount_socialaccount
+   Fields:
+      • user: ForeignKey NOT NULL    -> accounts.User
+      • provider: CharField NOT NULL   max_length=200
+      • uid: CharField NOT NULL   max_length=191
+      • last_login: DateTimeField NOT NULL   
+      • date_joined: DateTimeField NOT NULL   
+      • extra_data: JSONField NOT NULL   
+
+
+📊 SocialApp
+   Table: socialaccount_socialapp
+   Fields:
+      • provider: CharField NOT NULL   max_length=30
+      • provider_id: CharField NOT NULL   max_length=200
+      • name: CharField NOT NULL   max_length=40
+      • client_id: CharField NOT NULL   max_length=191
+      • secret: CharField NOT NULL   max_length=191
+      • key: CharField NOT NULL   max_length=191
+      • settings: JSONField NOT NULL   
+
+
+📊 SocialToken
+   Table: socialaccount_socialtoken
+   Fields:
+      • app: ForeignKey NULL    -> socialaccount.SocialApp
+      • account: ForeignKey NOT NULL    -> socialaccount.SocialAccount
+      • token: TextField NOT NULL   
+      • token_secret: TextField NOT NULL   
+      • expires_at: DateTimeField NULL   
+
+
+📦 STUDY_MATERIALS
+------------------------------------------------------------
+
+📊 Bookmark
+   Table: study_materials_bookmark
+   Fields:
+      • user: ForeignKey NOT NULL    -> accounts.User
+      • content_type: CharField NOT NULL   max_length=20
+      • content_id: IntegerField NOT NULL   
+      • created_at: DateTimeField NOT NULL   
+
+
+📊 Course
+   Table: study_materials_course
+   Fields:
+      • category: ForeignKey NOT NULL    -> study_materials.CourseCategory
+      • exam: ForeignKey NULL    -> exams.Exam
+      • title: CharField NOT NULL   max_length=200
+      • slug: SlugField NOT NULL  UNIQUE max_length=50
+      • subtitle: CharField NOT NULL   max_length=300
+      • description: RichTextField NOT NULL   
+      • objectives: RichTextField NOT NULL   
+      • requirements: RichTextField NOT NULL   
+      • difficulty: CharField NOT NULL   max_length=20
+      • thumbnail: ImageField NULL   max_length=100
+      • promo_video: URLField NOT NULL   max_length=200
+      • is_free: BooleanField NOT NULL   
+      • price: DecimalField NOT NULL   
+      • discounted_price: DecimalField NULL   
+      • total_lectures: IntegerField NOT NULL   
+      • total_duration: IntegerField NOT NULL   
+      • total_enrollments: IntegerField NOT NULL   
+      • rating: FloatField NOT NULL   
+      • is_active: BooleanField NOT NULL   
+      • is_featured: BooleanField NOT NULL   
+      • order: IntegerField NOT NULL   
+      • created_at: DateTimeField NOT NULL   
+      • updated_at: DateTimeField NOT NULL   
+
+
+📊 CourseCategory
+   Table: study_materials_coursecategory
+   Fields:
+      • name: CharField NOT NULL   max_length=100
+      • slug: SlugField NOT NULL  UNIQUE max_length=50
+      • icon: CharField NOT NULL   max_length=50
+      • description: TextField NOT NULL   
+      • order: IntegerField NOT NULL   
+      • is_active: BooleanField NOT NULL   
+      • created_at: DateTimeField NOT NULL   
+
+
+📊 CurrentAffair
+   Table: study_materials_currentaffair
+   Fields:
+      • title: CharField NOT NULL   max_length=300
+      • slug: SlugField NOT NULL  UNIQUE max_length=50
+      • category: CharField NOT NULL   max_length=20
+      • content: RichTextField NOT NULL   
+      • summary: TextField NOT NULL   
+      • date: DateField NOT NULL   
+      • source: CharField NOT NULL   max_length=200
+      • author: CharField NOT NULL   max_length=100
+      • image: ImageField NULL   max_length=100
+      • tags: CharField NOT NULL   max_length=500
+      • important_for: CharField NOT NULL   max_length=500
+      • views: IntegerField NOT NULL   
+      • likes: IntegerField NOT NULL   
+      • is_active: BooleanField NOT NULL   
+      • is_featured: BooleanField NOT NULL   
+      • created_at: DateTimeField NOT NULL   
+      • updated_at: DateTimeField NOT NULL   
+
+
+📊 EBook
+   Table: study_materials_ebook
+   Fields:
+      • exam: ForeignKey NULL    -> exams.Exam
+      • title: CharField NOT NULL   max_length=200
+      • slug: SlugField NOT NULL  UNIQUE max_length=50
+      • description: RichTextField NOT NULL   
+      • author: CharField NOT NULL   max_length=200
+      • publisher: CharField NOT NULL   max_length=200
+      • edition: CharField NOT NULL   max_length=50
+      • year: IntegerField NULL   
+      • pages: IntegerField NOT NULL   
+      • cover_image: ImageField NULL   max_length=100
+      • pdf_file: FileField NOT NULL   max_length=100
+      • is_free: BooleanField NOT NULL   
+      • price: DecimalField NOT NULL   
+      • downloads: IntegerField NOT NULL   
+      • views: IntegerField NOT NULL   
+      • tags: CharField NOT NULL   max_length=500
+      • is_active: BooleanField NOT NULL   
+      • is_featured: BooleanField NOT NULL   
+      • order: IntegerField NOT NULL   
+      • created_at: DateTimeField NOT NULL   
+      • updated_at: DateTimeField NOT NULL   
+
+
+📊 Lecture
+   Table: study_materials_lecture
+   Fields:
+      • section: ForeignKey NOT NULL    -> study_materials.Section
+      • title: CharField NOT NULL   max_length=200
+      • description: RichTextField NOT NULL   
+      • lecture_type: CharField NOT NULL   max_length=20
+      • video_url: URLField NOT NULL   max_length=200
+      • video_embed_code: TextField NOT NULL   
+      • document: FileField NULL   max_length=100
+      • content: RichTextField NOT NULL   
+      • duration: IntegerField NOT NULL   
+      • order: IntegerField NOT NULL   
+      • is_free_preview: BooleanField NOT NULL   
+      • is_active: BooleanField NOT NULL   
+      • created_at: DateTimeField NOT NULL   
+      • updated_at: DateTimeField NOT NULL   
+
+
+📊 Note
+   Table: study_materials_note
+   Fields:
+      • exam: ForeignKey NULL    -> exams.Exam
+      • subject: ForeignKey NULL    -> exams.Subject
+      • title: CharField NOT NULL   max_length=200
+      • slug: SlugField NOT NULL  UNIQUE max_length=50
+      • description: TextField NOT NULL   
+      • content: RichTextField NOT NULL   
+      • note_type: CharField NOT NULL   max_length=20
+      • pdf_file: FileField NULL   max_length=100
+      • cover_image: ImageField NULL   max_length=100
+      • author: CharField NOT NULL   max_length=100
+      • pages: IntegerField NOT NULL   
+      • file_size: CharField NOT NULL   max_length=50
+      • views: IntegerField NOT NULL   
+      • downloads: IntegerField NOT NULL   
+      • likes: IntegerField NOT NULL   
+      • tags: CharField NOT NULL   max_length=500
+      • is_free: BooleanField NOT NULL   
+      • is_active: BooleanField NOT NULL   
+      • is_featured: BooleanField NOT NULL   
+      • order: IntegerField NOT NULL   
+      • created_at: DateTimeField NOT NULL   
+      • updated_at: DateTimeField NOT NULL   
+
+
+📊 Section
+   Table: study_materials_section
+   Fields:
+      • course: ForeignKey NOT NULL    -> study_materials.Course
+      • title: CharField NOT NULL   max_length=200
+      • description: TextField NOT NULL   
+      • order: IntegerField NOT NULL   
+      • is_active: BooleanField NOT NULL   
+      • created_at: DateTimeField NOT NULL   
+
+
+📊 UserEnrollment
+   Table: study_materials_userenrollment
+   Fields:
+      • user: ForeignKey NOT NULL    -> accounts.User
+      • course: ForeignKey NOT NULL    -> study_materials.Course
+      • enrolled_at: DateTimeField NOT NULL   
+      • progress: FloatField NOT NULL   
+      • is_completed: BooleanField NOT NULL   
+      • completed_at: DateTimeField NULL   
+
+
+📊 UserLectureProgress
+   Table: study_materials_userlectureprogress
+   Fields:
+      • user: ForeignKey NOT NULL    -> accounts.User
+      • lecture: ForeignKey NOT NULL    -> study_materials.Lecture
+      • is_completed: BooleanField NOT NULL   
+      • completed_at: DateTimeField NULL   
+      • last_watched: DateTimeField NOT NULL   
+      • watch_time: IntegerField NOT NULL   
+
+
+📊 VideoLecture
+   Table: study_materials_videolecture
+   Fields:
+      • exam: ForeignKey NULL    -> exams.Exam
+      • subject: ForeignKey NULL    -> exams.Subject
+      • title: CharField NOT NULL   max_length=200
+      • slug: SlugField NOT NULL  UNIQUE max_length=50
+      • description: RichTextField NOT NULL   
+      • video_url: URLField NOT NULL   max_length=200
+      • thumbnail: ImageField NULL   max_length=100
+      • duration: CharField NOT NULL   max_length=50
+      • views: IntegerField NOT NULL   
+      • likes: IntegerField NOT NULL   
+      • tags: CharField NOT NULL   max_length=500
+      • is_free: BooleanField NOT NULL   
+      • is_active: BooleanField NOT NULL   
+      • is_featured: BooleanField NOT NULL   
+      • order: IntegerField NOT NULL   
+      • created_at: DateTimeField NOT NULL   
+      • updated_at: DateTimeField NOT NULL   
+
