@@ -151,89 +151,200 @@ A comprehensive Django-based exam preparation platform designed for government j
 
 ```
 govt_exam_platform/
+├── apps/                    # All applications
+│   ├── accounts/                    # User authentication
+│   │   ├── __init__.py               # Python package marker
+│   │   ├── admin.py                  # Admin configuration
+│   │   ├── apps.py                   # App configuration
+│   │   ├── forms.py                  # Form definitions
+│   │   ├── models.py                 # Database models
+│   │   ├── urls.py                   # URL routing
+│   │   ├── utils.py                  # Utility functions
+│   │   └── views.py                  # Views and logic
+│   ├── analytics/                    # Analytics
+│   │   ├── templatetags/
+│   │   │   ├── __init__.py               # Python package marker
+│   │   │   └── analytics_filters.py
+│   │   ├── __init__.py               # Python package marker
+│   │   ├── admin.py                  # Admin configuration
+│   │   ├── apps.py                   # App configuration
+│   │   ├── models.py                 # Database models
+│   │   ├── signals.py                # Django signals
+│   │   ├── urls.py                   # URL routing
+│   │   └── views.py                  # Views and logic
+│   ├── api/                    # REST API
+│   │   ├── __init__.py               # Python package marker
+│   │   ├── apps.py                   # App configuration
+│   │   ├── serializers.py            # DRF serializers
+│   │   ├── urls.py                   # URL routing
+│   │   └── views.py                  # Views and logic
+│   ├── contact/
+│   │   ├── __init__.py               # Python package marker
+│   │   ├── admin.py                  # Admin configuration
+│   │   ├── apps.py                   # App configuration
+│   │   ├── models.py                 # Database models
+│   │   ├── urls.py                   # URL routing
+│   │   └── views.py                  # Views and logic
+│   ├── exams/                    # Exam management
+│   │   ├── __init__.py               # Python package marker
+│   │   ├── admin.py                  # Admin configuration
+│   │   ├── apps.py                   # App configuration
+│   │   ├── models.py                 # Database models
+│   │   ├── urls.py                   # URL routing
+│   │   └── views.py                  # Views and logic
+│   ├── interviews/                    # Interview preparation
+│   │   ├── templatetags/
+│   │   │   ├── __init__.py               # Python package marker
+│   │   │   └── interview_extras.py
+│   │   ├── __init__.py               # Python package marker
+│   │   ├── admin.py                  # Admin configuration
+│   │   ├── apps.py                   # App configuration
+│   │   ├── models.py                 # Database models
+│   │   ├── urls.py                   # URL routing
+│   │   └── views.py                  # Views and logic
+│   ├── mocktests/                    # Mock test management
+│   │   ├── templatetags/
+│   │   │   ├── __init__.py               # Python package marker
+│   │   │   └── mocktest_filters.py
+│   │   ├── __init__.py               # Python package marker
+│   │   ├── admin.py                  # Admin configuration
+│   │   ├── apps.py                   # App configuration
+│   │   ├── models.py                 # Database models
+│   │   ├── urls.py                   # URL routing
+│   │   └── views.py                  # Views and logic
+│   ├── notifications/                    # Notifications
+│   │   ├── __init__.py               # Python package marker
+│   │   ├── admin.py                  # Admin configuration
+│   │   ├── apps.py                   # App configuration
+│   │   ├── models.py                 # Database models
+│   │   ├── urls.py                   # URL routing
+│   │   └── views.py                  # Views and logic
+│   ├── payments/                    # Payment processing
+│   │   ├── __init__.py               # Python package marker
+│   │   ├── admin.py                  # Admin configuration
+│   │   ├── apps.py                   # App configuration
+│   │   ├── cart_views.py
+│   │   ├── models.py                 # Database models
+│   │   ├── paytm_config.py
+│   │   ├── paytm_utils.py            # PayTM integration
+│   │   ├── phonepe_utils.py
+│   │   ├── services_paytm.py
+│   │   ├── tests.py                  # Test cases
+│   │   ├── urls.py                   # URL routing
+│   │   └── views.py                  # Views and logic
+│   └── study_materials/                    # Study material uploads
+│       ├── templatetags/
+│       │   └── study_extras.py
+│       ├── __init__.py               # Python package marker
+│       ├── admin.py                  # Admin configuration
+│       ├── apps.py                   # App configuration
+│       ├── models.py                 # Database models
+│       ├── urls.py                   # URL routing
+│       └── views.py                  # Views and logic
 ├── exam_prep/                    # Project configuration
-│   ├── __init__.py
-│   ├── settings.py              # Main settings
-│   ├── urls.py                  # Main URLs
-│   ├── wsgi.py
-│   └── asgi.py
-│
-├── apps/                        # All applications
-│   ├── accounts/                # User authentication
-│   │   ├── models.py            # User, OTP models
-│   │   ├── views.py             # Login, registration, profile
-│   │   ├── forms.py             # User forms
-│   │   ├── utils.py             # OTP utilities
-│   │   └── admin.py             # Admin configuration
-│   │
-│   ├── exams/                   # Exam management
-│   │   ├── models.py            # Exam, Category, Subject, Topic, Question, Option
-│   │   ├── views.py             # Exam listing, details
-│   │   ├── admin.py             # Admin configuration
-│   │   └── utils.py             # Question generation
-│   │
-│   ├── mocktests/               # Mock test management
-│   │   ├── models.py            # MockTest, MockTestQuestion, TestAttempt, TestAnswer
-│   │   ├── views.py             # Test taking, results
-│   │   ├── admin.py             # Admin configuration
-│   │   └── utils.py             # Scoring, analytics
-│   │
-│   ├── analytics/               # Analytics
-│   │   ├── models.py            # Performance models
-│   │   ├── views.py             # Analytics dashboard
-│   │   └── admin.py
-│   │
-│   ├── interviews/              # Interview preparation
-│   │   ├── models.py            # InterviewCategory, InterviewQuestion
-│   │   ├── views.py             # Interview practice
-│   │   └── admin.py
-│   │
-│   ├── payments/                # Payment processing
-│   │   ├── models.py            # Cart, Order, PaymentTransaction
-│   │   ├── views.py             # Checkout, payment processing
-│   │   ├── paytm_utils.py       # PayTM integration
-│   │   └── admin.py
-│   │
-│   ├── notifications/           # Notifications
-│   │   ├── models.py            # Notification, Announcement
-│   │   ├── views.py             # Notification display
-│   │   └── admin.py
-│   │
-│   ├── study_materials/         # Study materials
-│   │   ├── models.py            # Course, Section, Lecture, Note
-│   │   ├── views.py
-│   │   └── admin.py
-│   │
-│   └── api/                     # REST API
-│       ├── serializers.py       # DRF serializers
-│       ├── views.py             # API endpoints
-│       └── urls.py              # API URLs
-│
-├── templates/                   # HTML templates
-│   ├── base.html               # Base template
-│   ├── accounts/               # Account templates
-│   ├── exams/                  # Exam templates
-│   ├── mocktests/              # Mock test templates
-│   ├── payments/               # Payment templates
-│   └── admin/                  # Custom admin templates
-│
-├── static/                      # Static files
-│   ├── css/
-│   ├── js/
-│   ├── images/
-│   └── admin/                  # Custom admin CSS
-│
-├── media/                       # User uploaded files
-│   ├── profile_pics/
-│   ├── question_images/
-│   ├── study_materials/
-│   └── pdf_uploads/
-│
-├── staticfiles/                 # Collected static files
-├── logs/                        # Application logs
+│   ├── __init__.py               # Python package marker
+│   ├── asgi.py                   # ASGI entry point
+│   ├── celery.py                 # Celery configuration
+│   ├── local_settings.py
+│   ├── settings.py               # Django settings
+│   ├── urls.py                   # URL routing
+│   └── wsgi.py                   # WSGI entry point
+├── static/                    # Static files
+│   ├── admin/                    # Admin templates/CSS
+│   │   └── css/                    # CSS stylesheets
+│   │       └── custom_admin.css
+│   ├── css/                    # CSS stylesheets
+│   ├── images/                    # Image files
+│   ├── js/                    # JavaScript files
+│   │   └── homepage.js
+│   └── vendor/
+├── templates/                    # HTML templates
+│   ├── accounts/                    # User authentication
+│   │   ├── change_password.html
+│   │   ├── dashboard.html
+│   │   ├── forgot_password.html
+│   │   ├── login_signup.html
+│   │   ├── password_reset_form.html
+│   │   ├── profile.html
+│   │   ├── reset_password.html
+│   │   ├── set_password.html
+│   │   └── verify_otp.html
+│   ├── admin/                    # Admin templates/CSS
+│   │   ├── base_site.html
+│   │   ├── index.html
+│   │   └── login.html
+│   ├── analytics/                    # Analytics
+│   │   └── dashboard.html
+│   ├── contact/
+│   │   └── contact_us.html
+│   ├── dashboard/
+│   ├── exams/                    # Exam management
+│   │   ├── categories.html
+│   │   ├── category_detail.html
+│   │   ├── exam_coaching.html
+│   │   ├── exam_detail.html
+│   │   ├── exam_mock_tests.html
+│   │   └── list.html
+│   ├── interviews/                    # Interview preparation
+│   │   ├── category_questions.html
+│   │   ├── home.html
+│   │   ├── mock_interview.html
+│   │   ├── mock_results.html
+│   │   ├── practice.html
+│   │   ├── progress.html
+│   │   ├── question_bank.html
+│   │   └── tips.html
+│   ├── mocktests/                    # Mock test management
+│   │   ├── cart.html
+│   │   ├── checkout.html
+│   │   ├── detail.html
+│   │   ├── list.html
+│   │   ├── results.html
+│   │   └── test_window.html
+│   ├── notifications/                    # Notifications
+│   │   ├── list.html
+│   │   └── preferences.html
+│   ├── payments/                    # Payment processing
+│   │   ├── cart.html
+│   │   ├── checkout.html
+│   │   ├── my_orders.html
+│   │   ├── my_purchases.html
+│   │   ├── order_confirmation.html
+│   │   ├── payment_page.html
+│   │   ├── paytm_checkout.html
+│   │   ├── paytm_redirect.html
+│   │   ├── paytm_test.html
+│   │   ├── qr_payment.html
+│   │   └── verify_payment.html
+│   ├── study_materials/                    # Study material uploads
+│   │   ├── bookmarks.html
+│   │   ├── course_list.html
+│   │   ├── current_affair_detail.html
+│   │   ├── current_affairs_list.html
+│   │   ├── ebook_list.html
+│   │   ├── home.html
+│   │   ├── my_courses.html
+│   │   ├── note_detail.html
+│   │   ├── note_list.html
+│   │   ├── video_detail.html
+│   │   └── video_list.html
+│   ├── about.html
+│   ├── base.html
+│   ├── faq.html
+│   ├── index.html
+│   └── privacy_policy.html
+├── Dockerfile             # Docker configuration
+├── README.md             # Project documentation
+├── create_all_current_affairs_mock_tests.py
+├── create_current_affairs_mock_test_1_to_100.py
+├── docker-compose.yml             # Docker compose configuration
+├── generate_structure.py
+├── manage.py             # Django management script
+├── nginx.conf
 ├── requirements.txt             # Python dependencies
-├── manage.py                    # Django management script
-└── README.md                    # This file
+├── schema_export_20260625_122749.json
+├── schema_markdown_20260625_122749.md
+└── schema_summary_20260625_122749.txt
 ```
 
 ---
