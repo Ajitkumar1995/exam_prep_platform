@@ -36,7 +36,7 @@ def create_all_mock_tests():
     print("📰 CREATING 5 CURRENT AFFAIRS MOCK TESTS (500 UNIQUE QUESTIONS)")
     print("=" * 80)
     
-    # Create or get ExamCategory first
+    # Create or get ExamCategory
     print("\n📚 Setting up Exam Category...")
     
     exam_category, _ = ExamCategory.objects.get_or_create(
@@ -56,6 +56,36 @@ def create_all_mock_tests():
     Subject.objects.filter(exam__category=exam_category).delete()
     Exam.objects.filter(category=exam_category).delete()
     print("✓ Cleanup complete")
+    
+    # ===== CREATE SINGLE EXAM =====
+    print("\n📝 Creating MAIN EXAM for all mock tests...")
+    
+    main_exam, created = Exam.objects.get_or_create(
+        slug='current-affairs-2024',
+        defaults={
+            'name': 'Current Affairs 2024',
+            'short_name': 'CA 2024',
+            'category': exam_category,
+            'exam_level': 'national',
+            'duration_minutes': 60,
+            'total_marks': 500,
+            'total_questions': 500,
+            'negative_marking': False,
+            'description': 'Comprehensive Current Affairs 2024 - Complete Set of 500 Questions',
+            'is_paid': False,
+            'price': 0,
+            'is_active': True
+        }
+    )
+    print(f"✓ Main Exam Created: {main_exam.name} (ID: {main_exam.id})")
+    
+    # Create ONE subject for all questions
+    main_subject, _ = Subject.objects.get_or_create(
+        exam=main_exam,
+        name='Current Affairs 2024',
+        defaults={'weightage': 100, 'order': 1}
+    )
+    print(f"✓ Subject Created: {main_subject.name}")
     
     # ===== PART 1: Questions 1-100 =====
     part1_questions = [
@@ -2284,7 +2314,8 @@ def create_all_mock_tests():
         }
     ]
 
-    # Combine all parts
+    
+    # Combine all question data
     all_parts = [
         {'name': 'Current Affairs 2024 - Part 1', 'slug': 'current-affairs-2024-part1', 
          'description': 'Golden Globes, FIFA, ICC Awards & more (Questions 1-100)', 'questions': part1_questions},
@@ -2297,44 +2328,30 @@ def create_all_mock_tests():
         {'name': 'Current Affairs 2024 - Part 5', 'slug': 'current-affairs-2024-part5',
          'description': 'Henley Passport, Swachh Survekshan, Global Firepower & FIFA (Questions 401-500)', 'questions': part5_questions}
     ]
-
-    # Create exams and mock tests
+    
     print("\n📚 Creating 5 Mock Tests with 500 Unique Questions...")
-    all_parts.reverse()
     total_questions_created = 0
     
     for part in all_parts:
         print(f"\n📝 Creating {part['name']}...")
         
-        # Create exam for this part
-        exam, created = Exam.objects.get_or_create(
-            slug=part['slug'],
-            defaults={
-                'name': part['name'],
-                'short_name': f'CA P{all_parts.index(part)+1}',
-                'category': exam_category,
-                'exam_level': 'national',
-                'duration_minutes': 60,
-                'total_marks': len(part['questions']),
-                'total_questions': len(part['questions']),
-                'negative_marking': False,
-                'description': f'Comprehensive Current Affairs Mock Test Part {all_parts.index(part)+1} - {part["description"]}',
-                'is_paid': False,
-                'price': 0,
-                'is_active': True
-            }
+        # CREATE MOCK TEST DIRECTLY (No separate exam per part)
+        mock_test = MockTest.objects.create(
+            name=f'{part["name"]} ({len(part["questions"])} Questions)',
+            slug=f'{part["slug"]}-mock',
+            exam=main_exam,  # Link to the MAIN exam
+            description=part['description'],
+            duration_minutes=60,
+            total_questions=len(part['questions']),
+            total_marks=len(part['questions']) * 2,
+            is_paid=False,
+            price=0,
+            attempts_allowed=10,
+            is_active=True
         )
-        print(f"  ✓ Exam: {exam.name}")
+        print(f"  ✓ Mock Test Created: {mock_test.name}")
         
-        # Create subject for this exam
-        subject, _ = Subject.objects.get_or_create(
-            exam=exam,
-            name=part['name'],
-            defaults={'weightage': 100, 'order': 1}
-        )
-        print(f"  ✓ Subject: {subject.name}")
-        
-        # Create questions
+        # Create questions (all linked to MAIN exam and subject)
         created_questions = []
         for idx, q_data in enumerate(part['questions'], 1):
             # Shuffle options
@@ -2348,8 +2365,8 @@ def create_all_mock_tests():
             new_correct_index = [opt for _, opt in option_list].index(correct_answer)
             
             question = Question.objects.create(
-                exam=exam,
-                subject=subject,
+                exam=main_exam,  # All questions linked to MAIN exam
+                subject=main_subject,  # All questions under ONE subject
                 question_text=q_data['text'],
                 question_type='mcq',
                 difficulty=q_data['difficulty'],
@@ -2371,21 +2388,6 @@ def create_all_mock_tests():
         
         print(f"  ✓ Created {len(created_questions)} questions")
         
-        # Create Mock Test
-        mock_test = MockTest.objects.create(
-            name=f'{part["name"]} ({len(created_questions)} Questions)',
-            slug=f'{part["slug"]}-mock',
-            exam=exam,
-            description=part['description'],
-            duration_minutes=60,
-            total_questions=len(created_questions),
-            total_marks=len(created_questions),
-            is_paid=False,
-            price=0,
-            attempts_allowed=10,
-            is_active=True
-        )
-        
         # Add questions to mock test
         for idx, question in enumerate(created_questions):
             MockTestQuestion.objects.create(
@@ -2396,8 +2398,7 @@ def create_all_mock_tests():
             )
         
         total_questions_created += len(created_questions)
-        print(f"  ✓ Created mock test: {mock_test.name}")
-        print(f"    └─ {mock_test.total_questions} questions")
+        print(f"    └─ Added {mock_test.total_questions} questions to mock test")
     
     # Summary
     print("\n" + "=" * 80)
@@ -2405,10 +2406,10 @@ def create_all_mock_tests():
     print("=" * 80)
     
     print("\n📊 FINAL SUMMARY:")
-    print(f"   • Total Mock Tests Created: {MockTest.objects.filter(exam__category=exam_category).count()}")
+    print(f"   • Main Exam: {main_exam.name} (ID: {main_exam.id})")
+    print(f"   • Total Mock Tests Created: {MockTest.objects.filter(exam=main_exam).count()}")
     print(f"   • Total Questions: {total_questions_created}")
-    print(f"   • Total Exams: {Exam.objects.filter(category=exam_category).count()}")
-    print(f"   • Total Subjects: {Subject.objects.filter(exam__category=exam_category).count()}")
+    print(f"   • All questions linked to ONE exam: {main_exam.name}")
     print(f"   • All tests are FREE (is_paid=False, price=0)")
     
     print("\n📋 MOCK TESTS CREATED:")
@@ -2423,6 +2424,11 @@ def create_all_mock_tests():
     print("   2. Go to Mock Tests section")
     print("   3. Select any of the 5 Current Affairs mock tests")
     print("   4. Start practicing!")
+    
+    print("\n💡 Key Difference:")
+    print("   • All 5 mock tests share ONE exam")
+    print("   • All questions are under ONE subject")
+    print("   • Each mock test has its own set of 100 questions")
     
     print("\n" + "=" * 80)
 
