@@ -561,6 +561,12 @@ def test_results(request, attempt_id):
         if attempted_non_skipped > 0
         else 0
     )
+    score_percent = max(0, min(float(attempt.percentage or 0), 100))
+    accuracy_percent = max(0, min(float(accuracy_on_attempted or 0), 100))
+    completion_rate = (
+        (attempted_count / total_questions * 100) if total_questions > 0 else 0
+    )
+    completion_percent = max(0, min(float(completion_rate or 0), 100))
 
     section_stats = {}
     for answer in answers:
@@ -593,6 +599,10 @@ def test_results(request, attempt_id):
         "skipped_count": skipped_count,
         "marked_answered_count": marked_answered_count,
         "accuracy_on_attempted": accuracy_on_attempted,
+        "score_percent": score_percent,
+        "accuracy_percent": accuracy_percent,
+        "completion_rate": completion_rate,
+        "completion_percent": completion_percent,
         "time_taken_minutes": (
             attempt.total_time_taken // 60 if attempt.total_time_taken else 0
         ),
