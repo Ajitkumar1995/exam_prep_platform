@@ -2,7 +2,7 @@ from django.db import models
 from django.contrib.auth import get_user_model
 from django.utils.text import slugify
 from django.urls import reverse
-from ckeditor.fields import RichTextField
+from django_ckeditor_5.fields import CKEditor5Field
 from apps.exams.models import Exam, Subject
 
 User = get_user_model()
@@ -55,9 +55,9 @@ class Course(models.Model):
     title = models.CharField(max_length=200)
     slug = models.SlugField(unique=True, blank=True)
     subtitle = models.CharField(max_length=300, blank=True)
-    description = RichTextField()
-    objectives = RichTextField(blank=True, help_text="What students will learn")
-    requirements = RichTextField(blank=True, help_text="Prerequisites")
+    description = CKEditor5Field()
+    objectives = CKEditor5Field(blank=True, help_text="What students will learn")
+    requirements = CKEditor5Field(blank=True, help_text="Prerequisites")
 
     difficulty = models.CharField(
         max_length=20, choices=DIFFICULTY, default="intermediate"
@@ -137,7 +137,7 @@ class Lecture(models.Model):
         Section, on_delete=models.CASCADE, related_name="lectures"
     )
     title = models.CharField(max_length=200)
-    description = RichTextField(blank=True)
+    description = CKEditor5Field(blank=True)
 
     lecture_type = models.CharField(
         max_length=20, choices=LECTURE_TYPE, default="video"
@@ -146,7 +146,7 @@ class Lecture(models.Model):
     video_url = models.URLField(blank=True, help_text="YouTube or Vimeo URL")
     video_embed_code = models.TextField(blank=True)
     document = models.FileField(upload_to="lecture_documents/", null=True, blank=True)
-    content = RichTextField(blank=True)
+    content = CKEditor5Field(blank=True)
 
     duration = models.IntegerField(default=0, help_text="Duration in minutes")
     order = models.IntegerField(default=0)
@@ -192,7 +192,7 @@ class Note(models.Model):
     title = models.CharField(max_length=200)
     slug = models.SlugField(unique=True, blank=True)
     description = models.TextField()
-    content = RichTextField()
+    content = CKEditor5Field()
     note_type = models.CharField(max_length=20, choices=NOTE_TYPE, default="typed")
 
     pdf_file = models.FileField(upload_to="notes/", null=True, blank=True)
@@ -251,7 +251,7 @@ class VideoLecture(models.Model):
 
     title = models.CharField(max_length=200)
     slug = models.SlugField(unique=True, blank=True)
-    description = RichTextField()
+    description = CKEditor5Field()
 
     video_url = models.URLField(help_text="YouTube or Vimeo URL")
     thumbnail = models.ImageField(upload_to="video_thumbnails/", null=True, blank=True)
@@ -301,7 +301,7 @@ class EBook(models.Model):
 
     title = models.CharField(max_length=200)
     slug = models.SlugField(unique=True, blank=True)
-    description = RichTextField()
+    description = CKEditor5Field()
 
     author = models.CharField(max_length=200, blank=True)
     publisher = models.CharField(max_length=200, blank=True)
@@ -359,7 +359,7 @@ class CurrentAffair(models.Model):
     slug = models.SlugField(unique=True, blank=True)
     category = models.CharField(max_length=20, choices=CATEGORY, default="national")
 
-    content = RichTextField()
+    content = CKEditor5Field()
     summary = models.TextField(blank=True, help_text="Short summary for listing")
 
     date = models.DateField()

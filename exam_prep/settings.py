@@ -5,14 +5,35 @@ from datetime import timedelta
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+
+def cast_debug(value):
+    value = str(value).strip().lower()
+    if value in {"release", "prod", "production"}:
+        return False
+    if value in {"dev", "development"}:
+        return True
+    return value in {"1", "true", "t", "yes", "y", "on"}
+
+
 SECRET_KEY = config(
     "SECRET_KEY",
     default="django-insecure-j283o!g9_3+6x16b16^vc^n!rsufug9e1_71((*!=6ixhpb7oa",
 )
 
-DEBUG = config("DEBUG", default=True, cast=bool)
+DEBUG = config("DEBUG", default=True, cast=cast_debug)
 
 ALLOWED_HOSTS = config("ALLOWED_HOSTS", default="localhost,127.0.0.1").split(",")
+
+SITE_NAME = config("SITE_NAME", default="GovtExamWala")
+SITE_URL = config("SITE_URL", default="https://www.govtexamwala.com")
+SITE_DESCRIPTION = config(
+    "SITE_DESCRIPTION",
+    default=(
+        "GovtExamWala helps aspirants prepare for SSC, Banking, Railway, UPSC "
+        "and other government exams with mock tests, notes, videos and current affairs."
+    ),
+)
+DEFAULT_OG_IMAGE = config("DEFAULT_OG_IMAGE", default="")
 
 # ALLOWED_HOSTS = [
 #     "127.0.0.1",
@@ -39,7 +60,7 @@ INSTALLED_APPS = [
     "corsheaders",
     "django_filters",
     "import_export",
-    "ckeditor",
+    "django_ckeditor_5",
     "django_celery_beat",
     "allauth",
     "allauth.account",
@@ -56,6 +77,7 @@ INSTALLED_APPS = [
     "apps.notifications",
     "apps.study_materials",
     "apps.api",
+    "apps.cache.apps.CacheConfig",
 ]
 
 MIDDLEWARE = [
@@ -84,6 +106,7 @@ TEMPLATES = [
                 "django.template.context_processors.request",
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
+                "exam_prep.context_processors.seo",
             ],
         },
     },
@@ -131,7 +154,15 @@ LOGIN_REDIRECT_URL = "accounts:dashboard"
 STATIC_URL = "/static/"
 STATIC_ROOT = BASE_DIR / "staticfiles"
 STATICFILES_DIRS = [BASE_DIR / "static"]
-STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
+
+STORAGES = {
+    "default": {
+        "BACKEND": "django.core.files.storage.FileSystemStorage",
+    },
+    "staticfiles": {
+        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
+    },
+}
 
 MEDIA_URL = "/media/"
 MEDIA_ROOT = BASE_DIR / "media"
@@ -140,22 +171,55 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 AUTH_USER_MODEL = "accounts.User"
 
+REDIS_LOCATION = config(
+    "REDIS_URL",
+    default=(
+        f"redis://{config('REDIS_HOST', default='127.0.0.1')}:"
+        f"{config('REDIS_PORT', default='6379')}/1"
+    ),
+)
+
 CACHES = {
     "default": {
         "BACKEND": "django_redis.cache.RedisCache",
-        "LOCATION": f"redis://{config('REDIS_HOST', default='localhost')}:{config('REDIS_PORT', default='6379')}/1",
+        "LOCATION": REDIS_LOCATION,
         "OPTIONS": {
             "CLIENT_CLASS": "django_redis.client.DefaultClient",
+            "IGNORE_EXCEPTIONS": True,
         },
+        "KEY_PREFIX": "govtexamwala",
+        "TIMEOUT": 300,
     }
 }
 
-CELERY_BROKER_URL = f"redis://{config('REDIS_HOST', default='localhost')}:{config('REDIS_PORT', default='6379')}/0"
-CELERY_RESULT_BACKEND = f"redis://{config('REDIS_HOST', default='localhost')}:{config('REDIS_PORT', default='6379')}/0"
-CELERY_ACCEPT_CONTENT = ["application/json"]
+# Store login/session reads in Redis while keeping the DB as the durable fallback.
+SESSION_ENGINE = "django.contrib.sessions.backends.cached_db"
+SESSION_CACHE_ALIAS = "default"
+
+CELERY_REDIS_LOCATION = config(
+    "CELERY_REDIS_URL",
+    default=(
+        f"redis://{config('REDIS_HOST', default='127.0.0.1')}:"
+        f"{config('REDIS_PORT', default='6379')}/0"
+    ),
+)
+CELERY_BROKER_URL = config("CELERY_BROKER_URL", default=CELERY_REDIS_LOCATION)
+CELERY_RESULT_BACKEND = config("CELERY_RESULT_BACKEND", default=CELERY_REDIS_LOCATION)
+CELERY_ACCEPT_CONTENT = ["json"]
 CELERY_TASK_SERIALIZER = "json"
 CELERY_RESULT_SERIALIZER = "json"
 CELERY_TIMEZONE = TIME_ZONE
+CELERY_ENABLE_UTC = True
+CELERY_TASK_TRACK_STARTED = True
+CELERY_TASK_TIME_LIMIT = 30 * 60
+CELERY_TASK_SOFT_TIME_LIMIT = 25 * 60
+CELERY_WORKER_PREFETCH_MULTIPLIER = 1
+CELERY_BROKER_CONNECTION_RETRY_ON_STARTUP = True
+CELERY_BEAT_SCHEDULER = "django_celery_beat.schedulers:DatabaseScheduler"
+CELERY_IMPORTS = (
+    "apps.accounts.tasks",
+    "apps.analytics.tasks",
+)
 
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": (
@@ -221,10 +285,10 @@ PAYTM_CHANNEL_ID = "WEB"
 RATELIMIT_USE_CACHE = "default"
 
 # CKEditor config
-CKEDITOR_CONFIGS = {
-    "default": {
-        "toolbar": "full",
-        "height": 300,
-        "width": "100%",
-    },
+CKEDITOR_5_CONFIGS = {
+    'default': {
+        'toolbar': ['heading', '|', 'bold', 'italic', 'link', 'bulletedList', 'numberedList', 'blockQuote', 'imageUpload', ],
+    }
 }
+
+CKEDITOR_5_FILE_STORAGE = "django.core.files.storage.FileSystemStorage"

@@ -4,7 +4,7 @@ from django.contrib import messages
 from django.core.paginator import Paginator
 from django.http import JsonResponse
 from django.utils import timezone
-from django.db.models import Q
+from django.db.models import F, Q
 from .models import Notification, Announcement, NotificationView, NotificationClick
 
 
@@ -72,12 +72,24 @@ def notification_list(request):
         request.session.create()
     session_key = request.session.session_key
 
-    for notif in notifications:
-        NotificationView.objects.get_or_create(
-            notification=notif,
-            session_key=session_key,
-            defaults={"ip_address": request.META.get("REMOTE_ADDR")},
-        )
+    notification_ids = list(notifications.values_list("id", flat=True))
+    viewed_ids = set(
+        NotificationView.objects.filter(
+            notification_id__in=notification_ids, session_key=session_key
+        ).values_list("notification_id", flat=True)
+    )
+    NotificationView.objects.bulk_create(
+        [
+            NotificationView(
+                notification_id=notification_id,
+                session_key=session_key,
+                ip_address=request.META.get("REMOTE_ADDR"),
+            )
+            for notification_id in notification_ids
+            if notification_id not in viewed_ids
+        ],
+        ignore_conflicts=True,
+    )
 
     paginator = Paginator(notifications, 12)
     page_number = request.GET.get("page")
@@ -105,8 +117,8 @@ def notification_detail(request, slug):
     )
 
     # Update view count
+    Notification.objects.filter(pk=notification.pk).update(views=F("views") + 1)
     notification.views += 1
-    notification.save()
 
     context = {
         "notification": notification,
@@ -128,8 +140,7 @@ def track_click(request, notification_id):
         ip_address=request.META.get("REMOTE_ADDR"),
     )
 
-    notification.clicks += 1
-    notification.save()
+    Notification.objects.filter(pk=notification.pk).update(clicks=F("clicks") + 1)
 
     # Redirect to action URL or notification detail
     if notification.action_url:

@@ -3,8 +3,55 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <meta name="description" content="India's leading exam preparation platform for SSC, Banking, Railway, UPSC and more. Practice with mock tests, study material, and live classes.">
     <title>{% block title %}GovtExamWala - India's #1 Exam Preparation Platform{% endblock %}</title>
+    <meta name="description" content="{% block meta_description %}{{ seo.description }}{% endblock %}">
+    <meta name="robots" content="{% block meta_robots %}{{ seo.robots }}{% endblock %}">
+    <meta name="author" content="{{ seo.site_name }}">
+    <meta name="theme-color" content="#4f46e5">
+    <link rel="canonical" href="{% block canonical_url %}{{ seo.canonical_url }}{% endblock %}">
+    <meta property="og:site_name" content="{{ seo.site_name }}">
+    <meta property="og:type" content="{% block og_type %}website{% endblock %}">
+    <meta property="og:title" content="{% block og_title %}GovtExamWala - India's #1 Exam Preparation Platform{% endblock %}">
+    <meta property="og:description" content="{% block og_description %}{{ seo.description }}{% endblock %}">
+    <meta property="og:url" content="{{ seo.canonical_url }}">
+    {% if seo.og_image %}
+    <meta property="og:image" content="{{ seo.og_image }}">
+    {% endif %}
+    <meta name="twitter:card" content="{% if seo.og_image %}summary_large_image{% else %}summary{% endif %}">
+    <meta name="twitter:title" content="{% block twitter_title %}GovtExamWala - India's #1 Exam Preparation Platform{% endblock %}">
+    <meta name="twitter:description" content="{% block twitter_description %}{{ seo.description }}{% endblock %}">
+    {% if seo.og_image %}
+    <meta name="twitter:image" content="{{ seo.og_image }}">
+    {% endif %}
+    <script type="application/ld+json">
+    {% block structured_data %}
+    {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "Organization",
+          "@id": "{{ seo.site_url|escapejs }}/#organization",
+          "name": "{{ seo.site_name|escapejs }}",
+          "url": "{{ seo.site_url|escapejs }}"
+        },
+        {
+          "@type": "WebSite",
+          "@id": "{{ seo.site_url|escapejs }}/#website",
+          "url": "{{ seo.site_url|escapejs }}",
+          "name": "{{ seo.site_name|escapejs }}",
+          "publisher": {
+            "@id": "{{ seo.site_url|escapejs }}/#organization"
+          },
+          "potentialAction": {
+            "@type": "SearchAction",
+            "target": "{{ seo.site_url|escapejs }}/study/search/?q={search_term_string}",
+            "query-input": "required name=search_term_string"
+          }
+        }
+      ]
+    }
+    {% endblock %}
+    </script>
     
     <!-- Tailwind CSS + DaisyUI -->
     <script src="https://cdn.tailwindcss.com"></script>

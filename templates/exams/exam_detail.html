@@ -2,6 +2,27 @@
 {% load static %}
 
 {% block title %}{{ exam.name }} - Complete Preparation Guide{% endblock %}
+{% block meta_description %}{{ exam.name }} preparation guide with eligibility, exam pattern, syllabus, subjects, mock tests and study material for government exam aspirants.{% endblock %}
+{% block og_type %}article{% endblock %}
+{% block og_title %}{{ exam.name }} Preparation Guide - GovtExamWala{% endblock %}
+{% block og_description %}Study {{ exam.name }} eligibility, syllabus, exam pattern, mock tests and preparation resources in one place.{% endblock %}
+{% block twitter_title %}{{ exam.name }} Preparation Guide{% endblock %}
+{% block twitter_description %}Eligibility, syllabus, mock tests and study material for {{ exam.name }}.{% endblock %}
+{% block structured_data %}
+{
+  "@context": "https://schema.org",
+  "@type": "Course",
+  "name": "{{ exam.name|escapejs }} Preparation",
+  "description": "{{ exam.description|striptags|truncatechars:220|escapejs }}",
+  "provider": {
+    "@type": "Organization",
+    "name": "{{ seo.site_name|escapejs }}",
+    "url": "{{ seo.site_url|escapejs }}"
+  },
+  "url": "{{ seo.canonical_url|escapejs }}",
+  "educationalLevel": "{{ exam.get_exam_level_display|escapejs }}"
+}
+{% endblock %}
 
 {% block content %}
 <div class="bg-gradient-to-r from-blue-600 to-indigo-600 text-white py-12">

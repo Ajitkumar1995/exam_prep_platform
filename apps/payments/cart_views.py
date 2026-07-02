@@ -40,11 +40,9 @@ def add_to_cart(request, item_type, item_id):
 def view_cart(request):
     """View cart page"""
     cart, created = Cart.objects.get_or_create(user=request.user)
-    items = cart.items.all()
+    items = cart.items.select_related("exam", "mock_test")
 
-    total_amount = 0
-    for item in items:
-        total_amount += item.get_price()
+    total_amount = sum(item.get_price() for item in items)
 
     context = {
         "items": items,
@@ -68,15 +66,13 @@ def remove_from_cart(request, item_id):
 def checkout(request):
     """Checkout page - Review order before payment"""
     cart, created = Cart.objects.get_or_create(user=request.user)
-    items = cart.items.all()
+    items = cart.items.select_related("exam", "mock_test")
 
     if not items:
         messages.warning(request, "Your cart is empty. Please add items to checkout.")
         return redirect("payments:view_cart")
 
-    total_amount = 0
-    for item in items:
-        total_amount += item.get_price()
+    total_amount = sum(item.get_price() for item in items)
 
     context = {
         "items": items,
@@ -90,15 +86,13 @@ def place_order(request):
     """Place order and create payment transaction"""
     if request.method == "POST":
         cart, created = Cart.objects.get_or_create(user=request.user)
-        items = cart.items.all()
+        items = cart.items.select_related("exam", "mock_test")
 
         if not items:
             messages.warning(request, "Your cart is empty.")
             return redirect("payments:view_cart")
 
-        total_amount = 0
-        for item in items:
-            total_amount += item.get_price()
+        total_amount = sum(item.get_price() for item in items)
 
         # Create order
         order = Order.objects.create(
@@ -128,7 +122,7 @@ def place_order(request):
         request.session["current_order_id"] = order.id
 
         # Get first item for payment page
-        first_item = order.items.first()
+        first_item = order.items.select_related("exam", "mock_test").first()
 
         if first_item.item_type == "exam":
             item_id = first_item.exam.id
@@ -153,5 +147,7 @@ def order_confirmation(request, order_id):
 @login_required
 def my_orders(request):
     """View all user orders"""
-    orders = Order.objects.filter(user=request.user).order_by("-created_at")
+    orders = Order.objects.filter(user=request.user).prefetch_related(
+        "items__exam", "items__mock_test"
+    ).order_by("-created_at")
     return render(request, "payments/my_orders.html", {"orders": orders})

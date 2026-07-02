@@ -1,0 +1,88 @@
+{% extends 'base.html' %}
+
+{% block title %}Search Results - GovtExamWala{% endblock %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-8">
+    <div class="max-w-5xl mx-auto">
+        <h1 class="text-3xl font-bold mb-2">Search Results</h1>
+        <p class="text-gray-500 mb-6">{{ total_results }} result{{ total_results|pluralize }} for "{{ query }}"</p>
+
+        {% if courses %}
+        <section class="mb-8">
+            <h2 class="text-xl font-bold mb-3">Courses</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {% for course in courses %}
+                <a href="{% url 'study_materials:course_detail' course.slug %}" class="bg-white dark:bg-gray-800 rounded-lg shadow p-4 hover:shadow-lg transition">
+                    <h3 class="font-semibold mb-1">{{ course.title }}</h3>
+                    <p class="text-sm text-gray-500">{{ course.description|striptags|truncatechars:120 }}</p>
+                </a>
+                {% endfor %}
+            </div>
+        </section>
+        {% endif %}
+
+        {% if notes %}
+        <section class="mb-8">
+            <h2 class="text-xl font-bold mb-3">Notes</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {% for note in notes %}
+                <a href="{% url 'study_materials:note_detail' note.slug %}" class="bg-white dark:bg-gray-800 rounded-lg shadow p-4 hover:shadow-lg transition">
+                    <h3 class="font-semibold mb-1">{{ note.title }}</h3>
+                    <p class="text-sm text-gray-500">{{ note.description|striptags|truncatechars:120 }}</p>
+                </a>
+                {% endfor %}
+            </div>
+        </section>
+        {% endif %}
+
+        {% if videos %}
+        <section class="mb-8">
+            <h2 class="text-xl font-bold mb-3">Videos</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {% for video in videos %}
+                <a href="{% url 'study_materials:video_detail' video.slug %}" class="bg-white dark:bg-gray-800 rounded-lg shadow p-4 hover:shadow-lg transition">
+                    <h3 class="font-semibold mb-1">{{ video.title }}</h3>
+                    <p class="text-sm text-gray-500">{{ video.description|striptags|truncatechars:120 }}</p>
+                </a>
+                {% endfor %}
+            </div>
+        </section>
+        {% endif %}
+
+        {% if ebooks %}
+        <section class="mb-8">
+            <h2 class="text-xl font-bold mb-3">E-Books</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {% for ebook in ebooks %}
+                <a href="{% url 'study_materials:ebook_list' %}" class="bg-white dark:bg-gray-800 rounded-lg shadow p-4 hover:shadow-lg transition">
+                    <h3 class="font-semibold mb-1">{{ ebook.title }}</h3>
+                    <p class="text-sm text-gray-500">{{ ebook.description|striptags|truncatechars:120 }}</p>
+                </a>
+                {% endfor %}
+            </div>
+        </section>
+        {% endif %}
+
+        {% if affairs %}
+        <section class="mb-8">
+            <h2 class="text-xl font-bold mb-3">Current Affairs</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {% for affair in affairs %}
+                <a href="{% url 'study_materials:current_affair_detail' affair.slug %}" class="bg-white dark:bg-gray-800 rounded-lg shadow p-4 hover:shadow-lg transition">
+                    <h3 class="font-semibold mb-1">{{ affair.title }}</h3>
+                    <p class="text-sm text-gray-500">{{ affair.summary|striptags|truncatechars:120 }}</p>
+                </a>
+                {% endfor %}
+            </div>
+        </section>
+        {% endif %}
+
+        {% if not total_results %}
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-10 text-center">
+            <p class="text-gray-500">No matching study materials found.</p>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

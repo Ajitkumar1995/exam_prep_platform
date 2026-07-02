@@ -1,0 +1,40 @@
+"""
+Cache timeout definitions.
+
+All cache durations are defined in one place to avoid
+magic numbers throughout the project.
+"""
+
+# Seconds
+
+ONE_MINUTE = 60
+FIVE_MINUTES = 300
+TEN_MINUTES = 600
+THIRTY_MINUTES = 1800
+ONE_HOUR = 3600
+SIX_HOURS = 21600
+TWELVE_HOURS = 43200
+ONE_DAY = 86400
+
+
+class CacheTimeout:
+
+    HOMEPAGE = TEN_MINUTES
+
+    EXAM_LIST = ONE_HOUR
+
+    EXAM_DETAIL = ONE_HOUR
+
+    MOCK_TEST_LIST = ONE_HOUR
+
+    MOCK_TEST_DETAIL = ONE_HOUR
+
+    STUDY_MATERIAL = ONE_DAY
+
+    CURRENT_AFFAIRS = THIRTY_MINUTES
+
+    NOTIFICATIONS = FIVE_MINUTES
+
+    LEADERBOARD = FIVE_MINUTES
+
+    DAILY_CHALLENGE = TEN_MINUTES

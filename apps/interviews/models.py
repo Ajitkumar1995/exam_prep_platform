@@ -1,6 +1,6 @@
 from django.db import models
 from django.contrib.auth import get_user_model
-from ckeditor.fields import RichTextField
+from django_ckeditor_5.fields import CKEditor5Field
 
 User = get_user_model()
 
@@ -50,7 +50,7 @@ class InterviewQuestion(models.Model):
     difficulty = models.CharField(
         max_length=20, choices=DIFFICULTY, default="intermediate"
     )
-    sample_answer = RichTextField()
+    sample_answer = CKEditor5Field()
     keywords = models.CharField(
         max_length=500, blank=True, help_text="Comma-separated keywords for evaluation"
     )

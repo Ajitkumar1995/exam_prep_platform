@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+{% load study_extras %}
+
+{% block title %}{{ course.title }} - GovtExamWala{% endblock %}
+
+{% block content %}
+<div class="bg-gradient-to-r from-purple-600 to-indigo-600 text-white py-10">
+    <div class="container mx-auto px-4">
+        <div class="max-w-5xl mx-auto">
+            <h1 class="text-3xl font-bold mb-2">{{ course.title }}</h1>
+            <p class="text-lg opacity-90">{{ course.subtitle }}</p>
+        </div>
+    </div>
+</div>
+
+<div class="container mx-auto px-4 py-8">
+    <div class="max-w-5xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div class="lg:col-span-2 space-y-6">
+            <section class="bg-white dark:bg-gray-800 rounded-xl shadow p-6">
+                <h2 class="text-xl font-bold mb-3">About This Course</h2>
+                <div class="prose max-w-none dark:prose-invert">{{ course.description|safe }}</div>
+            </section>
+
+            <section class="bg-white dark:bg-gray-800 rounded-xl shadow p-6">
+                <h2 class="text-xl font-bold mb-4">Curriculum</h2>
+                <div class="space-y-4">
+                    {% for section in sections %}
+                    <div class="border dark:border-gray-700 rounded-lg overflow-hidden">
+                        <div class="bg-gray-50 dark:bg-gray-700 px-4 py-3 font-semibold">{{ section.title }}</div>
+                        <div class="divide-y dark:divide-gray-700">
+                            {% for lecture in section.lectures.all %}
+                            <a href="{% url 'study_materials:lecture_watch' course.slug lecture.id %}" class="flex items-center justify-between px-4 py-3 hover:bg-gray-50 dark:hover:bg-gray-700">
+                                <span><i class="fas fa-play-circle text-purple-600 mr-2"></i>{{ lecture.title }}</span>
+                                <span class="text-sm text-gray-500">
+                                    {% if lecture_progress|get_item:lecture.id %}Completed{% elif lecture.is_free_preview %}Preview{% else %}{{ lecture.duration }} min{% endif %}
+                                </span>
+                            </a>
+                            {% empty %}
+                            <div class="px-4 py-3 text-gray-500">No lectures yet.</div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    {% empty %}
+                    <p class="text-gray-500">No sections available yet.</p>
+                    {% endfor %}
+                </div>
+            </section>
+        </div>
+
+        <aside class="space-y-4">
+            <div class="bg-white dark:bg-gray-800 rounded-xl shadow p-6">
+                <div class="text-sm text-gray-500 mb-1">Progress</div>
+                <div class="text-3xl font-bold text-purple-600 mb-3">{{ progress_percentage|floatformat:0 }}%</div>
+                <div class="w-full h-3 bg-gray-200 rounded-full overflow-hidden mb-3">
+                    <div class="h-3 bg-purple-600" style="width: {{ progress_percentage|floatformat:0 }}%"></div>
+                </div>
+                <p class="text-sm text-gray-500">{{ completed_count }} of {{ total_lectures }} lectures completed</p>
+            </div>
+
+            {% if not is_enrolled %}
+            <a href="{% url 'study_materials:enroll_course' course.id %}" class="block text-center bg-purple-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-purple-700 transition">Enroll Now</a>
+            {% endif %}
+        </aside>
+    </div>
+</div>
+{% endblock %}

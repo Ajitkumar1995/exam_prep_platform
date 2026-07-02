@@ -82,7 +82,9 @@ class ExamViewSet(viewsets.ReadOnlyModelViewSet):
 
 
 class MockTestViewSet(viewsets.ModelViewSet):
-    queryset = MockTest.objects.filter(is_active=True)
+    queryset = MockTest.objects.filter(is_active=True).select_related(
+        "exam", "subject", "topic"
+    )
     serializer_class = MockTestSerializer
     permission_classes = [IsAuthenticated]
 
@@ -115,7 +117,11 @@ class MockTestViewSet(viewsets.ModelViewSet):
         selected_option = request.data.get("selected_option")
         time_taken = request.data.get("time_taken", 0)
 
-        attempt = get_object_or_404(TestAttempt, id=attempt_id, user=request.user)
+        attempt = get_object_or_404(
+            TestAttempt.objects.select_related("mock_test"),
+            id=attempt_id,
+            user=request.user,
+        )
 
         answer, created = TestAnswer.objects.get_or_create(
             attempt=attempt,
@@ -138,16 +144,21 @@ class MockTestViewSet(viewsets.ModelViewSet):
         attempt.status = "completed"
         attempt.end_time = timezone.now()
 
-        answers = TestAnswer.objects.filter(attempt=attempt)
+        answers = list(
+            TestAnswer.objects.filter(attempt=attempt)
+            .select_related("question")
+            .prefetch_related("question__options")
+        )
         total_score = 0
         correct_count = 0
 
         for answer in answers:
             question = answer.question
             if answer.selected_option:
-                is_correct = question.options.filter(
-                    id=answer.selected_option, is_correct=True
-                ).exists()
+                is_correct = any(
+                    option.is_correct and str(option.id) == str(answer.selected_option)
+                    for option in question.options.all()
+                )
                 if is_correct:
                     total_score += question.marks
                     correct_count += 1
@@ -167,7 +178,7 @@ class MockTestViewSet(viewsets.ModelViewSet):
                 "score": attempt.score,
                 "percentage": attempt.percentage,
                 "correct_answers": correct_count,
-                "total_questions": answers.count(),
+                "total_questions": len(answers),
             }
         )
 
@@ -177,17 +188,15 @@ class AnalyticsViewSet(viewsets.GenericViewSet):
 
     @action(detail=False, methods=["get"])
     def dashboard(self, request):
-        total_attempts = TestAttempt.objects.filter(
-            user=request.user, status="completed"
-        ).count()
-
         recent_attempts = TestAttempt.objects.filter(
             user=request.user, status="completed"
-        ).order_by("-end_time")[:5]
+        ).select_related("mock_test", "mock_test__exam").order_by("-end_time")[:5]
 
         return Response(
             {
-                "total_tests_taken": total_attempts,
+                "total_tests_taken": TestAttempt.objects.filter(
+                    user=request.user, status="completed"
+                ).count(),
                 "recent_attempts": TestAttemptSerializer(
                     recent_attempts, many=True
                 ).data,

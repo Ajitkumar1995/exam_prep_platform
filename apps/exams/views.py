@@ -1,7 +1,8 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.core.paginator import Paginator
-from django.db.models import Count, Avg, Q
+from django.db.models import Count, Avg, Q, Sum
 from django.utils import timezone
+from django.http import JsonResponse
 from .models import (
     ExamCategory,
     Exam,
@@ -14,11 +15,14 @@ from .models import (
     LiveTestCard,
 )
 from apps.payments.views import has_payment_access
-from apps.mocktests.models import MockTest
+from apps.mocktests.models import MockTest, TestAttempt
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
+from apps.cache.decorators import anonymous_cache_page
+from apps.cache.timeouts import CacheTimeout
 
 
+@anonymous_cache_page(CacheTimeout.EXAM_LIST, key_prefix="exam_list")
 def exam_list(request):
     """List all exams grouped by category"""
     categories = ExamCategory.objects.filter(is_active=True).prefetch_related("exams")
@@ -58,31 +62,37 @@ def exam_list(request):
     return render(request, "exams/list.html", context)
 
 
+@anonymous_cache_page(CacheTimeout.EXAM_LIST, key_prefix="exam_category")
 def category_detail(request, slug):
     """Show details of a specific category"""
     category = get_object_or_404(ExamCategory, slug=slug, is_active=True)
-    exams = Exam.objects.filter(category=category, is_active=True)
-
-    # Calculate statistics
-    total_questions = 0
-    total_mock_tests = 0
-    for exam in exams:
-        total_questions += exam.questions.filter(is_active=True).count()
-        total_mock_tests += exam.mock_tests.filter(is_active=True).count()
+    exams = list(
+        Exam.objects.filter(category=category, is_active=True).annotate(
+            active_question_count=Count(
+                "questions", filter=Q(questions__is_active=True), distinct=True
+            ),
+            active_mock_test_count=Count(
+                "mock_tests", filter=Q(mock_tests__is_active=True), distinct=True
+            ),
+        )
+    )
 
     context = {
         "category": category,
         "exams": exams,
-        "total_exams": exams.count(),
-        "total_questions": total_questions,
-        "total_mock_tests": total_mock_tests,
+        "total_exams": len(exams),
+        "total_questions": sum(exam.active_question_count for exam in exams),
+        "total_mock_tests": sum(exam.active_mock_test_count for exam in exams),
     }
     return render(request, "exams/category_detail.html", context)
 
 
+@anonymous_cache_page(CacheTimeout.EXAM_DETAIL, key_prefix="exam_detail")
 def exam_detail(request, slug):
     """Show detailed information about a specific exam"""
-    exam = get_object_or_404(Exam, slug=slug, is_active=True)
+    exam = get_object_or_404(
+        Exam.objects.select_related("category"), slug=slug, is_active=True
+    )
 
     # # Check if user has access to paid content
     # if exam.is_paid and exam.price > 0:
@@ -111,7 +121,6 @@ def exam_detail(request, slug):
         id=exam.id
     )[:6]
 
-    # Get statistics
     total_questions = exam.questions.filter(is_active=True).count()
     total_mock_tests = exam.mock_tests.filter(is_active=True).count()
 
@@ -132,17 +141,27 @@ def exam_detail(request, slug):
     return render(request, "exams/exam_detail.html", context)
 
 
+@anonymous_cache_page(CacheTimeout.EXAM_DETAIL, key_prefix="exam_coaching")
 def exam_coaching(request, slug):
     """Show coaching details for an exam"""
     exam = get_object_or_404(Exam, slug=slug, is_active=True)
 
-    # Get course modules from study materials grouped by subject
-    course_modules = []
-    subjects = exam.subjects.filter(is_active=True)
-    for subject in subjects:
-        materials = exam.study_materials.filter(subject=subject, is_active=True)[:5]
-        if materials.exists():
-            course_modules.append({"subject": subject, "materials": materials})
+    subjects = list(exam.subjects.filter(is_active=True))
+    materials_by_subject = {subject.id: [] for subject in subjects}
+    for material in (
+        exam.study_materials.filter(is_active=True, subject_id__in=materials_by_subject)
+        .select_related("subject")
+        .order_by("subject_id", "-created_at")
+    ):
+        subject_materials = materials_by_subject.get(material.subject_id)
+        if subject_materials is not None and len(subject_materials) < 5:
+            subject_materials.append(material)
+
+    course_modules = [
+        {"subject": subject, "materials": materials_by_subject[subject.id]}
+        for subject in subjects
+        if materials_by_subject[subject.id]
+    ]
 
     # Count video lectures
     video_lectures_count = exam.study_materials.filter(
@@ -169,10 +188,11 @@ def exam_coaching(request, slug):
     return render(request, "exams/exam_coaching.html", context)
 
 
+@anonymous_cache_page(CacheTimeout.MOCK_TEST_LIST, key_prefix="exam_mock_tests")
 def exam_mock_tests(request, slug):
     """Show mock tests for an exam"""
     exam = get_object_or_404(Exam, slug=slug, is_active=True)
-    mock_tests = exam.mock_tests.filter(is_active=True)
+    mock_tests = list(exam.mock_tests.filter(is_active=True))
 
     # Calculate total questions across all mock tests
     total_questions = sum(mt.total_questions for mt in mock_tests)
@@ -189,27 +209,20 @@ def exam_mock_tests(request, slug):
     return render(request, "exams/exam_mock_tests.html", context)
 
 
+@anonymous_cache_page(CacheTimeout.STUDY_MATERIAL, key_prefix="exam_study_material")
 def exam_study_material(request, slug):
     """Show study material for an exam"""
     exam = get_object_or_404(Exam, slug=slug, is_active=True)
 
-    # Filter study materials by type
-    notes = exam.study_materials.filter(material_type="notes", is_active=True)
-    videos = exam.study_materials.filter(material_type="video", is_active=True)
-    pdfs = exam.study_materials.filter(material_type="pdf", is_active=True)
-    ebooks = exam.study_materials.filter(material_type="ebook", is_active=True)
-
-    # Current affairs (you can add a separate model or use notes with a tag)
-    current_affairs = exam.study_materials.filter(
-        material_type="notes", is_active=True
-    )[:5]
-
-    # Previous year papers (you can add a separate model or use pdfs with tag)
-    previous_papers = exam.study_materials.filter(material_type="pdf", is_active=True)[
-        :5
-    ]
-
-    # Recommended books (ebooks)
+    materials = list(
+        exam.study_materials.filter(is_active=True).select_related("subject")
+    )
+    notes = [material for material in materials if material.material_type == "notes"]
+    videos = [material for material in materials if material.material_type == "video"]
+    pdfs = [material for material in materials if material.material_type == "pdf"]
+    ebooks = [material for material in materials if material.material_type == "ebook"]
+    current_affairs = notes[:5]
+    previous_papers = pdfs[:5]
     recommended_books = ebooks[:4]
 
     context = {
@@ -269,29 +282,6 @@ def take_daily_challenge(request, challenge_slug):
         return redirect("exams:list")
 
 
-# def join_live_test(request, test_id):
-#     """Join a live test from live test card"""
-#     live_test = get_object_or_404(LiveTestCard, id=test_id, is_active=True)
-
-#     # If button_url is provided, redirect there
-#     if live_test.button_url:
-#         return redirect(live_test.button_url)
-
-#     # Otherwise, try to find a mock test for the associated exam
-#     if live_test.exam:
-#         # mock_test = live_test.exam.mock_tests.filter(is_active=True).first()
-#         mock_test = live_test.exam.mock_tests.filter(is_active=True, is_paid=False).first()
-#         if mock_test:
-#             if request.user.is_authenticated:
-#                 return redirect('mocktests:take_mock_test', test_id=mock_test.id)
-#             else:
-#                 messages.info(request, 'Please login to take this test.')
-#                 return redirect('accounts:login_signup')
-
-#     messages.warning(request, 'Test is not available yet. Please check back later.')
-#     return redirect('exams:list')
-
-
 def join_live_test(request, test_id):
     """Join a live test from live test card"""
     live_test = get_object_or_404(LiveTestCard, id=test_id, is_active=True)
@@ -328,26 +318,24 @@ def join_live_test(request, test_id):
     return redirect("exams:list")
 
 
+@anonymous_cache_page(CacheTimeout.LEADERBOARD, key_prefix="exam_analytics")
 def get_exam_analytics(request, slug):
     """Get analytics data for an exam (AJAX)"""
     exam = get_object_or_404(Exam, slug=slug, is_active=True)
 
-    # Get mock test statistics
-    mock_tests = exam.mock_tests.filter(is_active=True)
-    total_attempts = 0
-    avg_score = 0
-
-    for mock_test in mock_tests:
-        attempts = mock_test.attempts.filter(status="completed")
-        total_attempts += attempts.count()
-        avg = attempts.aggregate(Avg("percentage"))["percentage__avg"] or 0
-        avg_score = (avg_score + avg) / 2 if avg_score else avg
+    mock_stats = exam.mock_tests.filter(is_active=True).aggregate(
+        total_mock_tests=Count("id"),
+        total_questions=Sum("total_questions"),
+    )
+    attempt_stats = TestAttempt.objects.filter(
+        mock_test__exam=exam, mock_test__is_active=True, status="completed"
+    ).aggregate(total_attempts=Count("id"), average_score=Avg("percentage"))
 
     data = {
-        "total_mock_tests": mock_tests.count(),
+        "total_mock_tests": mock_stats["total_mock_tests"] or 0,
         "total_questions": exam.questions.filter(is_active=True).count(),
         "total_study_materials": exam.study_materials.filter(is_active=True).count(),
-        "total_attempts": total_attempts,
-        "average_score": round(avg_score, 2),
+        "total_attempts": attempt_stats["total_attempts"] or 0,
+        "average_score": round(attempt_stats["average_score"] or 0, 2),
     }
     return JsonResponse(data)

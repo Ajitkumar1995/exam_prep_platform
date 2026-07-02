@@ -2,9 +2,11 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.core.paginator import Paginator
-from django.db.models import Q, Count
+from django.db.models import F, Q, Count, Prefetch
 from django.http import JsonResponse, HttpResponse
 from django.utils import timezone
+from apps.cache.decorators import anonymous_cache_page
+from apps.cache.timeouts import CacheTimeout
 import json
 import os
 from .models import (
@@ -22,6 +24,7 @@ from .models import (
 )
 
 
+@anonymous_cache_page(CacheTimeout.STUDY_MATERIAL, key_prefix="study_home")
 def study_home(request):
     """Study materials home page"""
     categories = CourseCategory.objects.filter(is_active=True)
@@ -56,6 +59,7 @@ def study_home(request):
     return render(request, "study_materials/home.html", context)
 
 
+@anonymous_cache_page(CacheTimeout.STUDY_MATERIAL, key_prefix="course_list")
 def course_list(request):
     """List all courses"""
     courses = Course.objects.filter(is_active=True).select_related("category")
@@ -113,8 +117,9 @@ def course_detail(request, slug):
         user=request.user, course=course
     ).exists()
 
-    # Get sections and lectures
-    sections = course.sections.filter(is_active=True).prefetch_related("lectures")
+    sections = course.sections.filter(is_active=True).prefetch_related(
+        Prefetch("lectures", queryset=Lecture.objects.filter(is_active=True))
+    )
 
     # Get user's lecture progress
     lecture_progress = {}
@@ -125,9 +130,7 @@ def course_detail(request, slug):
         lecture_progress = {lecture_id: True for lecture_id in completed_lectures}
 
     # Calculate total progress
-    total_lectures = sum(
-        section.lectures.filter(is_active=True).count() for section in sections
-    )
+    total_lectures = sum(len(section.lectures.all()) for section in sections)
     completed_count = len(lecture_progress)
     progress_percentage = (
         (completed_count / total_lectures * 100) if total_lectures > 0 else 0
@@ -169,7 +172,10 @@ def lecture_watch(request, course_slug, lecture_id):
     """Watch lecture video"""
     course = get_object_or_404(Course, slug=course_slug, is_active=True)
     lecture = get_object_or_404(
-        Lecture, id=lecture_id, section__course=course, is_active=True
+        Lecture.objects.select_related("section", "section__course"),
+        id=lecture_id,
+        section__course=course,
+        is_active=True,
     )
 
     # Check if user is enrolled
@@ -182,11 +188,12 @@ def lecture_watch(request, course_slug, lecture_id):
         return redirect("study_materials:course_detail", slug=course.slug)
 
     # Get next and previous lectures
-    all_lectures = Lecture.objects.filter(
-        section__course=course, is_active=True
-    ).order_by("section__order", "order")
-
-    lecture_ids = list(all_lectures.values_list("id", flat=True))
+    all_lectures = list(
+        Lecture.objects.filter(section__course=course, is_active=True)
+        .select_related("section")
+        .order_by("section__order", "order")
+    )
+    lecture_ids = [item.id for item in all_lectures]
     current_index = lecture_ids.index(lecture.id) if lecture.id in lecture_ids else -1
 
     next_lecture = None
@@ -194,9 +201,9 @@ def lecture_watch(request, course_slug, lecture_id):
 
     if current_index != -1:
         if current_index + 1 < len(lecture_ids):
-            next_lecture = Lecture.objects.get(id=lecture_ids[current_index + 1])
+            next_lecture = all_lectures[current_index + 1]
         if current_index - 1 >= 0:
-            prev_lecture = Lecture.objects.get(id=lecture_ids[current_index - 1])
+            prev_lecture = all_lectures[current_index - 1]
 
     context = {
         "course": course,
@@ -253,6 +260,7 @@ def mark_lecture_complete(request):
     return JsonResponse({"error": "Invalid request"}, status=400)
 
 
+@anonymous_cache_page(CacheTimeout.STUDY_MATERIAL, key_prefix="note_list")
 def note_list(request):
     """List all study notes"""
     notes = Note.objects.filter(is_active=True).select_related("exam", "subject")
@@ -292,8 +300,8 @@ def note_detail(request, slug):
     note = get_object_or_404(Note, slug=slug, is_active=True)
 
     # Increment views
+    Note.objects.filter(pk=note.pk).update(views=F("views") + 1)
     note.views += 1
-    note.save()
 
     # Check if bookmarked
     is_bookmarked = False
@@ -309,6 +317,7 @@ def note_detail(request, slug):
     return render(request, "study_materials/note_detail.html", context)
 
 
+@anonymous_cache_page(CacheTimeout.STUDY_MATERIAL, key_prefix="video_list")
 def video_list(request):
     """List all video lectures"""
     videos = VideoLecture.objects.filter(is_active=True).select_related(
@@ -345,8 +354,8 @@ def video_detail(request, slug):
     video = get_object_or_404(VideoLecture, slug=slug, is_active=True)
 
     # Increment views
+    VideoLecture.objects.filter(pk=video.pk).update(views=F("views") + 1)
     video.views += 1
-    video.save()
 
     # Check if bookmarked
     is_bookmarked = False
@@ -362,6 +371,7 @@ def video_detail(request, slug):
     return render(request, "study_materials/video_detail.html", context)
 
 
+@anonymous_cache_page(CacheTimeout.STUDY_MATERIAL, key_prefix="ebook_list")
 def ebook_list(request):
     """List all ebooks"""
     ebooks = EBook.objects.filter(is_active=True).select_related("exam")
@@ -414,6 +424,7 @@ def download_ebook(request, ebook_id):
     return redirect("study_materials:ebook_list")
 
 
+@anonymous_cache_page(CacheTimeout.CURRENT_AFFAIRS, key_prefix="current_affairs_list")
 def current_affairs_list(request):
     """List all current affairs"""
     affairs = CurrentAffair.objects.filter(is_active=True)
@@ -458,8 +469,14 @@ def current_affair_detail(request, slug):
     affair = get_object_or_404(CurrentAffair, slug=slug, is_active=True)
 
     # Increment views
+    CurrentAffair.objects.filter(pk=affair.pk).update(views=F("views") + 1)
     affair.views += 1
-    affair.save()
+
+    is_bookmarked = False
+    if request.user.is_authenticated:
+        is_bookmarked = Bookmark.objects.filter(
+            user=request.user, content_type="current_affair", content_id=affair.id
+        ).exists()
 
     # Get related affairs
     related_affairs = CurrentAffair.objects.filter(
@@ -469,6 +486,7 @@ def current_affair_detail(request, slug):
     context = {
         "affair": affair,
         "related_affairs": related_affairs,
+        "is_bookmarked": is_bookmarked,
     }
     return render(request, "study_materials/current_affair_detail.html", context)
 
@@ -501,39 +519,37 @@ def my_bookmarks(request):
     """View user's bookmarks"""
     bookmarks = Bookmark.objects.filter(user=request.user).order_by("-created_at")
 
-    # Group by content type
-    notes = []
-    videos = []
-    ebooks = []
-    affairs = []
+    bookmark_ids = {
+        "note": [],
+        "video": [],
+        "ebook": [],
+        "current_affair": [],
+    }
+    ordering = {content_type: {} for content_type in bookmark_ids}
 
-    for bookmark in bookmarks:
-        if bookmark.content_type == "note":
-            try:
-                note = Note.objects.get(id=bookmark.content_id, is_active=True)
-                notes.append(note)
-            except Note.DoesNotExist:
-                pass
-        elif bookmark.content_type == "video":
-            try:
-                video = VideoLecture.objects.get(id=bookmark.content_id, is_active=True)
-                videos.append(video)
-            except VideoLecture.DoesNotExist:
-                pass
-        elif bookmark.content_type == "ebook":
-            try:
-                ebook = EBook.objects.get(id=bookmark.content_id, is_active=True)
-                ebooks.append(ebook)
-            except EBook.DoesNotExist:
-                pass
-        elif bookmark.content_type == "current_affair":
-            try:
-                affair = CurrentAffair.objects.get(
-                    id=bookmark.content_id, is_active=True
-                )
-                affairs.append(affair)
-            except CurrentAffair.DoesNotExist:
-                pass
+    for index, bookmark in enumerate(bookmarks):
+        if bookmark.content_type in bookmark_ids:
+            bookmark_ids[bookmark.content_type].append(bookmark.content_id)
+            ordering[bookmark.content_type][bookmark.content_id] = index
+
+    notes = sorted(
+        Note.objects.filter(id__in=bookmark_ids["note"], is_active=True),
+        key=lambda item: ordering["note"].get(item.id, 0),
+    )
+    videos = sorted(
+        VideoLecture.objects.filter(id__in=bookmark_ids["video"], is_active=True),
+        key=lambda item: ordering["video"].get(item.id, 0),
+    )
+    ebooks = sorted(
+        EBook.objects.filter(id__in=bookmark_ids["ebook"], is_active=True),
+        key=lambda item: ordering["ebook"].get(item.id, 0),
+    )
+    affairs = sorted(
+        CurrentAffair.objects.filter(
+            id__in=bookmark_ids["current_affair"], is_active=True
+        ),
+        key=lambda item: ordering["current_affair"].get(item.id, 0),
+    )
 
     context = {
         "notes": notes,
@@ -559,6 +575,7 @@ def my_courses(request):
     return render(request, "study_materials/my_courses.html", context)
 
 
+@anonymous_cache_page(CacheTimeout.CURRENT_AFFAIRS, key_prefix="study_search")
 def search(request):
     """Search across all study materials"""
     query = request.GET.get("q", "")

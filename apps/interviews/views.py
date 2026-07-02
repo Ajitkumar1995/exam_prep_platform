@@ -5,11 +5,14 @@ from django.core.paginator import Paginator
 from django.db.models import Q, Count, Avg
 from django.http import JsonResponse
 from django.utils import timezone
+from apps.cache.decorators import anonymous_cache_page
+from apps.cache.timeouts import CacheTimeout
 import json
 import re
 from .models import InterviewCategory, InterviewQuestion, UserInterviewProgress
 
 
+@anonymous_cache_page(CacheTimeout.STUDY_MATERIAL, key_prefix="interview_home")
 def interview_home(request):
     """Interview preparation home page"""
     categories = InterviewCategory.objects.filter(is_active=True)
@@ -56,6 +59,7 @@ def interview_home(request):
     return render(request, "interviews/home.html", context)
 
 
+@anonymous_cache_page(CacheTimeout.STUDY_MATERIAL, key_prefix="question_bank")
 def question_bank(request):
     """Browse all interview questions with filters"""
     questions = InterviewQuestion.objects.filter(is_active=True).select_related(
@@ -411,6 +415,7 @@ def my_progress(request):
     return render(request, "interviews/progress.html", context)
 
 
+@anonymous_cache_page(CacheTimeout.STUDY_MATERIAL, key_prefix="category_questions")
 def category_questions(request, slug):
     """View questions by category"""
     category = get_object_or_404(InterviewCategory, slug=slug, is_active=True)

@@ -38,9 +38,6 @@ class MockTest(models.Model):
     negative_mark_value = models.FloatField(default=0.25)
     marks_per_question = models.FloatField(default=2)
 
-    # is_free = models.BooleanField(default=True)
-    # price = models.DecimalField(max_digits=10, decimal_places=2, default=0)
-    # Add to MockTest model
     is_paid = models.BooleanField(
         default=False, help_text="If True, users need to pay to access this test"
     )
@@ -72,7 +69,12 @@ class MockTest(models.Model):
         return reverse("mocktests:detail", args=[self.slug])
 
     def get_questions(self):
-        questions = self.questions.all().select_related("question")
+        """Return test questions with related question/options loaded efficiently."""
+        questions = (
+            self.questions.all()
+            .select_related("question", "question__subject", "question__topic")
+            .prefetch_related("question__options")
+        )
         if self.shuffle_questions:
             import random
 
@@ -111,9 +113,7 @@ class TestAttempt(models.Model):
         blank=True,
         related_name="test_attempts",
     )
-    session_id = models.CharField(
-        max_length=100, blank=True, null=True
-    )  # Add this for guest users
+    session_id = models.CharField(max_length=100, blank=True, null=True)
     mock_test = models.ForeignKey(
         MockTest, on_delete=models.CASCADE, related_name="attempts"
     )
@@ -133,7 +133,7 @@ class TestAttempt(models.Model):
     correct_answers = models.IntegerField(default=0)
     wrong_answers = models.IntegerField(default=0)
     skipped_answers = models.IntegerField(default=0)
-    not_answered_count = models.IntegerField(default=0)  # Add this field
+    not_answered_count = models.IntegerField(default=0)
 
     total_time_taken = models.IntegerField(default=0)
 
@@ -141,11 +141,14 @@ class TestAttempt(models.Model):
 
     class Meta:
         ordering = ["-created_at"]
+        indexes = [
+            models.Index(fields=["user", "status", "-end_time"]),
+            models.Index(fields=["mock_test", "status"]),
+            models.Index(fields=["session_id", "mock_test", "status"]),
+        ]
 
-    # def __str__(self):
-    #     return f"{self.user.email} - {self.mock_test.name}"
     def __str__(self):
-        # FIX: Handle case where user is None (guest users)
+        """Return a readable label for registered and guest attempts."""
         if self.user:
             return f"{self.user.email} - {self.mock_test.name}"
         elif self.session_id:
@@ -154,12 +157,14 @@ class TestAttempt(models.Model):
             return f"Anonymous - {self.mock_test.name}"
 
     def time_remaining(self):
+        """Return remaining attempt time in seconds."""
         if self.end_time:
             remaining = (self.end_time - timezone.now()).total_seconds()
             return max(0, int(remaining))
         return self.mock_test.duration_minutes * 60
 
     def is_expired(self):
+        """Return whether the attempt end time has passed."""
         if self.end_time:
             return timezone.now() > self.end_time
         return False
@@ -173,7 +178,7 @@ class TestAnswer(models.Model):
     selected_option = models.CharField(max_length=10, null=True, blank=True)
     is_correct = models.BooleanField(default=False)
     is_skipped = models.BooleanField(default=False)
-    is_marked_for_review = models.BooleanField(default=False)  # Add this field
+    is_marked_for_review = models.BooleanField(default=False)
     marks_obtained = models.FloatField(default=0)
     time_taken = models.IntegerField(default=0)
     answered_at = models.DateTimeField(auto_now_add=True)
@@ -181,11 +186,8 @@ class TestAnswer(models.Model):
     class Meta:
         unique_together = ["attempt", "question"]
 
-    # def __str__(self):
-    #     return f"Answer for Q{self.question.id}"
-
     def __str__(self):
-        # FIX: Handle case where attempt or its user is None
+        """Return a readable label for registered and guest answers."""
         if self.attempt and self.attempt.user:
             return f"{self.attempt.user.email} - Q{self.question.id}"
         elif self.attempt and self.attempt.session_id:

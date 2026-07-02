@@ -1,6 +1,6 @@
 from django.db import models
 from django.urls import reverse
-from ckeditor.fields import RichTextField
+from django_ckeditor_5.fields import CKEditor5Field
 from django.utils.text import slugify
 
 
@@ -138,10 +138,10 @@ class Exam(models.Model):
         max_length=50, blank=True, help_text="e.g., SBI PO, IBPS Clerk"
     )
     exam_level = models.CharField(max_length=20, choices=EXAM_LEVEL, default="national")
-    description = RichTextField()
-    eligibility = RichTextField(blank=True)
-    exam_pattern = RichTextField(blank=True)
-    syllabus = RichTextField(blank=True)
+    description = CKEditor5Field()
+    eligibility = CKEditor5Field(blank=True)
+    exam_pattern = CKEditor5Field(blank=True)
+    syllabus = CKEditor5Field(blank=True)
     important_dates = models.TextField(
         blank=True, help_text="JSON format for important dates"
     )
@@ -271,14 +271,14 @@ class Question(models.Model):
     question_type = models.CharField(
         max_length=20, choices=QUESTION_TYPE, default="mcq"
     )
-    question_text = RichTextField()
-    question_text_hindi = RichTextField(null=True, blank=True)
+    question_text = CKEditor5Field()
+    question_text_hindi = CKEditor5Field(null=True, blank=True)
     difficulty = models.CharField(max_length=10, choices=DIFFICULTY, default="medium")
     marks = models.FloatField(default=1)
     negative_marks = models.FloatField(default=0)
     estimated_time = models.IntegerField(default=60, help_text="Time in seconds")
-    explanation = RichTextField(blank=True, help_text="Explanation for the answer")
-    explanation_hindi = RichTextField(blank=True)
+    explanation = CKEditor5Field(blank=True, help_text="Explanation for the answer")
+    explanation_hindi = CKEditor5Field(blank=True)
     image = models.ImageField(upload_to="questions/", null=True, blank=True)
     tags = models.CharField(
         max_length=500, blank=True, help_text="Comma separated tags"
@@ -317,7 +317,7 @@ class ExamAnnouncement(models.Model):
         Exam, on_delete=models.CASCADE, related_name="announcements"
     )
     title = models.CharField(max_length=200)
-    content = RichTextField()
+    content = CKEditor5Field()
     announcement_date = models.DateTimeField()
     is_important = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
@@ -335,7 +335,7 @@ class ExamFaq(models.Model):
 
     exam = models.ForeignKey(Exam, on_delete=models.CASCADE, related_name="faqs")
     question = models.CharField(max_length=300)
-    answer = RichTextField()
+    answer = CKEditor5Field()
     order = models.IntegerField(default=0)
     is_active = models.BooleanField(default=True)
 
@@ -368,7 +368,7 @@ class StudyMaterial(models.Model):
     )
     title = models.CharField(max_length=200)
     material_type = models.CharField(max_length=20, choices=MATERIAL_TYPE)
-    description = RichTextField()
+    description = CKEditor5Field()
     file = models.FileField(upload_to="study_materials/", null=True, blank=True)
     video_url = models.URLField(blank=True)
     thumbnail = models.ImageField(upload_to="thumbnails/", null=True, blank=True)

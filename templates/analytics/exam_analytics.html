@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ exam.name }} Analytics - GovtExamWala{% endblock %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-8">
+    <div class="max-w-6xl mx-auto">
+        <h1 class="text-3xl font-bold mb-6">{{ exam.name }} Analytics</h1>
+
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
+            <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-5">
+                <div class="text-sm text-gray-500">Accuracy</div>
+                <div class="text-2xl font-bold text-green-600">{{ exam_performance.accuracy|floatformat:1 }}%</div>
+            </div>
+            <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-5">
+                <div class="text-sm text-gray-500">Best Score</div>
+                <div class="text-2xl font-bold text-purple-600">{{ exam_performance.best_score|floatformat:1 }}</div>
+            </div>
+            <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-5">
+                <div class="text-sm text-gray-500">Attempts</div>
+                <div class="text-2xl font-bold">{{ exam_performance.total_attempts }}</div>
+            </div>
+            <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-5">
+                <div class="text-sm text-gray-500">Progress</div>
+                <div class="text-2xl font-bold text-blue-600">{{ progress }}%</div>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <section class="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+                <h2 class="text-xl font-bold mb-4">Subject Performance</h2>
+                <div class="space-y-3">
+                    {% for subject in subject_performances %}
+                    <div class="flex justify-between border-b pb-2">
+                        <span>{{ subject.subject.name }}</span>
+                        <span class="font-semibold">{{ subject.accuracy|floatformat:1 }}%</span>
+                    </div>
+                    {% empty %}
+                    <p class="text-gray-500">No subject performance yet.</p>
+                    {% endfor %}
+                </div>
+            </section>
+
+            <section class="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+                <h2 class="text-xl font-bold mb-4">Recent Attempts</h2>
+                <div class="space-y-3">
+                    {% for attempt in attempts %}
+                    <div class="flex justify-between border-b pb-2">
+                        <span>{{ attempt.mock_test.name }}</span>
+                        <span class="font-semibold">{{ attempt.percentage|floatformat:1 }}%</span>
+                    </div>
+                    {% empty %}
+                    <p class="text-gray-500">No attempts yet.</p>
+                    {% endfor %}
+                </div>
+            </section>
+        </div>
+    </div>
+</div>
+{% endblock %}

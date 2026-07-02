@@ -2,6 +2,23 @@
 {% load static %}
 
 {% block title %}{{ video.title }} | GovtExamWala{% endblock %}
+{% block meta_description %}{{ video.description|striptags|truncatechars:155 }}{% endblock %}
+{% block og_type %}video.other{% endblock %}
+{% block og_title %}{{ video.title }} Video Lecture - GovtExamWala{% endblock %}
+{% block og_description %}{{ video.description|striptags|truncatechars:180 }}{% endblock %}
+{% block twitter_title %}{{ video.title }} Video Lecture{% endblock %}
+{% block twitter_description %}{{ video.description|striptags|truncatechars:180 }}{% endblock %}
+{% block structured_data %}
+{
+  "@context": "https://schema.org",
+  "@type": "VideoObject",
+  "name": "{{ video.title|escapejs }}",
+  "description": "{{ video.description|striptags|truncatechars:220|escapejs }}",
+  "url": "{{ seo.canonical_url|escapejs }}",
+  "embedUrl": "{{ video.get_embed_url|escapejs }}",
+  "uploadDate": "{{ video.created_at|date:'c' }}"
+}
+{% endblock %}
 
 {% block extra_css %}
 <style>

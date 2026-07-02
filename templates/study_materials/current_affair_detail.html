@@ -2,6 +2,32 @@
 {% load static %}
 
 {% block title %}{{ affair.title }} | GovtExamWala{% endblock %}
+{% block meta_description %}{% if affair.summary %}{{ affair.summary|striptags|truncatechars:155 }}{% else %}{{ affair.content|striptags|truncatechars:155 }}{% endif %}{% endblock %}
+{% block og_type %}article{% endblock %}
+{% block og_title %}{{ affair.title }} - Current Affairs{% endblock %}
+{% block og_description %}{% if affair.summary %}{{ affair.summary|striptags|truncatechars:180 }}{% else %}{{ affair.content|striptags|truncatechars:180 }}{% endif %}{% endblock %}
+{% block twitter_title %}{{ affair.title }}{% endblock %}
+{% block twitter_description %}{% if affair.summary %}{{ affair.summary|striptags|truncatechars:180 }}{% else %}{{ affair.content|striptags|truncatechars:180 }}{% endif %}{% endblock %}
+{% block structured_data %}
+{
+  "@context": "https://schema.org",
+  "@type": "NewsArticle",
+  "headline": "{{ affair.title|escapejs }}",
+  "description": "{% if affair.summary %}{{ affair.summary|striptags|truncatechars:220|escapejs }}{% else %}{{ affair.content|striptags|truncatechars:220|escapejs }}{% endif %}",
+  "url": "{{ seo.canonical_url|escapejs }}",
+  "datePublished": "{{ affair.date|date:'c' }}",
+  "dateModified": "{{ affair.updated_at|date:'c' }}",
+  "author": {
+    "@type": "Organization",
+    "name": "{% if affair.author %}{{ affair.author|escapejs }}{% else %}{{ seo.site_name|escapejs }}{% endif %}"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "{{ seo.site_name|escapejs }}",
+    "url": "{{ seo.site_url|escapejs }}"
+  }
+}
+{% endblock %}
 
 {% block content %}
 <div class="container mx-auto px-4 py-8">

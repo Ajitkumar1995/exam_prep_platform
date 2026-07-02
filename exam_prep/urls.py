@@ -4,26 +4,33 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.shortcuts import render
 from django.utils import timezone
-from django.db.models import Q, Count, Avg, Sum
+from django.db.models import Q, Count, Avg, Sum, Min
 from rest_framework import permissions
 from drf_yasg.views import get_schema_view
 from django.views.generic import RedirectView
 from drf_yasg import openapi
+from apps.cache.decorators import anonymous_cache_page
+from apps.cache.timeouts import CacheTimeout, ONE_DAY
+from .seo import llms_txt, robots_txt, sitemap_xml
 
 
+@anonymous_cache_page(ONE_DAY, key_prefix="about")
 def about(request):
     return render(request, "about.html")
 
 
+@anonymous_cache_page(ONE_DAY, key_prefix="faq")
 def faq(request):
     return render(request, "faq.html")
 
 
+@anonymous_cache_page(ONE_DAY, key_prefix="privacy_policy")
 def privacy_policy(request):
     return render(request, "privacy_policy.html")
 
 
 # Home page view with notifications, live cards, daily challenge, and leaderboard
+@anonymous_cache_page(CacheTimeout.HOMEPAGE, key_prefix="home")
 def home(request):
     from apps.exams.models import (
         ExamCategory,
@@ -70,29 +77,34 @@ def home(request):
     leaderboard_users = (
         User.objects.filter(test_attempts__status="completed")
         .annotate(
-            avg_score=Avg("test_attempts__percentage"),
-            total_tests=Count("test_attempts"),
-            total_correct=Sum("test_attempts__correct_answers"),
+            avg_score=Avg(
+                "test_attempts__percentage",
+                filter=Q(test_attempts__status="completed"),
+            ),
+            total_tests=Count(
+                "test_attempts",
+                filter=Q(test_attempts__status="completed"),
+                distinct=True,
+            ),
+            total_correct=Sum(
+                "test_attempts__correct_answers",
+                filter=Q(test_attempts__status="completed"),
+            ),
+            exam_name=Min(
+                "test_attempts__mock_test__exam__name",
+                filter=Q(test_attempts__status="completed"),
+            ),
         )
         .order_by("-avg_score")[:5]
     )
 
     leaderboard = []
     for idx, user in enumerate(leaderboard_users, 1):
-        # Get user's exam preference or default exam
-        exam_name = "General"
-        if user.test_attempts.filter(status="completed").exists():
-            exam_name = (
-                user.test_attempts.filter(status="completed")
-                .first()
-                .mock_test.exam.name
-            )
-
         leaderboard.append(
             {
                 "rank": idx,
                 "name": user.get_full_name() or user.username,
-                "exam": exam_name,
+                "exam": user.exam_name or "General",
                 "score": round(user.avg_score, 1) if user.avg_score else 0,
                 "accuracy": (
                     round((user.total_correct / (user.total_tests * 100)) * 100, 1)
@@ -139,6 +151,9 @@ schema_view = get_schema_view(
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("", home, name="home"),
+    path("robots.txt", robots_txt, name="robots_txt"),
+    path("sitemap.xml", sitemap_xml, name="sitemap_xml"),
+    path("llms.txt", llms_txt, name="llms_txt"),
     path("about/", about, name="about"),
     path("faq/", faq, name="faq"),
     path("privacy-policy/", privacy_policy, name="privacy_policy"),

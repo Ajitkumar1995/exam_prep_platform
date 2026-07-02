@@ -1507,7 +1507,7 @@
       },
       {
         "name": "description",
-        "type": "RichTextField",
+        "type": "CKEditor5Field",
         "null": false,
         "blank": false,
         "primary_key": false,
@@ -1517,7 +1517,7 @@
       },
       {
         "name": "eligibility",
-        "type": "RichTextField",
+        "type": "CKEditor5Field",
         "null": false,
         "blank": true,
         "primary_key": false,
@@ -1527,7 +1527,7 @@
       },
       {
         "name": "exam_pattern",
-        "type": "RichTextField",
+        "type": "CKEditor5Field",
         "null": false,
         "blank": true,
         "primary_key": false,
@@ -1537,7 +1537,7 @@
       },
       {
         "name": "syllabus",
-        "type": "RichTextField",
+        "type": "CKEditor5Field",
         "null": false,
         "blank": true,
         "primary_key": false,
@@ -1943,7 +1943,7 @@
       },
       {
         "name": "question_text",
-        "type": "RichTextField",
+        "type": "CKEditor5Field",
         "null": false,
         "blank": false,
         "primary_key": false,
@@ -1953,7 +1953,7 @@
       },
       {
         "name": "question_text_hindi",
-        "type": "RichTextField",
+        "type": "CKEditor5Field",
         "null": true,
         "blank": true,
         "primary_key": false,
@@ -2003,7 +2003,7 @@
       },
       {
         "name": "explanation",
-        "type": "RichTextField",
+        "type": "CKEditor5Field",
         "null": false,
         "blank": true,
         "primary_key": false,
@@ -2013,7 +2013,7 @@
       },
       {
         "name": "explanation_hindi",
-        "type": "RichTextField",
+        "type": "CKEditor5Field",
         "null": false,
         "blank": true,
         "primary_key": false,
@@ -2159,7 +2159,7 @@
       },
       {
         "name": "content",
-        "type": "RichTextField",
+        "type": "CKEditor5Field",
         "null": false,
         "blank": false,
         "primary_key": false,
@@ -2237,7 +2237,7 @@
       },
       {
         "name": "answer",
-        "type": "RichTextField",
+        "type": "CKEditor5Field",
         "null": false,
         "blank": false,
         "primary_key": false,
@@ -2316,7 +2316,7 @@
       },
       {
         "name": "description",
-        "type": "RichTextField",
+        "type": "CKEditor5Field",
         "null": false,
         "blank": false,
         "primary_key": false,
@@ -4088,7 +4088,7 @@
       },
       {
         "name": "sample_answer",
-        "type": "RichTextField",
+        "type": "CKEditor5Field",
         "null": false,
         "blank": false,
         "primary_key": false,
@@ -4848,7 +4848,7 @@
       },
       {
         "name": "message",
-        "type": "RichTextField",
+        "type": "CKEditor5Field",
         "null": false,
         "blank": false,
         "primary_key": false,
@@ -5045,7 +5045,7 @@
       },
       {
         "name": "content",
-        "type": "RichTextField",
+        "type": "CKEditor5Field",
         "null": false,
         "blank": false,
         "primary_key": false,
@@ -5397,7 +5397,7 @@
       },
       {
         "name": "description",
-        "type": "RichTextField",
+        "type": "CKEditor5Field",
         "null": false,
         "blank": false,
         "primary_key": false,
@@ -5407,7 +5407,7 @@
       },
       {
         "name": "objectives",
-        "type": "RichTextField",
+        "type": "CKEditor5Field",
         "null": false,
         "blank": true,
         "primary_key": false,
@@ -5417,7 +5417,7 @@
       },
       {
         "name": "requirements",
-        "type": "RichTextField",
+        "type": "CKEditor5Field",
         "null": false,
         "blank": true,
         "primary_key": false,
@@ -5673,7 +5673,7 @@
       },
       {
         "name": "description",
-        "type": "RichTextField",
+        "type": "CKEditor5Field",
         "null": false,
         "blank": true,
         "primary_key": false,
@@ -5723,7 +5723,7 @@
       },
       {
         "name": "content",
-        "type": "RichTextField",
+        "type": "CKEditor5Field",
         "null": false,
         "blank": true,
         "primary_key": false,
@@ -5852,7 +5852,7 @@
       },
       {
         "name": "content",
-        "type": "RichTextField",
+        "type": "CKEditor5Field",
         "null": false,
         "blank": false,
         "primary_key": false,
@@ -6071,7 +6071,7 @@
       },
       {
         "name": "description",
-        "type": "RichTextField",
+        "type": "CKEditor5Field",
         "null": false,
         "blank": false,
         "primary_key": false,
@@ -6239,7 +6239,7 @@
       },
       {
         "name": "description",
-        "type": "RichTextField",
+        "type": "CKEditor5Field",
         "null": false,
         "blank": false,
         "primary_key": false,
@@ -6456,7 +6456,7 @@
       },
       {
         "name": "content",
-        "type": "RichTextField",
+        "type": "CKEditor5Field",
         "null": false,
         "blank": false,
         "primary_key": false,

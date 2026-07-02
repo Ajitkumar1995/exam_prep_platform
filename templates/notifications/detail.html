@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ notification.title }} - GovtExamWala{% endblock %}
+
+{% block content %}
+<div class="bg-gradient-to-r from-purple-600 to-indigo-600 text-white py-10">
+    <div class="container mx-auto px-4">
+        <div class="max-w-4xl mx-auto">
+            <div class="flex flex-wrap gap-2 mb-3">
+                <span class="text-xs bg-white/20 px-3 py-1 rounded-full">{{ notification.get_priority_display }}</span>
+                <span class="text-xs bg-white/20 px-3 py-1 rounded-full">{{ notification.created_at|date:"M d, Y" }}</span>
+            </div>
+            <h1 class="text-3xl font-bold">{{ notification.title }}</h1>
+        </div>
+    </div>
+</div>
+
+<div class="container mx-auto px-4 py-8">
+    <article class="max-w-4xl mx-auto bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6">
+        {% if notification.image %}
+        <img src="{{ notification.image.url }}" alt="{{ notification.title }}" class="w-full rounded-lg mb-6">
+        {% endif %}
+
+        <div class="prose max-w-none dark:prose-invert">
+            {{ notification.message|safe }}
+        </div>
+
+        {% if notification.action_url %}
+        <div class="mt-8">
+            <a href="{% url 'notifications:track_click' notification.id %}" class="inline-flex items-center bg-purple-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-purple-700 transition">
+                {{ notification.button_text|default:"Open" }}
+                <i class="fas fa-arrow-right ml-2"></i>
+            </a>
+        </div>
+        {% endif %}
+    </article>
+</div>
+{% endblock %}

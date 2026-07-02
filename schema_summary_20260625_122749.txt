@@ -304,10 +304,10 @@ Generated: 2026-06-25 12:27:49
       • slug: SlugField NOT NULL  UNIQUE max_length=50
       • short_name: CharField NOT NULL   max_length=50
       • exam_level: CharField NOT NULL   max_length=20
-      • description: RichTextField NOT NULL   
-      • eligibility: RichTextField NOT NULL   
-      • exam_pattern: RichTextField NOT NULL   
-      • syllabus: RichTextField NOT NULL   
+      • description: CKEditor5Field NOT NULL   
+      • eligibility: CKEditor5Field NOT NULL   
+      • exam_pattern: CKEditor5Field NOT NULL   
+      • syllabus: CKEditor5Field NOT NULL   
       • important_dates: TextField NOT NULL   
       • official_website: URLField NOT NULL   max_length=200
       • logo: ImageField NULL   max_length=100
@@ -329,7 +329,7 @@ Generated: 2026-06-25 12:27:49
    Fields:
       • exam: ForeignKey NOT NULL    -> exams.Exam
       • title: CharField NOT NULL   max_length=200
-      • content: RichTextField NOT NULL   
+      • content: CKEditor5Field NOT NULL   
       • announcement_date: DateTimeField NOT NULL   
       • is_important: BooleanField NOT NULL   
       • is_active: BooleanField NOT NULL   
@@ -354,7 +354,7 @@ Generated: 2026-06-25 12:27:49
    Fields:
       • exam: ForeignKey NOT NULL    -> exams.Exam
       • question: CharField NOT NULL   max_length=300
-      • answer: RichTextField NOT NULL   
+      • answer: CKEditor5Field NOT NULL   
       • order: IntegerField NOT NULL   
       • is_active: BooleanField NOT NULL   
 
@@ -415,14 +415,14 @@ Generated: 2026-06-25 12:27:49
       • subject: ForeignKey NOT NULL    -> exams.Subject
       • topic: ForeignKey NULL    -> exams.Topic
       • question_type: CharField NOT NULL   max_length=20
-      • question_text: RichTextField NOT NULL   
-      • question_text_hindi: RichTextField NULL   
+      • question_text: CKEditor5Field NOT NULL   
+      • question_text_hindi: CKEditor5Field NULL   
       • difficulty: CharField NOT NULL   max_length=10
       • marks: FloatField NOT NULL   
       • negative_marks: FloatField NOT NULL   
       • estimated_time: IntegerField NOT NULL   
-      • explanation: RichTextField NOT NULL   
-      • explanation_hindi: RichTextField NOT NULL   
+      • explanation: CKEditor5Field NOT NULL   
+      • explanation_hindi: CKEditor5Field NOT NULL   
       • image: ImageField NULL   max_length=100
       • tags: CharField NOT NULL   max_length=500
       • is_active: BooleanField NOT NULL   
@@ -437,7 +437,7 @@ Generated: 2026-06-25 12:27:49
       • subject: ForeignKey NULL    -> exams.Subject
       • title: CharField NOT NULL   max_length=200
       • material_type: CharField NOT NULL   max_length=20
-      • description: RichTextField NOT NULL   
+      • description: CKEditor5Field NOT NULL   
       • file: FileField NULL   max_length=100
       • video_url: URLField NOT NULL   max_length=200
       • thumbnail: ImageField NULL   max_length=100
@@ -500,7 +500,7 @@ Generated: 2026-06-25 12:27:49
       • question_type: CharField NOT NULL   max_length=20
       • question_text: TextField NOT NULL   
       • difficulty: CharField NOT NULL   max_length=20
-      • sample_answer: RichTextField NOT NULL   
+      • sample_answer: CKEditor5Field NOT NULL   
       • keywords: CharField NOT NULL   max_length=500
       • tips: TextField NOT NULL   
       • time_limit: IntegerField NOT NULL   
@@ -604,7 +604,7 @@ Generated: 2026-06-25 12:27:49
    Fields:
       • title: CharField NOT NULL   max_length=200
       • slug: SlugField NOT NULL  UNIQUE max_length=50
-      • content: RichTextField NOT NULL   
+      • content: CKEditor5Field NOT NULL   
       • summary: CharField NOT NULL   max_length=300
       • announcement_type: CharField NOT NULL   max_length=20
       • bg_color: CharField NOT NULL   max_length=20
@@ -623,7 +623,7 @@ Generated: 2026-06-25 12:27:49
    Fields:
       • title: CharField NOT NULL   max_length=200
       • slug: SlugField NOT NULL  UNIQUE max_length=50
-      • message: RichTextField NOT NULL   
+      • message: CKEditor5Field NOT NULL   
       • priority: CharField NOT NULL   max_length=20
       • display_location: CharField NOT NULL   max_length=20
       • show_bell_icon: BooleanField NOT NULL   
@@ -817,9 +817,9 @@ Generated: 2026-06-25 12:27:49
       • title: CharField NOT NULL   max_length=200
       • slug: SlugField NOT NULL  UNIQUE max_length=50
       • subtitle: CharField NOT NULL   max_length=300
-      • description: RichTextField NOT NULL   
-      • objectives: RichTextField NOT NULL   
-      • requirements: RichTextField NOT NULL   
+      • description: CKEditor5Field NOT NULL   
+      • objectives: CKEditor5Field NOT NULL   
+      • requirements: CKEditor5Field NOT NULL   
       • difficulty: CharField NOT NULL   max_length=20
       • thumbnail: ImageField NULL   max_length=100
       • promo_video: URLField NOT NULL   max_length=200
@@ -855,7 +855,7 @@ Generated: 2026-06-25 12:27:49
       • title: CharField NOT NULL   max_length=300
       • slug: SlugField NOT NULL  UNIQUE max_length=50
       • category: CharField NOT NULL   max_length=20
-      • content: RichTextField NOT NULL   
+      • content: CKEditor5Field NOT NULL   
       • summary: TextField NOT NULL   
       • date: DateField NOT NULL   
       • source: CharField NOT NULL   max_length=200
@@ -877,7 +877,7 @@ Generated: 2026-06-25 12:27:49
       • exam: ForeignKey NULL    -> exams.Exam
       • title: CharField NOT NULL   max_length=200
       • slug: SlugField NOT NULL  UNIQUE max_length=50
-      • description: RichTextField NOT NULL   
+      • description: CKEditor5Field NOT NULL   
       • author: CharField NOT NULL   max_length=200
       • publisher: CharField NOT NULL   max_length=200
       • edition: CharField NOT NULL   max_length=50
@@ -902,12 +902,12 @@ Generated: 2026-06-25 12:27:49
    Fields:
       • section: ForeignKey NOT NULL    -> study_materials.Section
       • title: CharField NOT NULL   max_length=200
-      • description: RichTextField NOT NULL   
+      • description: CKEditor5Field NOT NULL   
       • lecture_type: CharField NOT NULL   max_length=20
       • video_url: URLField NOT NULL   max_length=200
       • video_embed_code: TextField NOT NULL   
       • document: FileField NULL   max_length=100
-      • content: RichTextField NOT NULL   
+      • content: CKEditor5Field NOT NULL   
       • duration: IntegerField NOT NULL   
       • order: IntegerField NOT NULL   
       • is_free_preview: BooleanField NOT NULL   
@@ -924,7 +924,7 @@ Generated: 2026-06-25 12:27:49
       • title: CharField NOT NULL   max_length=200
       • slug: SlugField NOT NULL  UNIQUE max_length=50
       • description: TextField NOT NULL   
-      • content: RichTextField NOT NULL   
+      • content: CKEditor5Field NOT NULL   
       • note_type: CharField NOT NULL   max_length=20
       • pdf_file: FileField NULL   max_length=100
       • cover_image: ImageField NULL   max_length=100
@@ -983,7 +983,7 @@ Generated: 2026-06-25 12:27:49
       • subject: ForeignKey NULL    -> exams.Subject
       • title: CharField NOT NULL   max_length=200
       • slug: SlugField NOT NULL  UNIQUE max_length=50
-      • description: RichTextField NOT NULL   
+      • description: CKEditor5Field NOT NULL   
       • video_url: URLField NOT NULL   max_length=200
       • thumbnail: ImageField NULL   max_length=100
       • duration: CharField NOT NULL   max_length=50

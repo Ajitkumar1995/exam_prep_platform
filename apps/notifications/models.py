@@ -1,7 +1,7 @@
 from django.db import models
 from django.utils import timezone
 from django.utils.text import slugify
-from ckeditor.fields import RichTextField
+from django_ckeditor_5.fields import CKEditor5Field
 
 
 class Notification(models.Model):
@@ -23,7 +23,7 @@ class Notification(models.Model):
 
     title = models.CharField(max_length=200)
     slug = models.SlugField(unique=True, blank=True)
-    message = RichTextField()
+    message = CKEditor5Field()
     priority = models.CharField(max_length=20, choices=PRIORITY, default="medium")
 
     # Display settings
@@ -94,7 +94,7 @@ class Announcement(models.Model):
 
     title = models.CharField(max_length=200)
     slug = models.SlugField(unique=True, blank=True)
-    content = RichTextField()
+    content = CKEditor5Field()
     summary = models.CharField(max_length=300, blank=True)
 
     announcement_type = models.CharField(

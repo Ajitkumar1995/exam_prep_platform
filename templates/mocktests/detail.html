@@ -2,6 +2,24 @@
 {% load static %}
 
 {% block title %}{{ mock_test.name }} - GovtExamWala{% endblock %}
+{% block meta_description %}Practice {{ mock_test.name }} for {{ mock_test.exam.name }} with {{ mock_test.total_questions }} questions, {{ mock_test.total_marks }} marks and a {{ mock_test.duration_minutes }} minute exam-like mock test.{% endblock %}
+{% block og_type %}article{% endblock %}
+{% block og_title %}{{ mock_test.name }} - {{ mock_test.exam.name }} Mock Test{% endblock %}
+{% block og_description %}Attempt a {{ mock_test.duration_minutes }} minute {{ mock_test.exam.name }} mock test with {{ mock_test.total_questions }} questions and performance tracking.{% endblock %}
+{% block twitter_title %}{{ mock_test.name }} Mock Test{% endblock %}
+{% block twitter_description %}Practice {{ mock_test.exam.name }} with exam-like questions, marks and timing.{% endblock %}
+{% block structured_data %}
+{
+  "@context": "https://schema.org",
+  "@type": "Quiz",
+  "name": "{{ mock_test.name|escapejs }}",
+  "description": "{{ mock_test.description|striptags|truncatechars:220|escapejs }}",
+  "url": "{{ seo.canonical_url|escapejs }}",
+  "about": "{{ mock_test.exam.name|escapejs }}",
+  "educationalUse": "Practice test",
+  "timeRequired": "PT{{ mock_test.duration_minutes }}M"
+}
+{% endblock %}
 
 {% block content %}
 <div class="container mx-auto px-4 py-8">

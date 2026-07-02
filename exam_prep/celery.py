@@ -1,5 +1,8 @@
 import os
+import logging
 from celery import Celery
+
+logger = logging.getLogger(__name__)
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "exam_prep.settings")
 
@@ -10,4 +13,5 @@ app.autodiscover_tasks()
 
 @app.task(bind=True)
 def debug_task(self):
-    print(f"Request: {self.request!r}")
+    """Log the current Celery request for worker diagnostics."""
+    logger.debug("Request: %r", self.request)

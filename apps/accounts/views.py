@@ -18,7 +18,7 @@ from .forms import (
     ChangePasswordForm,
 )
 from .utils import create_otp, verify_otp
-from django.core.mail import send_mail
+from .tasks import send_email_task
 from django.contrib.auth.tokens import default_token_generator
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.utils.encoding import force_bytes, force_str
@@ -271,28 +271,48 @@ def forgot_password(request):
                     """
 
             try:
-                # Send email using the same configuration that works for OTP
-                send_mail(
+                send_email_task.delay(
                     subject,
                     message,
-                    "GovtExamWala <noreply@govtexamwala.com>",
                     [email],
-                    fail_silently=False,
+                    "GovtExamWala <noreply@govtexamwala.com>",
                 )
-                logger.info(f"Password reset email sent to {email}")
+                logger.info("Password reset email queued for %s", email)
                 messages.success(
                     request,
                     f"Password reset link has been sent to {email}. Please check your inbox.",
                 )
                 return redirect("accounts:login_signup")
             except Exception as e:
-                logger.error(
-                    f"Failed to send password reset email to {email}: {str(e)}"
+                logger.warning(
+                    "Celery unavailable for password reset email to %s: %s",
+                    email,
+                    e,
                 )
-                messages.error(
-                    request, "Unable to send reset link. Please try again later."
-                )
-                return redirect("accounts:forgot_password")
+                try:
+                    send_email_task.apply(
+                        args=[
+                            subject,
+                            message,
+                            [email],
+                            "GovtExamWala <noreply@govtexamwala.com>",
+                        ]
+                    )
+                    messages.success(
+                        request,
+                        f"Password reset link has been sent to {email}. Please check your inbox.",
+                    )
+                    return redirect("accounts:login_signup")
+                except Exception as fallback_error:
+                    logger.error(
+                        "Failed to send password reset email to %s: %s",
+                        email,
+                        fallback_error,
+                    )
+                    messages.error(
+                        request, "Unable to send reset link. Please try again later."
+                    )
+                    return redirect("accounts:forgot_password")
 
         except User.DoesNotExist:
             # For security, don't reveal if email exists or not
@@ -376,22 +396,17 @@ def dashboard(request):
     from apps.mocktests.models import TestAttempt
     from django.db import models
 
-    total_tests = TestAttempt.objects.filter(
-        user=request.user, status="completed"
-    ).count()
-    avg_score = (
-        TestAttempt.objects.filter(user=request.user, status="completed").aggregate(
-            avg=models.Avg("percentage")
-        )["avg"]
-        or 0
+    stats = TestAttempt.objects.filter(user=request.user, status="completed").aggregate(
+        total_tests=models.Count("id"),
+        avg_score=models.Avg("percentage"),
     )
     recent_tests = TestAttempt.objects.filter(
         user=request.user, status="completed"
-    ).order_by("-end_time")[:5]
+    ).select_related("mock_test", "mock_test__exam").order_by("-end_time")[:5]
 
     context = {
-        "total_tests": total_tests,
-        "avg_score": round(avg_score, 1),
+        "total_tests": stats["total_tests"] or 0,
+        "avg_score": round(stats["avg_score"] or 0, 1),
         "recent_tests": recent_tests,
         "user": request.user,
     }

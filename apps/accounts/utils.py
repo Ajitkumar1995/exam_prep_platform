@@ -1,17 +1,23 @@
 import random
 import string
-from django.core.mail import send_mail
+import logging
 from django.conf import settings
 from django.utils import timezone
 from datetime import timedelta
+from kombu.exceptions import OperationalError
+
+from .tasks import send_email_task
+
+logger = logging.getLogger(__name__)
 
 
 def generate_otp():
+    """Generate a six-digit numeric OTP."""
     return "".join(random.choices(string.digits, k=6))
 
 
 def otp_send_email(email, otp, purpose="verification"):
-    """Send OTP via email with better formatting to avoid spam"""
+    """Queue an OTP email and fall back to synchronous sending if needed."""
     subject = f"Your {purpose} code for GovtExamWala"
 
     # HTML email format (better for spam filters)
@@ -57,51 +63,62 @@ def otp_send_email(email, otp, purpose="verification"):
     """
 
     try:
-        send_mail(
+        send_email_task.delay(
             subject,
             plain_message,
-            settings.DEFAULT_FROM_EMAIL,
             [email],
-            fail_silently=False,
-            html_message=html_message,  # Send HTML version
+            settings.DEFAULT_FROM_EMAIL,
+            html_message=html_message,
         )
-        print(f"OTP email sent successfully to {email}")
+        logger.info("OTP email queued for %s", email)
         return True
-    except Exception as e:
-        print(f"Failed to send OTP email to {email}: {str(e)}")
-        return False
+    except OperationalError as exc:
+        logger.warning("Celery unavailable for OTP email to %s: %s", email, exc)
+        try:
+            send_email_task.apply(
+                args=[
+                    subject,
+                    plain_message,
+                    [email],
+                    settings.DEFAULT_FROM_EMAIL,
+                ],
+                kwargs={"html_message": html_message},
+            )
+            return True
+        except Exception as fallback_exc:
+            logger.warning("Failed to send OTP email to %s: %s", email, fallback_exc)
+            return False
 
 
 def create_otp(user, purpose="verification"):
+    """Create a fresh OTP for a user and send it by email."""
     from .models import OTP
 
     otp_code = generate_otp()
 
-    # Delete old OTPs for this purpose/type
     OTP.objects.filter(user=user, otp_type=purpose, is_used=False).delete()
 
     expires_at = timezone.now() + timedelta(minutes=10)
 
-    # Make sure otp_type is set
     otp = OTP.objects.create(
         user=user,
         otp=otp_code,
-        otp_type=purpose,  # This should be 'signup' or 'login'
+        otp_type=purpose,
         expires_at=expires_at,
         is_used=False,
     )
 
-    print(f"DEBUG - OTP created: {otp_code} for {user.email} with type {purpose}")
+    logger.debug("OTP created for user=%s type=%s", user.email, purpose)
 
     otp_send_email(user.email, otp_code, purpose)
     return otp
 
 
-def verify_otp(user, otp_code, otp_type="email"):  # CHANGE THIS - add parameters
-    """Verify OTP for user"""
+def verify_otp(user, otp_code, otp_type="email"):
+    """Validate an unused OTP and mark it as consumed."""
     from .models import OTP
 
-    print(f"DEBUG - Verifying OTP: user={user.email}, otp={otp_code}, type={otp_type}")
+    logger.debug("Verifying OTP for user=%s type=%s", user.email, otp_type)
 
     try:
         otp = OTP.objects.get(user=user, otp=otp_code, otp_type=otp_type, is_used=False)
@@ -109,15 +126,16 @@ def verify_otp(user, otp_code, otp_type="email"):  # CHANGE THIS - add parameter
         if otp.is_valid():
             otp.is_used = True
             otp.save()
-            print(f"DEBUG - OTP verified successfully")
+            logger.debug("OTP verified successfully for user=%s", user.email)
             return True
         else:
-            print(
-                f"DEBUG - OTP expired (expires_at: {otp.expires_at}, now: {timezone.now()})"
+            logger.debug(
+                "OTP expired for user=%s expires_at=%s now=%s",
+                user.email,
+                otp.expires_at,
+                timezone.now(),
             )
             return False
     except OTP.DoesNotExist:
-        print(
-            f"DEBUG - OTP not found for user={user.email}, otp={otp_code}, type={otp_type}"
-        )
+        logger.debug("OTP not found for user=%s type=%s", user.email, otp_type)
         return False
